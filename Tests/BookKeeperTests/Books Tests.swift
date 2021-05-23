@@ -8,7 +8,7 @@ extension Sequence where Element: AccountProtocol {
     }
 }
 
-final class BookTests: XCTestCase {
+final class BooksTests: XCTestCase {
     func testInitNoParameters() {
         let books: Books = .init()
         XCTAssert(books.rawMaterialsAll().isEmpty)
@@ -144,7 +144,7 @@ final class BookTests: XCTestCase {
 }
 
 // MARK: - Business Operations
-extension BookTests {
+extension BooksTests {
     func testBookRevenueWithEmptyBooks() throws {
         // initiate empty books
         var books: Books = .init()
@@ -362,7 +362,7 @@ extension BookTests {
 }
 
 // MARK: - Add
-extension BookTests {
+extension BooksTests {
     func testAddClient() {
         let client: Client = .init()
         var books: Books = .init()
@@ -446,7 +446,7 @@ extension BookTests {
 }
 
 // MARK: - TBD
-extension BookTests {
+extension BooksTests {
     func testInventoryPurchases() {
         // initiate empty books
         let books: Books = .init()

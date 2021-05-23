@@ -85,8 +85,33 @@ extension Books: CustomStringConvertible {
     }
 }
 
+// MARK: - Double Entry
+
+public extension Books {
+    func doubleEntry<Account1: SimpleAccount, Account2: SimpleAccount>(
+        debitAccount: inout Account1,
+        creditAccount: inout Account2,
+        amount: Double
+    ) throws {
+
+        let debitBackup = debitAccount
+        let creditBackup = creditAccount
+
+        do {
+            try debitAccount.debit(amount: amount)
+            try creditAccount.credit(amount: amount)
+        } catch {
+            // restore backup if any account operation (debit or credit) fails
+            debitAccount = debitBackup
+            creditAccount = creditBackup
+
+            throw error
+        }
+    }
+}
+
 // MARK: - Business Operations
-extension Books {
+public extension Books {
     /// `Booking Revenue` occurs when Finished Goods are shipped to Client:
     /// delivery started by goods leaving the warehouse.
     ///
@@ -113,7 +138,7 @@ extension Books {
     ///
     /// Net revenue (excluding VAT) minus COGS is a financial result of this operation (sale).
     ///
-    public mutating func bookRevenue(for order: SalesOrder) throws {
+    mutating func bookRevenue(for order: SalesOrder) throws {
         guard order.orderType == .bookRevenue else {
             throw BooksError.incorrectOrderType
         }
@@ -160,7 +185,7 @@ extension Books {
             ///     - debit Accounts Receivable (Client or Channel).
             ///     - credit Revenue (Product).
             ///
-            clients[clientID]?.receivables.debit(amount: order.amountWithTax)
+            try clients[clientID]?.receivables.debit(amount: order.amountWithTax)
             try revenueAccount.credit(salesOrder: order)
 
             /// 2. For amount of VAT:
@@ -169,7 +194,7 @@ extension Books {
             ///     - credit Tax Liabilities Account (General Ledger).
             ///
             try revenueAccount.debit(salesOrder: order)
-            taxLiabilities.credit(amount: order.tax)
+            try taxLiabilities.credit(amount: order.tax)
 
             guard let cost = finishedGoods[finishedGoodID]?.cost() else {
                 print("cost of product is not defined")
@@ -182,7 +207,7 @@ extension Books {
             ///     - credit Inventory (Product).
             ///
             let cogs = Double(order.qty) * cost
-            finishedGoods[finishedGoodID]?.cogs.debit(amount: cogs)
+            try finishedGoods[finishedGoodID]?.cogs.debit(amount: cogs)
             try finishedGoods[finishedGoodID]?.inventory.credit(order: order)
         } catch let error {
             /// `restore` to before-state (`undo` changes)
@@ -196,7 +221,7 @@ extension Books {
         }
     }
 
-    public enum BooksError: Error {
+    enum BooksError: Error {
         case incorrectOrderType
         case unknownClient
         case unknownFinishedGood
@@ -207,7 +232,7 @@ extension Books {
     /// `Record Finished Goods`
     /// Once the production facility has converted the work-in-process into completed goods,
     /// you then shift the cost of these materials into the finished goods account.
-    public mutating func recordFinishedGoods(for order: ProductionOrder) throws {
+    mutating func recordFinishedGoods(for order: ProductionOrder) throws {
         guard case .recordFinishedGoods(_) = order.orderType else {
             throw BooksError.incorrectOrderType
         }
@@ -239,20 +264,20 @@ extension Books {
 }
 
 // MARK: - Add
-extension Books {
-    public mutating func add(client: Client) {
+public extension Books {
+    mutating func add(client: Client) {
         clients[client.id] = client
     }
 
-    public mutating func add(finishedGood: FinishedGood) {
+    mutating func add(finishedGood: FinishedGood) {
         finishedGoods[finishedGood.id] = finishedGood
     }
 
-    public mutating func add(workInProgress wip: WorkInProgress) {
+    mutating func add(workInProgress wip: WorkInProgress) {
         wips[wip.id] = wip
     }
 
-    public mutating func add(rawMaterial: RawMaterial) {
+    mutating func add(rawMaterial: RawMaterial) {
         rawMaterials[rawMaterial.id] = rawMaterial
     }
 }

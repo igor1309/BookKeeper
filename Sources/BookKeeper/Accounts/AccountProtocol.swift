@@ -1,5 +1,25 @@
 import Foundation
 
+/// An `account` is a separate, detailed record associated with a specific asset, liability, equity, revenue, expense, gain, or loss.
+///
+/// Examples of accounts are:
+///     - Cash (asset account: normally a debit balance)
+///     - Accounts receivable (asset account: normally a debit balance)
+///     - Inventory (asset account: normally a debit balance)
+///     - Fixed assets (asset account: normally a debit balance)
+///     - Accounts payable (liability account: normally a credit balance)
+///     - Accrued liabilities (liability account: normally a credit balance)
+///     - Notes payable (liability account: normally a credit balance)
+///     - Common stock (equity account: normally a credit balance)
+///     - Retained earnings (equity account: normally a credit balance)
+///     - Revenue - products (revenue account: normally a credit balance)
+///     - Revenue - services (revenue account: normally a credit balance)
+///     - Cost of goods sold (expense account: normally a debit balance)
+///     - Wage expense (expense account: normally a debit balance)
+///     - Utilities expense (expense account: normally a debit balance)
+///     - Travel and entertainment (expense account: normally a debit balance)
+///     - Gain on sale of asset (gain account: normally a credit balance)
+///     - Loss on sale of asset (loss account: normally a debit balance)
 public protocol AccountProtocol: Hashable {
     var amount: Double { get set }
 
@@ -27,48 +47,6 @@ public extension AccountProtocol {
 
     func balance() -> Double {
         return amount
-    }
-}
-
-public protocol SimpleAccount: AccountProtocol {
-    mutating func debit(amount: Double) throws
-    mutating func credit(amount: Double) throws
-}
-
-public enum AccountError: Error, Equatable {
-    case insufficientBalance
-    case negativeAmount
-}
-
-public extension SimpleAccount {
-    mutating func debit(amount: Double) throws {
-        guard amount >= 0 else { throw AccountError.negativeAmount}
-
-        switch kind {
-            case .active, .bothActivePassive:
-                self.amount += amount
-            case .passive:
-                if self.amount < amount {
-                    throw AccountError.insufficientBalance
-                } else {
-                    self.amount -= amount
-                }
-        }
-    }
-
-    mutating func credit(amount: Double) throws {
-        guard amount >= 0 else { throw AccountError.negativeAmount}
-
-        switch kind {
-            case .active, .bothActivePassive:
-                if self.amount < amount {
-                    throw AccountError.insufficientBalance
-                } else {
-                    self.amount -= amount
-                }
-            case .passive:
-                self.amount += amount
-        }
     }
 }
 

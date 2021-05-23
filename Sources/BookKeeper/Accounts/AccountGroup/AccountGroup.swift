@@ -25,20 +25,39 @@
 ///     can't iterate over type values: can't conform to CaseIterable up until `leafs' like CurrentAsset, CurrentLiability, etc (CaseIterable enums without associated values)
 ///     if can't iterate then how to create, for example, an AccountGroupPicker, that should show the hierarchy
 ///
+/// CaseIterable for enum with associated value see https://oleb.net/blog/2018/06/enumerating-enum-cases#manual-conformance
+
 #warning("lots of code added - need to update tests")
-public enum AccountGroup: Equatable, Hashable {
+
+public enum AccountGroup: Equatable, Hashable, CaseIterable {
     case balanceSheet(BalanceSheet)
     case incomeStatement(IncomeStatement)
+
+    public static var allCases: [AccountGroup] {
+        /// Dummy function whose only purpose is to produce
+        /// an error when a new case is added to enum. Never call!
+        @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
+        func _assertExhaustiveness(of accountGroup: AccountGroup, never: Never) {
+            switch accountGroup {
+                case .balanceSheet(_),
+                     .incomeStatement(_):
+                    break
+            }
+        }
+
+        return BalanceSheet.allCases.map(AccountGroup.balanceSheet)
+            + IncomeStatement.allCases.map(AccountGroup.incomeStatement)
+    }
 }
 
 // MARK: - BalanceSheet
 
-public enum BalanceSheet: Equatable, Hashable {
+public enum BalanceSheet: Equatable, Hashable, CaseIterable {
     case asset(Asset)
     case liability(Liability)
     case equity(Equity)
 
-    public enum Asset: Equatable, Hashable {
+    public enum Asset: Equatable, Hashable, CaseIterable {
         case currentAsset(CurrentAsset)
         case propertyPlantEquipment(PropertyPlantEquipment)
 
@@ -57,9 +76,25 @@ public enum BalanceSheet: Equatable, Hashable {
             case accumulatedDepreciationEquipment = "Accumulated Depreciation Equipment"
             case accumulatedDepreciationVehicles = "Accumulated Depreciation Vehicles"
         }
+
+        public static var allCases: [BalanceSheet.Asset] {
+            /// Dummy function whose only purpose is to produce
+            /// an error when a new case is added to enum. Never call!
+            @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
+            func _assertExhaustiveness(of asset: BalanceSheet.Asset, never: Never) {
+                switch asset {
+                    case .currentAsset(_),
+                         .propertyPlantEquipment(_):
+                        break
+                }
+            }
+
+            return CurrentAsset.allCases.map(Asset.currentAsset)
+                + PropertyPlantEquipment.allCases.map(Asset.propertyPlantEquipment)
+        }
     }
 
-    public enum Liability: Equatable, Hashable {
+    public enum Liability: Equatable, Hashable, CaseIterable {
         case currentLiability(CurrentLiability)
         case longtermLiability(LongtermLiability)
 
@@ -75,6 +110,22 @@ public enum BalanceSheet: Equatable, Hashable {
             case mortgageLoanPayable = "Mortgage Loan Payable"
             case bondsPayable = "Bonds Payable"
         }
+
+        public static var allCases: [BalanceSheet.Liability] {
+            /// Dummy function whose only purpose is to produce
+            /// an error when a new case is added to enum. Never call!
+            @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
+            func _assertExhaustiveness(of liability: BalanceSheet.Liability, never: Never) {
+                switch liability {
+                    case .currentLiability(_),
+                         .longtermLiability(_):
+                        break
+                }
+            }
+
+            return CurrentLiability.allCases.map(Liability.currentLiability)
+                + LongtermLiability.allCases.map(Liability.longtermLiability)
+        }
     }
 
     public enum Equity: String, Equatable, Hashable, CaseIterable {
@@ -82,11 +133,29 @@ public enum BalanceSheet: Equatable, Hashable {
         case retainedEarnings = "Retained Earnings"
         case treasuryStock = "Treasury Stock"
     }
+
+    public static var allCases: [BalanceSheet] {
+        /// Dummy function whose only purpose is to produce
+        /// an error when a new case is added to enum. Never call!
+        @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
+        func _assertExhaustiveness(of balanceSheet: BalanceSheet, never: Never) {
+            switch balanceSheet {
+                case .asset(_),
+                     .liability(_),
+                     .equity(_):
+                    break
+            }
+        }
+
+        return Asset.allCases.map(BalanceSheet.asset)
+            + Liability.allCases.map(BalanceSheet.liability)
+            + Equity.allCases.map(BalanceSheet.equity)
+    }
 }
 
 // MARK: - IncomeStatement
 
-public enum IncomeStatement: Equatable, Hashable {
+public enum IncomeStatement: Equatable, Hashable, CaseIterable {
     /// Operating Revenues (account numbers 30000 - 39999)
     /// 31010 Sales - Division #1, Product Line 010
     /// 31022 Sales - Division #1, Product Line 022
@@ -129,5 +198,21 @@ public enum IncomeStatement: Equatable, Hashable {
          96100 Loss on Sale of Assets
          */
         case other = "Other"
+    }
+
+    public static var allCases: [IncomeStatement] {
+        /// Dummy function whose only purpose is to produce
+        /// an error when a new case is added to enum. Never call!
+        @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
+        func _assertExhaustiveness(of incomeStatement: IncomeStatement, never: Never) {
+            switch incomeStatement {
+                case .revenue,
+                     .expense(_):
+                    break
+            }
+        }
+
+        return [.revenue]
+            + Expense.allCases.map(IncomeStatement.expense)
     }
 }
