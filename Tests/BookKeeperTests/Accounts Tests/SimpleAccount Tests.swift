@@ -1,7 +1,7 @@
 import XCTest
 import BookKeeper
 
-final class AccountProtocolTests: XCTestCase {
+final class SimpleAccountTests: XCTestCase {
     struct ActiveAccount: SimpleAccount {
         var amount: Double = 0
         static var kind: AccountKind = .active

@@ -234,10 +234,10 @@ extension BooksTests {
         XCTAssertEqual(receivables.balance(), 99 * 100 * (1 + 0.2))
 
         XCTAssertEqual(books.revenueAccountBalance, order.amountExTax)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 0 - order.tax)
+        XCTAssertEqual(books.taxLiabilitiesBalance, order.tax)
 
         XCTAssertEqual(books.revenueAccountBalance, 100 * 99.0)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 100 * 99.0 * -0.2)
+        XCTAssertEqual(books.taxLiabilitiesBalance, 100 * 99.0 * 0.2)
     }
 
     func testBookRevenueWithNonEmptyBooks() throws {
@@ -293,7 +293,7 @@ extension BooksTests {
         XCTAssertEqual(books.client(forID: client.id)?.id, client.id)
 
         XCTAssertEqual(books.revenueAccountBalance, 999 + 100 * 99.0)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 111 + -100 * 99.0 * 0.2)
+        XCTAssertEqual(books.taxLiabilitiesBalance, 111 + 100 * 99.0 * 0.2)
     }
 
     func testRecordFinishedGoods() throws {
