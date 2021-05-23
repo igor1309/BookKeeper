@@ -22,6 +22,7 @@ public protocol AccountProtocol: Hashable {
 }
 
 public extension AccountProtocol {
+    var kind: AccountKind { Self.kind }
     var group: AccountGroup { Self.accountGroup }
 
     func balance() -> Double {
@@ -30,17 +31,44 @@ public extension AccountProtocol {
 }
 
 public protocol SimpleAccount: AccountProtocol {
-    mutating func debit(amount: Double)
-    mutating func credit(amount: Double)
+    mutating func debit(amount: Double) throws
+    mutating func credit(amount: Double) throws
+}
+
+public enum AccountError: Error, Equatable {
+    case insufficientBalance
+    case negativeAmount
 }
 
 public extension SimpleAccount {
-    mutating func debit(amount: Double) {
-        self.amount += amount
+    mutating func debit(amount: Double) throws {
+        guard amount >= 0 else { throw AccountError.negativeAmount}
+
+        switch kind {
+            case .active, .bothActivePassive:
+                self.amount += amount
+            case .passive:
+                if self.amount < amount {
+                    throw AccountError.insufficientBalance
+                } else {
+                    self.amount -= amount
+                }
+        }
     }
 
-    mutating func credit(amount: Double) {
-        self.amount -= amount
+    mutating func credit(amount: Double) throws {
+        guard amount >= 0 else { throw AccountError.negativeAmount}
+
+        switch kind {
+            case .active, .bothActivePassive:
+                if self.amount < amount {
+                    throw AccountError.insufficientBalance
+                } else {
+                    self.amount -= amount
+                }
+            case .passive:
+                self.amount += amount
+        }
     }
 }
 

@@ -1,8 +1,3 @@
-/// Main Financial Reports:
-///     - Balance Statement (Balance)
-///     - Profit and Loss Statement (P&L, PnL)
-///     - Cash Flow Statement (CF)
-
 /// Active accounts are those that account for property.
 /// Passive accounts are those that reflect liabilities or sources.
 /// There are also a number of accounts that can be both active
