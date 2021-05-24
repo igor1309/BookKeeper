@@ -1,5 +1,5 @@
 // MARK: - TBD
-extension Books {
+public extension Books {
     /// `Inventory Purchases`
     /// (Ending inventory - Beginning inventory) + Cost of goods sold = Inventory purchases
     /// https://www.accountingtools.com/articles/how-to-calculate-inventory-purchases.html

@@ -2,6 +2,7 @@ import XCTest
 // @testable
 import BookKeeper
 
+// MARK: - Business Operations
 extension BooksTests {
     func testReceiveCash() throws {
         var books: Books = .init()

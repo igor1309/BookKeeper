@@ -1,5 +1,6 @@
-// MARK: - Business Operations (cont'd)
+// MARK: - Business Operations
 public extension Books {
+    
     /// `Receive Cash` from Client.
     mutating func receiveCash(_ amount: Double, from clientID: Client.ID) throws {
         let cashAccountBackup = cashAccount
