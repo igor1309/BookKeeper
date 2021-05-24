@@ -1,6 +1,7 @@
 import Foundation
 
-/// An `account` is a separate, detailed record associated with a specific asset, liability, equity, revenue, expense, gain, or loss.
+/// An `account` is a separate, detailed record associated with a specific asset, liability,
+/// equity, revenue, expense, gain, or loss.
 ///
 /// Examples of accounts are:
 ///     - Cash (asset account: normally a debit balance)
