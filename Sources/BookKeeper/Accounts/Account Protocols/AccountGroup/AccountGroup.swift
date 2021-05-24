@@ -166,6 +166,7 @@ public enum IncomeStatement: Equatable, Hashable, CaseIterable {
     case expense(Expense)
 
     public enum Expense: String, Equatable, Hashable, CaseIterable {
+        case depreciation = "Depreciation Expense"
         /*
          Cost of Goods Sold (account numbers 40000 - 49999)
          41010 COGS - Division #1, Product Line p
@@ -182,7 +183,7 @@ public enum IncomeStatement: Equatable, Hashable, CaseIterable {
          50200 Marketing Dept. Supplies
          50600 Marketing Dept. Telephone
          */
-        case marketingExpenses = "Marketing Expenses"
+        case marketingExpenses = "Marketing Expense"
 
         /*
          Payroll Dept. Expenses (account numbers 59000 - 59999)

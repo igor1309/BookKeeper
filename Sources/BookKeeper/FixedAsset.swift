@@ -43,6 +43,7 @@ public struct FixedAsset: Identifiable, Equatable {
     public let value: Double
     public var depreciation: Double = 0
 
+    public var carryingAmount: Double { value - depreciation }
 
     public init(id: UUID = UUID(),
                 name: String,

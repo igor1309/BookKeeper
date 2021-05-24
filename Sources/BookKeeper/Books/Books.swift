@@ -7,11 +7,15 @@ public struct Books {
     public var clients: [Client.ID: Client]
     public var fixedAssets: [FixedAsset.ID: FixedAsset]
 
+    // balance sheet
     public var cashAccount: CashAccount
     public var accumulatedDepreciation: AccumulatedDepreciation
     public var payables: AccountsPayable
-    public var revenueAccount: RevenueAccount
     public var taxLiabilities: TaxLiabilities
+
+    // income statement
+    public var revenueAccount: RevenueAccount
+    public var depreciationExpenses: DepreciationExpenses
 
     public init(rawMaterials: [RawMaterial.ID: RawMaterial]? = nil,
                 wips: [WorkInProgress.ID: WorkInProgress]? = nil,
@@ -22,6 +26,7 @@ public struct Books {
                 accumulatedDepreciation: AccumulatedDepreciation? = nil,
                 payables: AccountsPayable? = nil,
                 revenueAccount: RevenueAccount? = nil,
+                depreciationExpenses: DepreciationExpenses? = nil,
                 taxLiabilities: TaxLiabilities? = nil
     ) {
         self.rawMaterials = rawMaterials ?? [:]
@@ -33,6 +38,7 @@ public struct Books {
         self.accumulatedDepreciation = accumulatedDepreciation ?? .init()
         self.payables = payables ?? .init()
         self.revenueAccount = revenueAccount ?? .init()
+        self.depreciationExpenses = depreciationExpenses ?? .init()
         self.taxLiabilities = taxLiabilities ?? .init()
     }
 
@@ -81,6 +87,7 @@ public extension Books {
         case costOfProductNotDefined
         case incorrectLifetime
         case nonPositiveAmount
+        case depreciationFail
     }
 
 }

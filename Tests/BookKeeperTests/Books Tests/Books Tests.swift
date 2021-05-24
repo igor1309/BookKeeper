@@ -127,11 +127,11 @@ final class BooksTests: XCTestCase {
 
 // MARK: - TBD
 extension BooksTests {
-    func testInventoryPurchases() {
+    func testPurchaseInventory() {
         // initiate empty books
         let books: Books = .init()
-        //let inventoryPurchases = books.inventoryPurchases()
-        //XCTAssertEqual(inventoryPurchases, 0)
+        //let purchaseInventory = books.purchaseInventory()
+        //XCTAssertEqual(purchaseInventory, 0)
 
         XCTFail("finish with test")
     }
