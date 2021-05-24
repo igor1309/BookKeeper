@@ -18,10 +18,6 @@ extension RevenueAccount: CustomStringConvertible {
 
 // MARK: - Sales Order Processing
 extension RevenueAccount: SalesProcessingAccount {
-    #warning("unify all SalesProcessingError")
-    public enum SalesProcessingError: Error {
-        case wrongSalesOrderType
-    }
 
     /// Revenue is `passive account` hence revenue `deductions` are `debited` on the revenue account.
     /// Normal revenue deductions are:
@@ -44,11 +40,12 @@ extension RevenueAccount: SalesProcessingAccount {
     ///
     /// We do not use contra accounts, we debit revenue.
     public mutating func debit(salesOrder order: SalesOrder) throws {
+
         switch order.orderType {
             case .bookRevenue:
                 amount -= order.tax
             default:
-                throw SalesProcessingError.wrongSalesOrderType
+                throw OrderProcessingError.wrongOrderType
         }
     }
 
@@ -56,11 +53,12 @@ extension RevenueAccount: SalesProcessingAccount {
     /// Main reason to record revenue `increase` is revenue recognition,
     /// since Revenue is a `passive` account this is done by `credit` on it.
     public mutating func credit(salesOrder order: SalesOrder) throws {
+
         switch order.orderType {
             case .bookRevenue:
                 amount += order.amountWithTax
             default:
-                throw SalesProcessingError.wrongSalesOrderType
+                throw OrderProcessingError.wrongOrderType
         }
     }
 

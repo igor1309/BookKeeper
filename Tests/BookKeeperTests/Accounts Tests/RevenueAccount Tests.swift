@@ -58,8 +58,8 @@ extension RevenueAccountTests {
                                 qty: qty,
                                 priceExTax: priceExVAT)
         XCTAssertThrowsError(try revenueAccount.debit(salesOrder: order2)) { error in
-            XCTAssertEqual(error as! RevenueAccount.SalesProcessingError,
-                           RevenueAccount.SalesProcessingError.wrongSalesOrderType)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.wrongOrderType)
         }    }
 
     func testCreditSalesOrder() {
@@ -92,8 +92,8 @@ extension RevenueAccountTests {
                                 qty: qty,
                                 priceExTax: priceExVAT)
         XCTAssertThrowsError(try revenueAccount.credit(salesOrder: order2)) { error in
-            XCTAssertEqual(error as! RevenueAccount.SalesProcessingError,
-                           RevenueAccount.SalesProcessingError.wrongSalesOrderType)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.wrongOrderType)
         }
     }
 

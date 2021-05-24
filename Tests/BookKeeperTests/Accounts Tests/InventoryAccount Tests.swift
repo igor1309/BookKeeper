@@ -68,10 +68,10 @@ extension InventoryAccountTests {
 
         // create another sales return order and add to inventory
         let orderSalesReturn2: SalesOrder = .init(orderType: .salesReturn(cost: 59),
-                                       clientID: order.clientID,
-                                       finishedGoodID: order.finishedGoodID,
-                                       qty: 100,
-                                       priceExTax: 99)
+                                                  clientID: order.clientID,
+                                                  finishedGoodID: order.finishedGoodID,
+                                                  qty: 100,
+                                                  priceExTax: 99)
         XCTAssertNoThrow(try inventory.debit(order: orderSalesReturn2))
 
         // evaluate
@@ -90,8 +90,8 @@ extension InventoryAccountTests {
                                                  qty: 100,
                                                  priceExTax: 99)
         XCTAssertThrowsError(try inventory.debit(order: orderBookRevenue)) { error in
-            XCTAssertEqual(error as! InventoryAccount.OrderProcessingError,
-                           InventoryAccount.OrderProcessingError.wrongOrderType)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.wrongOrderType)
         }
     }
 
@@ -106,8 +106,8 @@ extension InventoryAccountTests {
                                       qty: 100,
                                       priceExTax: 99)
         XCTAssertThrowsError(try inventory.credit(order: order)) { error in
-            XCTAssertEqual(error as! InventoryAccount.OrderProcessingError,
-                           InventoryAccount.OrderProcessingError.emptyInventoryHasNoCost)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.emptyInventoryHasNoCost)
         }
 
         // evaluate
@@ -152,8 +152,8 @@ extension InventoryAccountTests {
                                       priceExTax: priceExTax)
 
         XCTAssertThrowsError(try inventory.credit(order: order)) { error in
-            XCTAssertEqual(error as! InventoryAccount.OrderProcessingError,
-                           InventoryAccount.OrderProcessingError.wrongOrderType)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.wrongOrderType)
         }
     }
 }
@@ -199,8 +199,8 @@ extension InventoryAccountTests {
                                            finishedGoodID: finishedGood.id,
                                            qty: 100)
         XCTAssertThrowsError(try inventory.debit(order: order3)) { error in
-            XCTAssertEqual(error as! InventoryAccount.OrderProcessingError,
-                           InventoryAccount.OrderProcessingError.wrongOrderType)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.wrongOrderType)
         }
     }
 
@@ -215,8 +215,8 @@ extension InventoryAccountTests {
                                                         finishedGoodID: finishedGood.id,
                                                         qty: 100)
         XCTAssertThrowsError(try inventory.credit(order: trashInventoryOrder)) { error in
-            XCTAssertEqual(error as! InventoryAccount.OrderProcessingError,
-                           InventoryAccount.OrderProcessingError.emptyInventoryHasNoCost)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.emptyInventoryHasNoCost)
         }
 
         // evaluate
@@ -252,8 +252,8 @@ extension InventoryAccountTests {
                                            finishedGoodID: finishedGood.id,
                                            qty: 100)
         XCTAssertThrowsError(try inventory.credit(order: order3)) { error in
-            XCTAssertEqual(error as! InventoryAccount.OrderProcessingError,
-                           InventoryAccount.OrderProcessingError.wrongOrderType)
+            XCTAssertEqual(error as! OrderProcessingError,
+                           OrderProcessingError.wrongOrderType)
         }
     }
 }

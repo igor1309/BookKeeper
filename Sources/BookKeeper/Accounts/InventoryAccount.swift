@@ -32,7 +32,7 @@ extension InventoryAccount {
     public func cost() -> Double? {
         /// Note:
         ///
-        ///     For modeling we allow qty, amount and cost  be negative
+        ///     For modeling we allow qty, amount and cost to be negative
         ///
         guard qty != 0 else { return nil }
 
@@ -43,11 +43,7 @@ extension InventoryAccount {
 // MARK: - Order Processing
 #warning("finish with documentation - you can do better")
 extension InventoryAccount: OrderProcessingAccount {
-    public enum OrderProcessingError: Error {
-        case wrongOrderType
-        case emptyInventoryHasNoCost
-    }
-
+    
     /// `Debit`.
     /// Inventory Account is `active` account hence `increase` is recorded by `debit` on the account.
     /// The reasons for `inventory increase` are:
@@ -59,6 +55,7 @@ extension InventoryAccount: OrderProcessingAccount {
     /// When finished Goods are moved from production floor
     ///
     public mutating func debit<Order: OrderProtocol>(order: Order) throws {
+
         switch order.orderType {
             case .salesReturn(let cost),
                  .produced(let cost),
@@ -66,6 +63,7 @@ extension InventoryAccount: OrderProcessingAccount {
                 let amount = Double(order.qty) * cost
                 self.amount += amount
                 self.qty += order.qty
+                
             default:
                 throw OrderProcessingError.wrongOrderType
         }
