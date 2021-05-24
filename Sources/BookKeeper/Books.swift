@@ -85,31 +85,6 @@ extension Books: CustomStringConvertible {
     }
 }
 
-// MARK: - Double Entry
-
-public extension Books {
-    func doubleEntry<Account1: SimpleAccount, Account2: SimpleAccount>(
-        debitAccount: inout Account1,
-        creditAccount: inout Account2,
-        amount: Double
-    ) throws {
-
-        let debitBackup = debitAccount
-        let creditBackup = creditAccount
-
-        do {
-            try debitAccount.debit(amount: amount)
-            try creditAccount.credit(amount: amount)
-        } catch {
-            // restore backup if any account operation (debit or credit) fails
-            debitAccount = debitBackup
-            creditAccount = creditBackup
-
-            throw error
-        }
-    }
-}
-
 // MARK: - Business Operations
 public extension Books {
     /// `Booking Revenue` occurs when Finished Goods are shipped to Client:
