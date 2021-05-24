@@ -12,11 +12,8 @@ final class BooksPayInvoiceTests: XCTestCase {
         XCTAssertEqual(books.payables.balance(), 1_000_000)
 
         XCTAssertThrowsError(try books.payInvoice(amount: 800_000)) { error in
-            #warning("""
-                error has no info which account has insufficient balance, here we try to pay more than cash at hand
-                """)
           XCTAssertEqual(error as! AccountError,
-                           AccountError.insufficientBalance)
+                         AccountError.insufficientBalance(books.cashAccount))
         }
 
         try books.payInvoice(amount: 600_000)
@@ -33,12 +30,8 @@ final class BooksPayInvoiceTests: XCTestCase {
         XCTAssertEqual(books.payables.balance(), 1_000_000)
 
         XCTAssertThrowsError(try books.payInvoice(amount: 2_000_000)) { error in
-            #warning("""
-                error has no info which account has insufficient balance, here we try to pay more than owed
-                i.e. payables < payInvoice(amount:)
-                """)
             XCTAssertEqual(error as! AccountError,
-                           AccountError.insufficientBalance)
+                           AccountError.insufficientBalance(books.payables))
         }
 
         try books.payInvoice(amount: 1_000_000)

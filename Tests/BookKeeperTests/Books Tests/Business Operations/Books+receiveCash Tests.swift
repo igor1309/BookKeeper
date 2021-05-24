@@ -32,7 +32,7 @@ extension BooksTests {
 
         // cash receive fail with negative amount
         XCTAssertThrowsError(try books.receiveCash(-1_000, from: client.id)) { error in
-            XCTAssertEqual(error as! AccountError,
+            XCTAssertEqual(error as! AccountError<CashAccount>,
                            AccountError.negativeAmount)
         }
 

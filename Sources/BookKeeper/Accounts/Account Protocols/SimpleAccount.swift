@@ -9,14 +9,14 @@ public protocol SimpleAccount: AccountProtocol {
 
 public extension SimpleAccount {
     mutating func debit(amount: Double) throws {
-        guard amount >= 0 else { throw AccountError.negativeAmount}
+        guard amount >= 0 else { throw AccountError<Self>.negativeAmount}
 
         switch kind {
             case .active, .bothActivePassive:
                 self.amount += amount
             case .passive:
                 if self.amount < amount {
-                    throw AccountError.insufficientBalance
+                    throw AccountError<Self>.insufficientBalance(self)
                 } else {
                     self.amount -= amount
                 }
@@ -24,12 +24,12 @@ public extension SimpleAccount {
     }
 
     mutating func credit(amount: Double) throws {
-        guard amount >= 0 else { throw AccountError.negativeAmount}
+        guard amount >= 0 else { throw AccountError<Self>.negativeAmount}
 
         switch kind {
             case .active, .bothActivePassive:
                 if self.amount < amount {
-                    throw AccountError.insufficientBalance
+                    throw AccountError<Self>.insufficientBalance(self)
                 } else {
                     self.amount -= amount
                 }

@@ -26,7 +26,7 @@ extension BooksTests {
             try books.doubleEntry(debitAccount: &activeAccount1, creditAccount: &activeAccount2, amount: 100)
         ) { error in
             XCTAssertEqual(error as! AccountError,
-                           AccountError.insufficientBalance)
+                           AccountError.insufficientBalance(activeAccount2))
             XCTAssertEqual(activeAccount1.balance(), 0, "Account balance should be restored")
             XCTAssertEqual(activeAccount2.balance(), 0, "Account balance should be restored")
         }
@@ -52,7 +52,7 @@ extension BooksTests {
             try books.doubleEntry(debitAccount: &passiveAccount, creditAccount: &activeAccount, amount: 100)
         ) { error in
             XCTAssertEqual(error as! AccountError,
-                           AccountError.insufficientBalance)
+                           AccountError.insufficientBalance(passiveAccount))
             XCTAssertEqual(activeAccount.balance(), 0, "Account balance should be restored")
             XCTAssertEqual(passiveAccount.balance(), 0, "Account balance should be restored")
         }
@@ -83,7 +83,7 @@ extension BooksTests {
             try books.doubleEntry(debitAccount: &passiveAccount1, creditAccount: &passiveAccount2, amount: 100)
         ) { error in
             XCTAssertEqual(error as! AccountError,
-                           AccountError.insufficientBalance)
+                           AccountError.insufficientBalance(passiveAccount1))
             XCTAssertEqual(passiveAccount1.balance(), 0, "Account balance should be restored")
             XCTAssertEqual(passiveAccount2.balance(), 0, "Account balance should be restored")
         }
