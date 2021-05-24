@@ -6,6 +6,7 @@ public struct Books {
     public var finishedGoods: [FinishedGood.ID: FinishedGood]
     public var clients: [Client.ID: Client]
 
+    public var cashAccount: CashAccount
     public var revenueAccount: RevenueAccount
     public var taxLiabilities: TaxLiabilities
 
@@ -13,6 +14,7 @@ public struct Books {
                 wips: [WorkInProgress.ID: WorkInProgress]? = nil,
                 finishedGoods: [FinishedGood.ID: FinishedGood]? = nil,
                 clients: [Client.ID: Client]? = nil,
+                cashAccount: CashAccount? = nil,
                 revenueAccount: RevenueAccount? = nil,
                 taxLiabilities: TaxLiabilities? = nil
     ) {
@@ -20,6 +22,7 @@ public struct Books {
         self.wips = wips ?? [:]
         self.finishedGoods = finishedGoods ?? [:]
         self.clients = clients ?? [:]
+        self.cashAccount = cashAccount ?? .init()
         self.revenueAccount = revenueAccount ?? .init()
         self.taxLiabilities = taxLiabilities ?? .init()
     }
@@ -62,6 +65,9 @@ extension Books {
         clients[id]
     }
 
+    public var cashBalance: Double {
+        cashAccount.balance()
+    }
     public var revenueAccountBalance: Double {
         revenueAccount.balance()
     }
@@ -87,6 +93,17 @@ extension Books: CustomStringConvertible {
 
 // MARK: - Business Operations
 public extension Books {
+
+    enum BooksError: Error {
+        case incorrectOrderType
+        case unknownClient
+        case unknownFinishedGood
+        case unknownWorkInProgress
+        case costOfProductNotDefined
+
+        case undefinedAccount
+    }
+
     /// `Booking Revenue` occurs when Finished Goods are shipped to Client:
     /// delivery started by goods leaving the warehouse.
     ///
@@ -142,17 +159,17 @@ public extension Books {
             for example, look at Composable Architecture
             https://github.com/pointfreeco/swift-composable-architecture
             """)
-        guard let receivablesBefore = clients[clientID]?.receivables else {
+        guard let receivablesBackup = clients[clientID]?.receivables else {
             throw BooksError.unknownClient
         }
-        guard let cogsBefore = finishedGoods[finishedGoodID]?.cogs else {
+        guard let cogsBackup = finishedGoods[finishedGoodID]?.cogs else {
             throw BooksError.unknownFinishedGood
         }
-        guard let inventoryBefore = finishedGoods[finishedGoodID]?.inventory else {
+        guard let inventoryBackup = finishedGoods[finishedGoodID]?.inventory else {
             throw BooksError.unknownFinishedGood
         }
-        let revenueAccountBefore = revenueAccount
-        let taxLiabilitiesBefore = taxLiabilities
+        let revenueAccountBackup = revenueAccount
+        let taxLiabilitiesBackup = taxLiabilities
 
         do {
             /// 1. For amount including Value Added Tax (VAT):
@@ -186,22 +203,14 @@ public extension Books {
             try finishedGoods[finishedGoodID]?.inventory.credit(order: order)
         } catch let error {
             /// `restore` to before-state (`undo` changes)
-            clients[clientID]?.receivables = receivablesBefore
-            revenueAccount = revenueAccountBefore
-            taxLiabilities = taxLiabilitiesBefore
-            finishedGoods[finishedGoodID]?.cogs = cogsBefore
-            finishedGoods[finishedGoodID]?.inventory = inventoryBefore
+            clients[clientID]?.receivables = receivablesBackup
+            revenueAccount = revenueAccountBackup
+            taxLiabilities = taxLiabilitiesBackup
+            finishedGoods[finishedGoodID]?.cogs = cogsBackup
+            finishedGoods[finishedGoodID]?.inventory = inventoryBackup
 
             throw error
         }
-    }
-
-    enum BooksError: Error {
-        case incorrectOrderType
-        case unknownClient
-        case unknownFinishedGood
-        case unknownWorkInProgress
-        case costOfProductNotDefined
     }
 
     /// `Record Finished Goods`
@@ -217,10 +226,10 @@ public extension Books {
 
         /// `Save State`
         /// See comment for function bookRevenue(for:)
-        guard let finishedGoodsInventory = finishedGoods[finishedGoodID]?.inventory else {
+        guard let finishedGoodsInventoryBackup = finishedGoods[finishedGoodID]?.inventory else {
             throw BooksError.unknownFinishedGood
         }
-        guard let wipsInventory = wips[wipID]?.inventory else {
+        guard let wipsInventoryBackup = wips[wipID]?.inventory else {
             throw BooksError.unknownWorkInProgress
         }
 
@@ -229,8 +238,8 @@ public extension Books {
             try wips[wipID]?.inventory.credit(order: order)
         } catch let error {
             /// `restore` to before-state (`undo` changes)
-            finishedGoods[finishedGoodID]?.inventory = finishedGoodsInventory
-            wips[wipID]?.inventory = wipsInventory
+            finishedGoods[finishedGoodID]?.inventory = finishedGoodsInventoryBackup
+            wips[wipID]?.inventory = wipsInventoryBackup
 
             throw error
         }

@@ -15,6 +15,7 @@ final class BooksTests: XCTestCase {
         XCTAssert(books.wipsAll().isEmpty)
         XCTAssert(books.finishedGoodsAll().isEmpty)
         XCTAssert(books.clientsAll().isEmpty)
+        XCTAssertEqual(books.cashBalance, 0)
         XCTAssertEqual(books.revenueAccountBalance, 0)
         XCTAssertEqual(books.taxLiabilitiesBalance, 0)
     }
@@ -96,19 +97,6 @@ final class BooksTests: XCTestCase {
         XCTAssertEqual(books.client(forID: client.id), client)
     }
 
-    func testRevenueAccountBalance() {
-        let books: Books = .init()
-        XCTAssertEqual(books.revenueAccountBalance, 0)
-
-        XCTFail("finish test: perform operation and confirm account changed")
-    }
-    func testTaxLiabilitiesBalance() {
-        let books: Books = .init()
-        XCTAssertEqual(books.taxLiabilitiesBalance, 0)
-
-        XCTFail("finish test: perform operation and confirm account changed")
-    }
-
     func testDescription() throws {
         var books: Books = .init()
         XCTAssertEqual(books.description,
@@ -139,7 +127,7 @@ final class BooksTests: XCTestCase {
                        ["Finished Goods:\n\tFinishedGood(inventory: Inventory(amount: 0.0, qty: 0), cogs: COGS(0.0))\nClients:\n\tClient(receivables: AccountReceivable(0.0))\nRevenue: 0.0\nTax Liabilities: 0.0"],
                        "Using array to see escaped special characters")
 
-        XCTFail("finish with test: test with some products, clents. etc - after operations")
+        XCTFail("finish with test: test with some products, clients. etc - after operations")
     }
 }
 
