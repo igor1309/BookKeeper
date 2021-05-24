@@ -26,13 +26,13 @@ final class InventoryOrderTests: XCTestCase {
 
     //    func testDescription() {
     //        XCTAssertEqual(inventoryOrderProducedProductNoInventory.description,
-    //                       "Client(receivables: AccountReceivable(0.0))")
+    //                       "Client(receivables: AccountsReceivable(0.0))")
     //        XCTAssertEqual(inventoryOrderProduced.description,
-    //                       "Client(receivables: AccountReceivable(0.0))")
+    //                       "Client(receivables: AccountsReceivable(0.0))")
     //        XCTAssertEqual(inventoryOrderTrashedProductNoInventory.description,
-    //                       "Client(receivables: AccountReceivable(0.0))")
+    //                       "Client(receivables: AccountsReceivable(0.0))")
     //        XCTAssertEqual(inventoryOrderTrashed.description,
-    //                       "Client(receivables: AccountReceivable(9900.0))")
+    //                       "Client(receivables: AccountsReceivable(9900.0))")
     //    }
 
 }

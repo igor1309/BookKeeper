@@ -1,4 +1,4 @@
-public struct AccountReceivable: SimpleAccount {
+public struct AccountsReceivable: SimpleAccount {
     public static let kind: AccountKind = .active
     public static let accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.accountsReceivable)))
 
@@ -9,9 +9,9 @@ public struct AccountReceivable: SimpleAccount {
     }
 }
 
-extension AccountReceivable: CustomStringConvertible {
+extension AccountsReceivable: CustomStringConvertible {
     #warning("kind and accountGroup properties are not used in description")
     public var description: String {
-        "AccountReceivable(\(amount))"
+        "AccountsReceivable(\(amount))"
     }
 }

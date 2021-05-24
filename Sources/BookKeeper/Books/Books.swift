@@ -5,8 +5,11 @@ public struct Books {
     public var wips: [WorkInProgress.ID: WorkInProgress]
     public var finishedGoods: [FinishedGood.ID: FinishedGood]
     public var clients: [Client.ID: Client]
+    public var fixedAssets: [FixedAsset.ID: FixedAsset]
 
     public var cashAccount: CashAccount
+    public var accumulatedDepreciation: AccumulatedDepreciation
+    public var payables: AccountsPayable
     public var revenueAccount: RevenueAccount
     public var taxLiabilities: TaxLiabilities
 
@@ -14,7 +17,10 @@ public struct Books {
                 wips: [WorkInProgress.ID: WorkInProgress]? = nil,
                 finishedGoods: [FinishedGood.ID: FinishedGood]? = nil,
                 clients: [Client.ID: Client]? = nil,
+                fixedAssets: [FixedAsset.ID: FixedAsset]? = nil,
                 cashAccount: CashAccount? = nil,
+                accumulatedDepreciation: AccumulatedDepreciation? = nil,
+                payables: AccountsPayable? = nil,
                 revenueAccount: RevenueAccount? = nil,
                 taxLiabilities: TaxLiabilities? = nil
     ) {
@@ -22,7 +28,10 @@ public struct Books {
         self.wips = wips ?? [:]
         self.finishedGoods = finishedGoods ?? [:]
         self.clients = clients ?? [:]
+        self.fixedAssets = fixedAssets ?? [:]
         self.cashAccount = cashAccount ?? .init()
+        self.accumulatedDepreciation = accumulatedDepreciation ?? .init()
+        self.payables = payables ?? .init()
         self.revenueAccount = revenueAccount ?? .init()
         self.taxLiabilities = taxLiabilities ?? .init()
     }
@@ -41,6 +50,7 @@ public extension Books {
     }
 
     var cashBalance: Double { cashAccount.balance() }
+    var accumulatedDepreciationBalance: Double { accumulatedDepreciation.balance() }
     var revenueAccountBalance: Double { revenueAccount.balance() }
     var taxLiabilitiesBalance: Double { taxLiabilities.balance() }
 
@@ -69,6 +79,8 @@ public extension Books {
         case unknownFinishedGood
         case unknownWorkInProgress
         case costOfProductNotDefined
+        case incorrectLifetime
+        case nonPositiveAmount
     }
 
 }

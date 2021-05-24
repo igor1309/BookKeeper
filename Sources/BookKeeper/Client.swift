@@ -12,10 +12,10 @@ public struct Client: Equatable, Hashable, Identifiable {
     /// Best polished solution is https://github.com/pointfreeco/swift-tagged/ wrapped is Swift Package.
     ///
     public let id: UUID
-    public var receivables: AccountReceivable
+    public var receivables: AccountsReceivable
 
     public init(id: UUID = UUID(),
-                receivables: AccountReceivable = .init()
+                receivables: AccountsReceivable = .init()
     ) {
         self.id = id
         self.receivables = receivables

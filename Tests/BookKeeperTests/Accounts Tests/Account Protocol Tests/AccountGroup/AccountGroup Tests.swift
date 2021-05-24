@@ -2,14 +2,14 @@ import XCTest
 import BookKeeper
 
 final class AccountGroupTests: XCTestCase {
-    var accountReceivableZero: AccountReceivable!
+    var accountsReceivableZero: AccountsReceivable!
     var cogsAccount: COGS!
     var inventoryAccount: InventoryAccount!
     var revenueAccount: RevenueAccount!
     var taxLiabilities: TaxLiabilities!
 
     override func setUpWithError() throws {
-        accountReceivableZero = .init(amount: 10_000)
+        accountsReceivableZero = .init(amount: 10_000)
         cogsAccount = .init(amount: 10_000)
         inventoryAccount = .init(qty: 1_000, amount: 59_000)
         revenueAccount = .init(amount: 20_000)
@@ -62,7 +62,7 @@ final class AccountGroupTests: XCTestCase {
 
     func testBalance() {
         XCTFail("finish with this test")
-        //        let accounts: [Any] = [accountReceivable,
+        //        let accounts: [Any] = [accountsReceivable,
         //                                        cogs,
         //                                        inventory,
         //                                        revenue,

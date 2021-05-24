@@ -15,7 +15,10 @@ final class BooksTests: XCTestCase {
         XCTAssert(books.wipsAll().isEmpty)
         XCTAssert(books.finishedGoodsAll().isEmpty)
         XCTAssert(books.clientsAll().isEmpty)
+        XCTAssert(books.fixedAssetsAll().isEmpty)
         XCTAssertEqual(books.cashBalance, 0)
+        XCTAssertEqual(books.accumulatedDepreciationBalance, 0)
+        XCTAssertEqual(books.payables.balance(), 0)
         XCTAssertEqual(books.revenueAccountBalance, 0)
         XCTAssertEqual(books.taxLiabilitiesBalance, 0)
     }
@@ -109,13 +112,13 @@ final class BooksTests: XCTestCase {
                         Finished Goods:
                         \tFinishedGood(inventory: Inventory(amount: 0.0, qty: 0), cogs: COGS(0.0))
                         Clients:
-                        \tClient(receivables: AccountReceivable(0.0))
+                        \tClient(receivables: AccountsReceivable(0.0))
                         Revenue: 0.0
                         Tax Liabilities: 0.0
                         """])
 
         XCTAssertEqual([books.description],
-                       ["Finished Goods:\n\tFinishedGood(inventory: Inventory(amount: 0.0, qty: 0), cogs: COGS(0.0))\nClients:\n\tClient(receivables: AccountReceivable(0.0))\nRevenue: 0.0\nTax Liabilities: 0.0"],
+                       ["Finished Goods:\n\tFinishedGood(inventory: Inventory(amount: 0.0, qty: 0), cogs: COGS(0.0))\nClients:\n\tClient(receivables: AccountsReceivable(0.0))\nRevenue: 0.0\nTax Liabilities: 0.0"],
                        "Using array to see escaped special characters")
 
         XCTFail("finish with test: test with some products, clients. etc - after operations")

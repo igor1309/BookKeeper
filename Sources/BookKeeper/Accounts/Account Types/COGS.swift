@@ -8,6 +8,11 @@
 /// billable hours (though the term may be changed to "cost of services"). In a retail or wholesale
 /// business, the cost of goods sold is likely to be merchandise that was bought from a manufacturer.
 /// https://www.accountingtools.com/articles/2017/5/4/cost-of-goods-sold
+///
+/// COGS is recognized in the same period as the related revenue, so that revenues and
+/// related expenses are always matched against each other (the matching principle);
+/// the result should be recognition of the proper amount of profit or loss in an accounting period.
+/// https://www.accountingtools.com/articles/what-is-cogs-cost-of-goods-sold.html
 public struct COGS: SimpleAccount {
     public static let kind: AccountKind = .active
     public static let accountGroup: AccountGroup = .incomeStatement(.expense(.cogs))

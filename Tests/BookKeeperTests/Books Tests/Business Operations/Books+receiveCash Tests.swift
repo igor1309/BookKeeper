@@ -15,7 +15,7 @@ extension BooksTests {
         }
 
         // add new client
-        let receivables: AccountReceivable = .init(amount: 1_500)
+        let receivables: AccountsReceivable = .init(amount: 1_500)
         let client: Client = .init(receivables: receivables)
         books.add(client: client)
 

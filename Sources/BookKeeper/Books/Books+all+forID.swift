@@ -1,4 +1,4 @@
-// MARK: - All & forID
+// MARK: - All
 public extension Books {
     func rawMaterialsAll() -> [RawMaterial.ID: RawMaterial] {
         rawMaterials
@@ -13,6 +13,14 @@ public extension Books {
         clients
     }
 
+    func fixedAssetsAll() -> [FixedAsset.ID: FixedAsset] {
+        fixedAssets
+    }
+
+}
+
+// MARK: - forID
+public extension Books {
     func rawMaterial(forID id: RawMaterial.ID) -> RawMaterial? {
         rawMaterials[id]
     }
@@ -24,6 +32,9 @@ public extension Books {
     }
     func client(forID id: Client.ID) -> Client? {
         clients[id]
+    }
+    func fixedAsset(forID id: FixedAsset.ID) -> FixedAsset? {
+        fixedAssets[id]
     }
 
 }

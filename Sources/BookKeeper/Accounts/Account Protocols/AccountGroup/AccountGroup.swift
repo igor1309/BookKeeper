@@ -67,6 +67,7 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
             case inventory = "Inventory"
         }
 
+        #warning("rename to Fixed Asset?")
         public enum PropertyPlantEquipment: String, Equatable, Hashable, CaseIterable {
             case land = "Land"
             case buildings = "Buildings"

@@ -13,11 +13,11 @@ final class ClientTests: XCTestCase {
     func testDescription() {
         let clientZero: Client = .init()
         XCTAssertEqual(clientZero.description,
-                       "Client(receivables: AccountReceivable(0.0))")
+                       "Client(receivables: AccountsReceivable(0.0))")
 
         let client: Client = Client(receivables: .init(amount: 9_900))
         XCTAssertEqual(client.description,
-                       "Client(receivables: AccountReceivable(9900.0))")
+                       "Client(receivables: AccountsReceivable(9900.0))")
     }
 
 }

@@ -2,7 +2,7 @@ import XCTest
 // @testable
 import BookKeeper
 
-// MARK: - All & forID
+// MARK: - All
 extension BooksTests {
 
     func testRawMaterialsAll() { XCTFail("finish test") }
@@ -12,6 +12,13 @@ extension BooksTests {
     func testFinishedGoodsAll() { XCTFail("finish test") }
 
     func testClientsAll() { XCTFail("finish test") }
+
+    func testFixedAssetsAll() { XCTFail("finish test") }
+
+}
+
+// MARK: - forID
+extension BooksTests {
 
     func testRawMaterialForID() {
         var books: Books = .init()
@@ -47,6 +54,16 @@ extension BooksTests {
 
         books.add(client: client)
         XCTAssertEqual(books.client(forID: client.id), client)
+    }
+
+    func testFixedAssetForID() {
+        let fixedAsset: FixedAsset = .init(name: "freezer", lifetime: 7, value: 1_000_000)
+
+        let books0: Books = .init()
+        XCTAssertNil(books0.fixedAsset(forID: fixedAsset.id))
+
+        let books: Books = .init(fixedAssets: [fixedAsset.id: fixedAsset])
+        XCTAssertEqual(books.fixedAsset(forID: fixedAsset.id), fixedAsset)
     }
 
 }
