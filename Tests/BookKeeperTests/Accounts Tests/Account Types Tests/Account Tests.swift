@@ -1,7 +1,7 @@
 import XCTest
 import BookKeeper
 
-final class SimpleAccountTests: XCTestCase {
+final class AccountTests: XCTestCase {
     #warning("rename and rewrite test because Simple account is now struct not protocol")
     func test_RENAME_THIS_FUNC_DebitCreditSimpleAccountDefaultImplementation() throws {
         // active account

@@ -109,7 +109,7 @@ extension BooksTests {
 
         let finishedGoods: [FinishedGood.ID: FinishedGood] = [finishedGood.id: finishedGood]
         let clients: [Client.ID: Client] = [client.id: client]
-        let revenueAccount: RevenueAccount = .init(amount: 999)
+        let revenueAccount: Account<Revenue> = .init(amount: 999)
         let taxLiabilities: Account<TaxLiabilities> = .init(amount: 111)
 
         var books: Books = .init(finishedGoods: finishedGoods,

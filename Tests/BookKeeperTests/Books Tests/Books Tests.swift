@@ -32,7 +32,7 @@ final class BooksTests: XCTestCase {
 
         let finishedGoods: [FinishedGood.ID: FinishedGood] = [finishedGood.id: finishedGood]
         let clients: [Client.ID: Client] = [client.id: client]
-        let revenueAccount: RevenueAccount = .init(amount: 999)
+        let revenueAccount: Account<Revenue> = .init(amount: 999)
         let taxLiabilities: Account<TaxLiabilities> = .init(amount: 111)
 
         let books: Books = .init(finishedGoods: finishedGoods,
@@ -77,7 +77,7 @@ final class BooksTests: XCTestCase {
         let books0: Books = .init()
         XCTAssertEqual(books0.revenueAccountBalance, 0)
 
-        let revenueAccount = RevenueAccount(amount: 999)
+        let revenueAccount: Account<Revenue> = .init(amount: 999)
         let books: Books = .init(revenueAccount: revenueAccount)
         XCTAssertEqual(books.revenueAccountBalance, 999)
     }

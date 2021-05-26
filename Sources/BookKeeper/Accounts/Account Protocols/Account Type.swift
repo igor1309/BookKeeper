@@ -1,3 +1,10 @@
+/// `AccountTypeProtocol` defines `fantom types` with static properties
+/// intended to be used with `Account<AccountType>`.
+///
+/// Motivation: prevent errors like setting cash account value to revenue account by
+/// using different types:
+/// `Account<Cash> and Account<Revenue>` respectively.
+///
 public protocol AccountTypeProtocol: Equatable {
     static var defaultName: String { get }
     static var kind: AccountKind { get }
@@ -20,8 +27,8 @@ public enum Cash: AccountTypeProtocol {
 /// Cost of goods sold is the accumulated total of all costs used to create a product or service,
 /// which has been sold.
 ///
-/// These costs fall into the general sub-categories of `direct labor`,
-/// `materials`, and `overhead`. In a service business, the cost of goods sold is considered
+/// These costs fall into the general sub-categories of `direct labor`, `materials`,
+/// and `overhead`. In a service business, the cost of goods sold is considered
 /// to be the `labor`, `payroll taxes`, and `benefits` of those people who generate
 /// billable hours (though the term may be changed to "cost of services"). In a retail or wholesale
 /// business, the cost of goods sold is likely to be merchandise that was bought from a manufacturer.
@@ -85,4 +92,10 @@ public enum TaxLiabilities: AccountTypeProtocol {
     public static var defaultName = "Tax Liabilities"
     public static let kind = AccountKind.passive
     public static let group = AccountGroup.balanceSheet(.liability(.currentLiability(.taxesPayable)))
+}
+
+public enum Revenue: AccountTypeProtocol {
+    public static var defaultName = "Revenue"
+    public static let kind = AccountKind.passive
+    public static let group = AccountGroup.incomeStatement(.revenue)
 }

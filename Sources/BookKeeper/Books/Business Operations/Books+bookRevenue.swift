@@ -83,14 +83,14 @@ public extension Books {
             ///     - credit Revenue (Product).
             ///
             try clients[clientID]?.receivables.debit(amount: order.amountWithTax)
-            try revenueAccount.credit(salesOrder: order)
+            try revenueAccount.credit(amount: order.amountWithTax)
 
             /// 2. For amount of VAT:
             ///
             ///     - debit Revenue (Product).
             ///     - credit Tax Liabilities Account (General Ledger).
             ///
-            try revenueAccount.debit(salesOrder: order)
+            try revenueAccount.debit(amount: order.tax)
             try taxLiabilities.credit(amount: order.tax)
 
             guard let cost = finishedGoods[finishedGoodID]?.cost() else {

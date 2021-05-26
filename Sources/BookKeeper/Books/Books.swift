@@ -14,7 +14,7 @@ public struct Books {
     public var taxLiabilities: Account<TaxLiabilities>
 
     // income statement
-    public var revenueAccount: RevenueAccount
+    public var revenueAccount: Account<Revenue>
     public var depreciationExpensesAccount: Account<DepreciationExpenses>
 
     public init(rawMaterials: [RawMaterial.ID: RawMaterial] = [:],
@@ -25,7 +25,7 @@ public struct Books {
                 cashAccount: Account<Cash> = .init(),
                 accumulatedDepreciation: Account<AccumulatedDepreciation> = .init(),
                 payables: Account<AccountsPayable> = .init(),
-                revenueAccount: RevenueAccount = .init(),
+                revenueAccount: Account<Revenue> = .init(),
                 depreciationExpensesAccount: Account<DepreciationExpenses> = .init(),
                 taxLiabilities: Account<TaxLiabilities> = .init()
     ) {

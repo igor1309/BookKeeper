@@ -6,13 +6,7 @@
 /// Journal entries for inventory transactions — AccountingTools
 /// https://www.accountingtools.com/articles/2017/5/13/journal-entries-for-inventory-transactions
 ///
-public struct InventoryAccount: AccountProtocol {
-    public static let kind: AccountKind = .active
-    public static let accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory)))
-
-    public var kind: AccountKind { Self.kind }
-    public var group: AccountGroup { Self.accountGroup }
-
+public struct InventoryAccount {
     public var qty: Int
     public var amount: Double
 
@@ -20,6 +14,14 @@ public struct InventoryAccount: AccountProtocol {
         self.qty = qty
         self.amount = amount
     }
+}
+
+extension InventoryAccount: AccountProtocol {
+    public static let kind: AccountKind = .active
+    public static let accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory)))
+    
+    public var kind: AccountKind { Self.kind }
+    public var group: AccountGroup { Self.accountGroup }
 }
 
 extension InventoryAccount: CustomStringConvertible {

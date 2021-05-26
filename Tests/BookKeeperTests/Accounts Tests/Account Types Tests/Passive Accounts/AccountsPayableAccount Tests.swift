@@ -2,7 +2,7 @@ import XCTest
 // @testable
 import BookKeeper
 
-extension SimpleAccountTests {
+extension AccountTests {
     func testAccountsPayableAccount() {
         XCTAssertEqual(Account<AccountsPayable>.init().kind,
                        .passive)

@@ -5,7 +5,7 @@ final class AccountGroupTests: XCTestCase {
     var accountsReceivable: Account<AccountsReceivable>!
     var cogsAccount: Account<COGS>!
     var inventoryAccount: InventoryAccount!
-    var revenueAccount: RevenueAccount!
+    var revenueAccount: Account<Revenue>!
     var taxLiabilities: Account<TaxLiabilities>!
 
     override func setUpWithError() throws {
