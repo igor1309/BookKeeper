@@ -10,8 +10,8 @@ extension BooksTests {
         XCTAssert(books.clientsAll().isEmpty)
 
         // create sales order and book revenue
-        let client: Client = .init()
-        let finishedGood: FinishedGood = .init()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
         let qty = 100
         let priceExTax = 99.0
 
@@ -101,15 +101,16 @@ extension BooksTests {
 
     func testBookRevenueWithNonEmptyBooks() throws {
         // initiate books (as in testInitWithParameters())
-        let finishedGood: FinishedGood = .init(inventory: .init(qty: 1_000, amount: 49_000),
-                                               cogs: .init())
-
-        let client: Client = .init()
+        let finishedGood: FinishedGood = .init(
+            name: "Finished",
+            inventory: .init(qty: 1_000, amount: 49_000)
+        )
+        let client: Client = .sample
 
         let finishedGoods: [FinishedGood.ID: FinishedGood] = [finishedGood.id: finishedGood]
         let clients: [Client.ID: Client] = [client.id: client]
         let revenueAccount: RevenueAccount = .init(amount: 999)
-        let taxLiabilities: TaxLiabilities = .init(amount: 111)
+        let taxLiabilities: Account<TaxLiabilities> = .init(amount: 111)
 
         var books: Books = .init(finishedGoods: finishedGoods,
                                  clients: clients,

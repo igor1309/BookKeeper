@@ -16,7 +16,7 @@ public extension Books {
             }
 
             // debit
-            try depreciationExpenses.debit(amount: depreciationAmountPerMonth)
+            try depreciationExpensesAccount.debit(amount: depreciationAmountPerMonth)
 
             // credit
             fixedAssets[assetID]?.depreciation += depreciationAmountPerMonth

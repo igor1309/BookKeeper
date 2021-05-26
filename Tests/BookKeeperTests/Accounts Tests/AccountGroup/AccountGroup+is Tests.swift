@@ -3,7 +3,7 @@ import BookKeeper
 
 extension AccountGroupTests {
     func testAccountGroupIsAsset() {
-        XCTAssert(accountsReceivableZero.group.isAsset)
+        XCTAssert(accountsReceivable.group.isAsset)
         XCTAssertFalse(cogsAccount.group.isAsset)
         XCTAssert(inventoryAccount.group.isAsset)
         XCTAssertFalse(revenueAccount.group.isAsset)
@@ -11,7 +11,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsCurrentAsset() {
-        XCTAssert(accountsReceivableZero.group.isCurrentAsset)
+        XCTAssert(accountsReceivable.group.isCurrentAsset)
         XCTAssertFalse(cogsAccount.group.isCurrentAsset)
         XCTAssert(inventoryAccount.group.isCurrentAsset)
         XCTAssertFalse(revenueAccount.group.isCurrentAsset)
@@ -19,7 +19,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsPropertyPlantEquipment() {
-        XCTAssertFalse(accountsReceivableZero.group.isPropertyPlantEquipment)
+        XCTAssertFalse(accountsReceivable.group.isPropertyPlantEquipment)
         XCTAssertFalse(cogsAccount.group.isPropertyPlantEquipment)
         XCTAssertFalse(inventoryAccount.group.isPropertyPlantEquipment)
         XCTAssertFalse(revenueAccount.group.isPropertyPlantEquipment)
@@ -27,7 +27,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsLiability() {
-        XCTAssertFalse(accountsReceivableZero.group.isLiability)
+        XCTAssertFalse(accountsReceivable.group.isLiability)
         XCTAssertFalse(cogsAccount.group.isLiability)
         XCTAssertFalse(inventoryAccount.group.isLiability)
         XCTAssertFalse(revenueAccount.group.isLiability)
@@ -35,7 +35,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsCurrentLiability() {
-        XCTAssertFalse(accountsReceivableZero.group.isCurrentLiability)
+        XCTAssertFalse(accountsReceivable.group.isCurrentLiability)
         XCTAssertFalse(cogsAccount.group.isCurrentLiability)
         XCTAssertFalse(inventoryAccount.group.isCurrentLiability)
         XCTAssertFalse(revenueAccount.group.isCurrentLiability)
@@ -43,7 +43,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsLongtermLiability() {
-        XCTAssertFalse(accountsReceivableZero.group.isLongtermLiability)
+        XCTAssertFalse(accountsReceivable.group.isLongtermLiability)
         XCTAssertFalse(cogsAccount.group.isLongtermLiability)
         XCTAssertFalse(inventoryAccount.group.isLongtermLiability)
         XCTAssertFalse(revenueAccount.group.isLongtermLiability)
@@ -51,7 +51,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsEquity() {
-        XCTAssertFalse(accountsReceivableZero.group.isEquity)
+        XCTAssertFalse(accountsReceivable.group.isEquity)
         XCTAssertFalse(cogsAccount.group.isEquity)
         XCTAssertFalse(inventoryAccount.group.isEquity)
         XCTAssertFalse(revenueAccount.group.isEquity)
@@ -60,7 +60,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsRevenue() {
-        XCTAssertFalse(accountsReceivableZero.group.isRevenue)
+        XCTAssertFalse(accountsReceivable.group.isRevenue)
         XCTAssertFalse(cogsAccount.group.isRevenue)
         XCTAssertFalse(inventoryAccount.group.isRevenue)
         XCTAssert(revenueAccount.group.isRevenue)
@@ -68,7 +68,7 @@ extension AccountGroupTests {
     }
 
     func testAccountGroupIsExpense() {
-        XCTAssertFalse(accountsReceivableZero.group.isExpense)
+        XCTAssertFalse(accountsReceivable.group.isExpense)
         XCTAssert(cogsAccount.group.isExpense)
         XCTAssertFalse(inventoryAccount.group.isExpense)
         XCTAssertFalse(revenueAccount.group.isExpense)

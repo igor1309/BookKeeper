@@ -13,11 +13,11 @@ public struct SalesOrder: OrderProtocol {
         }
     }
 
-//    public enum OrderType: Equatable {
-//        case bookRevenue
-//        /// when products are returns we should provide cost (from previous records)
-//        case salesReturn(cost: Double)
-//    }
+    //    public enum OrderType: Equatable {
+    //        case bookRevenue
+    //        /// when products are returns we should provide cost (from previous records)
+    //        case salesReturn(cost: Double)
+    //    }
 
     public let orderType: OrderType
     public let clientID: Client.ID
@@ -44,5 +44,11 @@ public struct SalesOrder: OrderProtocol {
         self.qty = qty
         self.priceExTax = priceExTax
         self.taxRate = taxRate
+    }
+}
+
+extension SalesOrder: CustomStringConvertible {
+    public var description: String {
+        "Sales Order(\(orderType) \(amountExTax): \(qty) @ \(priceExTax), tax: \(taxRate))"
     }
 }

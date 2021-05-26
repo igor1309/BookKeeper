@@ -19,11 +19,11 @@ public extension Books {
     ///   - creditAccount: Account to be credited.
     ///   - amount: Transaction amount.
     /// - Throws: Error if debit or credit operation fails, for example if balance is not sufficient.
-    func doubleEntry<DebitAccount: SimpleAccount, CreditAccount: SimpleAccount>(
-        debitAccount: inout DebitAccount,
-        creditAccount: inout CreditAccount,
+    func doubleEntry<T1, T2>(
+        debitAccount: inout Account<T1>,
+        creditAccount: inout Account<T2>,
         amount: Double
-    ) throws {
+    ) throws where T1: AccountTypeProtocol, T2: AccountTypeProtocol{
 
         let debitAccountBackup = debitAccount
         let creditAccountBackup = creditAccount

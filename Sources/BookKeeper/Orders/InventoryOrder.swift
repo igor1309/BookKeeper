@@ -34,3 +34,10 @@ public struct InventoryOrder: OrderProtocol {
         self.qty = qty
     }
 }
+
+
+extension InventoryOrder: CustomStringConvertible {
+    public var description: String {
+        "Sales Order(\(orderType): \(qty))"
+    }
+}

@@ -40,7 +40,7 @@ extension BooksTests {
 
     func testFinishedGoodForID() {
         var books: Books = .init()
-        let finishedGood: FinishedGood = .init()
+        let finishedGood: FinishedGood = .sample
         XCTAssertNil(books.finishedGood(forID: finishedGood.id))
 
         books.add(finishedGood: finishedGood)
@@ -49,7 +49,7 @@ extension BooksTests {
 
     func testClientForID() {
         var books: Books = .init()
-        let client: Client = .init()
+        let client: Client = .sample
         XCTAssertNil(books.client(forID: client.id))
 
         books.add(client: client)

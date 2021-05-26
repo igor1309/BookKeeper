@@ -26,14 +26,14 @@ final class BooksTests: XCTestCase {
     func testInitWithParameters() {
         // initiate books
         let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
-        let finishedGood: FinishedGood = .init(inventory: inventory, cogs: COGS())
+        let finishedGood: FinishedGood = .init(name: "finished", inventory: inventory)
 
-        let client: Client = .init()
+        let client: Client = .sample
 
         let finishedGoods: [FinishedGood.ID: FinishedGood] = [finishedGood.id: finishedGood]
         let clients: [Client.ID: Client] = [client.id: client]
         let revenueAccount: RevenueAccount = .init(amount: 999)
-        let taxLiabilities: TaxLiabilities = .init(amount: 111)
+        let taxLiabilities: Account<TaxLiabilities> = .init(amount: 111)
 
         let books: Books = .init(finishedGoods: finishedGoods,
                                  clients: clients,
@@ -59,7 +59,7 @@ final class BooksTests: XCTestCase {
         var books: Books = .init()
         XCTAssert(books.isEmpty)
 
-        let client: Client = .init()
+        let client: Client = .sample
         books.add(client: client)
         XCTAssertFalse(books.isEmpty)
     }
@@ -68,7 +68,7 @@ final class BooksTests: XCTestCase {
         let books0: Books = .init()
         XCTAssertEqual(books0.cashBalance, 0)
 
-        let cash = CashAccount(amount: 999)
+        let cash: Account<Cash> = .init(amount: 999)
         let books: Books = .init(cashAccount: cash)
         XCTAssertEqual(books.cashBalance, 999)
     }
@@ -86,7 +86,7 @@ final class BooksTests: XCTestCase {
         let books0: Books = .init()
         XCTAssertEqual(books0.taxLiabilitiesBalance, 0)
 
-        let taxLiabilities = TaxLiabilities(amount: 999)
+        let taxLiabilities: Account<TaxLiabilities> = .init(amount: 999)
         let books: Books = .init(taxLiabilities: taxLiabilities)
         XCTAssertEqual(books.taxLiabilitiesBalance, 999)
     }
@@ -101,10 +101,10 @@ final class BooksTests: XCTestCase {
                        Tax Liabilities: 0.0
                        """)
 
-        let finishedGood: FinishedGood = .init()
+        let finishedGood: FinishedGood = .sample
         books.add(finishedGood: finishedGood)
 
-        let client: Client = .init()
+        let client: Client = .sample
         books.add(client: client)
 
         XCTAssertEqual([books.description],

@@ -1,24 +1,12 @@
 import XCTest
 import BookKeeper
 
-struct ActiveAccount: SimpleAccount {
-    var amount: Double
-    static var kind: AccountKind = .active
-    static var accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.cash)))
-}
-
-struct PassiveAccount: SimpleAccount {
-    var amount: Double
-    static var kind: AccountKind = .passive
-    static var accountGroup: AccountGroup = .balanceSheet(.liability(.currentLiability(.accountsPayable)))
-}
-
 extension BooksTests {
     func testDoubleEntryActiveActive() throws {
         let books: Books = .init()
 
-        var activeAccount1: ActiveAccount = .init(amount: 0)
-        var activeAccount2: ActiveAccount = .init(amount: 0)
+        var activeAccount1: Account<Cash> = .init()
+        var activeAccount2: Account<AccountsReceivable> = .init()
         XCTAssertEqual(activeAccount1.balance(), 0)
         XCTAssertEqual(activeAccount2.balance(), 0)
 
@@ -43,8 +31,8 @@ extension BooksTests {
     func testDoubleEntryActivePassive() throws {
         let books: Books = .init()
 
-        var activeAccount: ActiveAccount = .init(amount: 0)
-        var passiveAccount: PassiveAccount = .init(amount: 0)
+        var activeAccount: Account<Cash> = .init()
+        var passiveAccount: Account<AccountsPayable> = .init()
         XCTAssertEqual(activeAccount.balance(), 0)
         XCTAssertEqual(passiveAccount.balance(), 0)
 
@@ -74,8 +62,8 @@ extension BooksTests {
     func testDoubleEntryPassivePassive() throws {
         let books: Books = .init()
 
-        var passiveAccount1: PassiveAccount = .init(amount: 0)
-        var passiveAccount2: PassiveAccount = .init(amount: 0)
+        var passiveAccount1: Account<AccountsPayable> = .init()
+        var passiveAccount2: Account<TaxLiabilities> = .init()
         XCTAssertEqual(passiveAccount1.balance(), 0)
         XCTAssertEqual(passiveAccount2.balance(), 0)
 

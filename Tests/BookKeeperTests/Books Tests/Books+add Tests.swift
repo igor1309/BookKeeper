@@ -5,7 +5,7 @@ import BookKeeper
 // MARK: - Add
 extension BooksTests {
     func testAddClient() {
-        let client: Client = .init()
+        let client: Client = .sample
         var books: Books = .init()
         XCTAssert(books.clientsAll().isEmpty)
 
@@ -21,14 +21,14 @@ extension BooksTests {
         XCTAssertEqual(books.client(forID: client.id), client,
                        "Adding element with the same id should not duplicate.")
 
-        let client2: Client = .init()
+        let client2: Client = .sample
         books.add(client: client2)
         XCTAssertEqual(books.clientsAll().count, 2)
         XCTAssertEqual(books.client(forID: client2.id), client2)
     }
 
     func testAddFinishedGood() {
-        let finishedGood: FinishedGood = .init()
+        let finishedGood: FinishedGood = .sample
         var books: Books = .init()
         XCTAssert(books.finishedGoodsAll().isEmpty)
 
@@ -44,7 +44,7 @@ extension BooksTests {
         XCTAssertEqual(books.finishedGood(forID: finishedGood.id), finishedGood,
                        "Adding element with the same id should not duplicate.")
 
-        let finishedGood2: FinishedGood = .init()
+        let finishedGood2: FinishedGood = .sample
         books.add(finishedGood: finishedGood2)
         XCTAssertEqual(books.finishedGoodsAll().count, 2)
         XCTAssertEqual(books.finishedGood(forID: finishedGood2.id), finishedGood2)

@@ -2,34 +2,35 @@ import XCTest
 // @testable
 import BookKeeper
 
-final class AccumulatedDepreciationTests: XCTestCase {
-    func testAccumulatedDepreciationInit() {
-        XCTAssertEqual(AccumulatedDepreciation.kind, .passive)
+extension SimpleAccountTests {
+    func testAccumulatedDepreciationAccount() {
+        XCTAssertEqual(Account<AccumulatedDepreciation>.init().kind,
+                       .passive)
 
-        XCTAssertEqual(AccumulatedDepreciation.accountGroup,
+        XCTAssertEqual(Account<AccumulatedDepreciation>.init().group,
                        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
 
-        let accumulatedDepreciationZero: AccumulatedDepreciation = .init()
+        let accumulatedDepreciationZero: Account<AccumulatedDepreciation> = .init()
         XCTAssertEqual(accumulatedDepreciationZero.amount, 0)
         XCTAssertEqual(accumulatedDepreciationZero.balance(), 0)
         XCTAssertEqual(accumulatedDepreciationZero.group,
                        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
 
-        let accumulatedDepreciationWithValue: AccumulatedDepreciation = .init(amount: 10_000)
+        let accumulatedDepreciationWithValue: Account<AccumulatedDepreciation> = .init(amount: 10_000)
         XCTAssertEqual(accumulatedDepreciationWithValue.amount, 10_000)
         XCTAssertEqual(accumulatedDepreciationWithValue.balance(), 10_000)
         XCTAssertEqual(accumulatedDepreciationWithValue.group,
                        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
     }
 
-    func testDescription() {
-        let accumulatedDepreciationZero: AccumulatedDepreciation = .init()
+    func testAccumulatedDepreciationAccountDescription() {
+        let accumulatedDepreciationZero: Account<AccumulatedDepreciation> = .init()
         XCTAssertEqual(accumulatedDepreciationZero.description,
-                       "AccumulatedDepreciation(0.0)")
+                       "Accumulated Depreciation(Accumulated Depreciation Equipment (passive); 0.0)")
 
-        let accumulatedDepreciationWithValue: AccumulatedDepreciation = .init(amount: 10_000)
+        let accumulatedDepreciationWithValue: Account<AccumulatedDepreciation> = .init(amount: 10_000)
         XCTAssertEqual(accumulatedDepreciationWithValue.description,
-                       "AccumulatedDepreciation(10000.0)")
+                       "Accumulated Depreciation(Accumulated Depreciation Equipment (passive); 10000.0)")
     }
 
 }

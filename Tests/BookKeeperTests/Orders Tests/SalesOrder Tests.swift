@@ -2,15 +2,17 @@ import XCTest
 import BookKeeper
 
 final class SalesOrderTests: XCTestCase {
-    func testSalesOrderInit() {
-        let client: Client = .init()
-        let finishedGood: FinishedGood = .init()
+    func testSalesOrderToBookRevenueInit() {
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .init(name: "Finished Good")
 
-        let salesOrderBookRevenue: SalesOrder = .init(orderType: .bookRevenue,
-                                                      clientID: client.id,
-                                                      finishedGoodID: finishedGood.id,
-                                                      qty: 100,
-                                                      priceExTax: 99)
+        let salesOrderBookRevenue: SalesOrder = .init(
+            orderType: .bookRevenue,
+            clientID: client.id,
+            finishedGoodID: finishedGood.id,
+            qty: 100,
+            priceExTax: 99
+        )
         XCTAssertEqual(salesOrderBookRevenue.orderType, .bookRevenue)
         XCTAssertEqual(salesOrderBookRevenue.clientID, client.id)
         XCTAssertEqual(salesOrderBookRevenue.finishedGoodID, finishedGood.id)
@@ -21,12 +23,19 @@ final class SalesOrderTests: XCTestCase {
         XCTAssertEqual(salesOrderBookRevenue.amountExTax, 100 * 99)
         XCTAssertEqual(salesOrderBookRevenue.amountWithTax, 100 * 99 * (1 + 0.2))
         XCTAssertNil(salesOrderBookRevenue.cost)
+    }
 
-        let salesOrderSalesReturn: SalesOrder = .init(orderType: .salesReturn(cost: 49),
-                                                      clientID: client.id,
-                                                      finishedGoodID: finishedGood.id,
-                                                      qty: 100,
-                                                      priceExTax: 99)
+    func testSalesOrderSalesReturnInit() {
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .init(name: "Finished Good")
+
+        let salesOrderSalesReturn: SalesOrder = .init(
+            orderType: .salesReturn(cost: 49),
+            clientID: client.id,
+            finishedGoodID: finishedGood.id,
+            qty: 100,
+            priceExTax: 99
+        )
         XCTAssertEqual(salesOrderSalesReturn.orderType, .salesReturn(cost: 49))
         XCTAssertEqual(salesOrderSalesReturn.clientID, client.id)
         XCTAssertEqual(salesOrderSalesReturn.finishedGoodID, finishedGood.id)
@@ -38,4 +47,32 @@ final class SalesOrderTests: XCTestCase {
         XCTAssertEqual(salesOrderSalesReturn.amountWithTax, 100 * 99 * (1 + 0.2))
         XCTAssertEqual(salesOrderSalesReturn.cost, 49)
     }
+
+    func testDescription() {
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .init(name: "Finished Good")
+
+        let salesOrderBookRevenue: SalesOrder = .init(
+            orderType: .bookRevenue,
+            clientID: client.id,
+            finishedGoodID: finishedGood.id,
+            qty: 100,
+            priceExTax: 99
+        )
+        XCTAssertEqual(salesOrderBookRevenue.description,
+                       "Sales Order(bookRevenue 9900.0: 100 @ 99.0, tax: 0.2)")
+
+        let salesOrderSalesReturn: SalesOrder = .init(
+            orderType: .salesReturn(cost: 49),
+            clientID: client.id,
+            finishedGoodID: finishedGood.id,
+            qty: 100,
+            priceExTax: 99
+        )
+        XCTAssertEqual(salesOrderSalesReturn.description,
+                       "Sales Order(salesReturn(cost: 49.0) 9900.0: 100 @ 99.0, tax: 0.2)")
+
+
+    }
+
 }

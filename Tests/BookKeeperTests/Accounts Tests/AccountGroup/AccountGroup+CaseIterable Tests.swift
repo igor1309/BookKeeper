@@ -6,7 +6,7 @@ extension AccountGroupTests {
     func testAccountGroupAllCases() {
         XCTAssertNotEqual(AccountGroup.allCases, [])
         XCTAssertFalse(AccountGroup.allCases.isEmpty)
-        XCTAssertEqual(AccountGroup.allCases.count, 25)
+        XCTAssertEqual(AccountGroup.allCases.count, 26)
 
         XCTAssertFalse(BalanceSheet.allCases.isEmpty)
         XCTAssertEqual(BalanceSheet.allCases.count, 20)
@@ -36,6 +36,6 @@ extension AccountGroupTests {
         XCTAssertEqual(BalanceSheet.allCases.count, 20)
 
         XCTAssertFalse(IncomeStatement.allCases.isEmpty)
-        XCTAssertEqual(IncomeStatement.allCases.count, 5)
+        XCTAssertEqual(IncomeStatement.allCases.count, 6)
     }
 }

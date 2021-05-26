@@ -8,38 +8,38 @@ public struct Books {
     public var fixedAssets: [FixedAsset.ID: FixedAsset]
 
     // balance sheet
-    public var cashAccount: CashAccount
-    public var accumulatedDepreciation: AccumulatedDepreciation
-    public var payables: AccountsPayable
-    public var taxLiabilities: TaxLiabilities
+    public var cashAccount: Account<Cash>
+    public var accumulatedDepreciation: Account<AccumulatedDepreciation>
+    public var payables: Account<AccountsPayable>
+    public var taxLiabilities: Account<TaxLiabilities>
 
     // income statement
     public var revenueAccount: RevenueAccount
-    public var depreciationExpenses: DepreciationExpenses
+    public var depreciationExpensesAccount: Account<DepreciationExpenses>
 
-    public init(rawMaterials: [RawMaterial.ID: RawMaterial]? = nil,
-                wips: [WorkInProgress.ID: WorkInProgress]? = nil,
-                finishedGoods: [FinishedGood.ID: FinishedGood]? = nil,
-                clients: [Client.ID: Client]? = nil,
-                fixedAssets: [FixedAsset.ID: FixedAsset]? = nil,
-                cashAccount: CashAccount? = nil,
-                accumulatedDepreciation: AccumulatedDepreciation? = nil,
-                payables: AccountsPayable? = nil,
-                revenueAccount: RevenueAccount? = nil,
-                depreciationExpenses: DepreciationExpenses? = nil,
-                taxLiabilities: TaxLiabilities? = nil
+    public init(rawMaterials: [RawMaterial.ID: RawMaterial] = [:],
+                wips: [WorkInProgress.ID: WorkInProgress] = [:],
+                finishedGoods: [FinishedGood.ID: FinishedGood] = [:],
+                clients: [Client.ID: Client] = [:],
+                fixedAssets: [FixedAsset.ID: FixedAsset] = [:],
+                cashAccount: Account<Cash> = .init(),
+                accumulatedDepreciation: Account<AccumulatedDepreciation> = .init(),
+                payables: Account<AccountsPayable> = .init(),
+                revenueAccount: RevenueAccount = .init(),
+                depreciationExpensesAccount: Account<DepreciationExpenses> = .init(),
+                taxLiabilities: Account<TaxLiabilities> = .init()
     ) {
-        self.rawMaterials = rawMaterials ?? [:]
-        self.wips = wips ?? [:]
-        self.finishedGoods = finishedGoods ?? [:]
-        self.clients = clients ?? [:]
-        self.fixedAssets = fixedAssets ?? [:]
-        self.cashAccount = cashAccount ?? .init()
-        self.accumulatedDepreciation = accumulatedDepreciation ?? .init()
-        self.payables = payables ?? .init()
-        self.revenueAccount = revenueAccount ?? .init()
-        self.depreciationExpenses = depreciationExpenses ?? .init()
-        self.taxLiabilities = taxLiabilities ?? .init()
+        self.rawMaterials = rawMaterials
+        self.wips = wips
+        self.finishedGoods = finishedGoods
+        self.clients = clients
+        self.fixedAssets = fixedAssets
+        self.cashAccount = cashAccount
+        self.accumulatedDepreciation = accumulatedDepreciation
+        self.payables = payables
+        self.revenueAccount = revenueAccount
+        self.depreciationExpensesAccount = depreciationExpensesAccount
+        self.taxLiabilities = taxLiabilities
     }
 
 }
@@ -50,8 +50,12 @@ public extension Books {
             && wips.isEmpty
             && finishedGoods.isEmpty
             && clients.isEmpty
+            && fixedAssets.isEmpty
             && cashBalance == 0
+            && accumulatedDepreciationBalance == 0
+            && payables.balance() == 0
             && revenueAccountBalance == 0
+            && depreciationExpensesAccount.balance() == 0
             && taxLiabilitiesBalance == 0
     }
 

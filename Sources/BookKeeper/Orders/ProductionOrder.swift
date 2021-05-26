@@ -32,3 +32,9 @@ public struct ProductionOrder: OrderProtocol {
         self.qty = qty
     }
 }
+
+extension ProductionOrder: CustomStringConvertible {
+    public var description: String {
+        "Production Order(\(orderType): \(qty))"
+    }
+}

@@ -3,21 +3,21 @@ import BookKeeper
 
 final class ClientTests: XCTestCase {
     func testClientInit() {
-        let clientZero: Client = .init()
+        let clientZero: Client = .init(name: "Client0")
         XCTAssertEqual(clientZero.receivables.balance(), 0)
 
-        let client: Client = Client(receivables: .init(amount: 9_900))
+        let client: Client = Client(name: "Client", initialReceivables: 9_900)
         XCTAssertEqual(client.receivables.balance(), 9_900)
     }
 
     func testDescription() {
-        let clientZero: Client = .init()
+        let clientZero: Client = .init(name: "Client0")
         XCTAssertEqual(clientZero.description,
-                       "Client(receivables: AccountsReceivable(0.0))")
+                       "Client Client0(receivables: Client0(Accounts Receivable (active); 0.0))")
 
-        let client: Client = Client(receivables: .init(amount: 9_900))
+        let client: Client = Client(name: "Client", initialReceivables: 9_900)
         XCTAssertEqual(client.description,
-                       "Client(receivables: AccountsReceivable(9900.0))")
+                       "Client Client(receivables: Client(Accounts Receivable (active); 9900.0))")
     }
 
 }

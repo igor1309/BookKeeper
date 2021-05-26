@@ -12,18 +12,40 @@ public struct Client: Equatable, Hashable, Identifiable {
     /// Best polished solution is https://github.com/pointfreeco/swift-tagged/ wrapped is Swift Package.
     ///
     public let id: UUID
-    public var receivables: AccountsReceivable
+    public let name: String
+    #warning("a downside of using account without static properties is that we can't define here a kind of account")
+    public var receivables: Account<AccountsReceivable>
 
+    #warning("change parameter name from amount to more telling")
     public init(id: UUID = UUID(),
-                receivables: AccountsReceivable = .init()
+                name: String,
+                initialReceivables amount: Double = 0
     ) {
         self.id = id
-        self.receivables = receivables
+        self.name = name
+        self.receivables = .init(name: name, amount: amount)
     }
+
+    #warning("this init conflicts. fix & write tests. see ClientTests")
+    /// Failable initialiser that checks Account Kind and AccountGroup
+//    public init?(id: UUID = UUID(),
+//                 name: String,
+//                 receivables: SimpleAccount
+//    ) {
+//        guard receivables.kind == .active,
+//              receivables.group == .balanceSheet(.asset(.currentAsset(.accountsReceivable))) else {
+//            return nil
+//        }
+//
+//        self.id = id
+//        self.name = name
+//        self.receivables = receivables
+//    }
+
 }
 
 extension Client: CustomStringConvertible {
     public var description: String {
-        "Client(receivables: \(receivables))"
+        "Client \(name)(receivables: \(receivables))"
     }
 }

@@ -10,6 +10,9 @@ public struct InventoryAccount: AccountProtocol {
     public static let kind: AccountKind = .active
     public static let accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory)))
 
+    public var kind: AccountKind { Self.kind }
+    public var group: AccountGroup { Self.accountGroup }
+
     public var qty: Int
     public var amount: Double
 
@@ -22,7 +25,7 @@ public struct InventoryAccount: AccountProtocol {
 extension InventoryAccount: CustomStringConvertible {
     #warning("kind and accountGroup properties are not used in description")
     public var description: String {
-        "Inventory(amount: \(amount), qty: \(qty))"
+        "Inventory(qty: \(qty), amount: \(amount))"
     }
 }
 

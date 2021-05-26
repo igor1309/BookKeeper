@@ -38,10 +38,10 @@ final class InventoryAccountTests: XCTestCase {
     func testDescription() {
         let inventoryAccountZero: InventoryAccount = .init()
         XCTAssertEqual(inventoryAccountZero.description,
-                       "Inventory(amount: 0.0, qty: 0)")
+                       "Inventory(qty: 0, amount: 0.0)")
         let inventoryAccount: InventoryAccount = .init(qty: 1_000, amount: 59_000)
         XCTAssertEqual(inventoryAccount.description,
-                       "Inventory(amount: 59000.0, qty: 1000)")
+                       "Inventory(qty: 1000, amount: 59000.0)")
     }
 }
 
@@ -50,8 +50,8 @@ extension InventoryAccountTests {
     func testDebitSalesOrder() throws {
         // fill inventory by sales return
         var inventory: InventoryAccount = .init(qty: 1_000, amount: 59_000)
-        let client: Client = .init()
-        let finishedGood: FinishedGood = .init()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
         let order: SalesOrder = .init(orderType: .salesReturn(cost: 49),
                                       clientID: client.id,
                                       finishedGoodID: finishedGood.id,
@@ -98,8 +98,8 @@ extension InventoryAccountTests {
     func testCreditSalesOrderEmptyAccount() throws {
         // book revenue to empty inventory
         var inventory: InventoryAccount = .init()
-        let client: Client = .init()
-        let finishedGood: FinishedGood = .init()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
         let order: SalesOrder = .init(orderType: .bookRevenue,
                                       clientID: client.id,
                                       finishedGoodID: finishedGood.id,
@@ -119,8 +119,8 @@ extension InventoryAccountTests {
     func testCreditSalesOrderNonEmptyAccount() throws {
         // fill inventory
         var inventory: InventoryAccount = .init(qty: 1_000, amount: 59_000)
-        let client: Client = .init()
-        let finishedGood: FinishedGood = .init()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
         let order: SalesOrder = .init(orderType: .bookRevenue,
                                       clientID: client.id,
                                       finishedGoodID: finishedGood.id,
@@ -140,8 +140,8 @@ extension InventoryAccountTests {
         XCTAssertEqual(inventory.cost(), 59)
 
         // create and try order that can't be processed
-        let client: Client = .init()
-        let finishedGood: FinishedGood = .init()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
         let qty = 100
         let priceExTax = 99.0
 
@@ -166,7 +166,7 @@ extension InventoryAccountTests {
         XCTAssertNil(inventory.cost())
 
         // add first order
-        let finishedGood: FinishedGood = .init()
+        let finishedGood: FinishedGood = .sample
         let order1: InventoryOrder = .init(orderType: .produced(cost: 49),
                                            finishedGoodID: finishedGood.id,
                                            qty: 200)
@@ -195,9 +195,10 @@ extension InventoryAccountTests {
         XCTAssertEqual(cost2, 63.2857, accuracy: 0.001)
 
         // create and try order that can't be processed
-        let order3: InventoryOrder = .init(orderType: .trashed,
-                                           finishedGoodID: finishedGood.id,
-                                           qty: 100)
+        let order3: InventoryOrder = .init(
+            orderType: .trashed,
+            finishedGoodID: finishedGood.id,
+            qty: 100)
         XCTAssertThrowsError(try inventory.debit(order: order3)) { error in
             XCTAssertEqual(error as! OrderProcessingError,
                            OrderProcessingError.wrongOrderType)
@@ -210,10 +211,11 @@ extension InventoryAccountTests {
         XCTAssertNil(inventory.cost())
 
         // add trash order
-        let finishedGood: FinishedGood = .init()
-        let trashInventoryOrder: InventoryOrder = .init(orderType: .trashed,
-                                                        finishedGoodID: finishedGood.id,
-                                                        qty: 100)
+        let finishedGood: FinishedGood = .sample
+        let trashInventoryOrder: InventoryOrder = .init(
+            orderType: .trashed,
+            finishedGoodID: finishedGood.id,
+            qty: 100)
         XCTAssertThrowsError(try inventory.credit(order: trashInventoryOrder)) { error in
             XCTAssertEqual(error as! OrderProcessingError,
                            OrderProcessingError.emptyInventoryHasNoCost)
@@ -262,15 +264,16 @@ extension InventoryAccountTests {
 extension InventoryAccountTests {
     func testDebitProductionOrder() throws {
         // initiate product with empty inventories
-        var finishedGood: FinishedGood = .init()
+        var finishedGood: FinishedGood = .sample
         XCTAssert(finishedGood.inventory.isEmpty)
 
         // create production order
         let wip = WorkInProgress()
-        let order: ProductionOrder = .init(orderType: .recordFinishedGoods(cost: 49),
-                                           finishedGoodID: finishedGood.id,
-                                           workInProgressID: wip.id,
-                                           finishedGoodQty: 999)
+        let order: ProductionOrder = .init(
+            orderType: .recordFinishedGoods(cost: 49),
+            finishedGoodID: finishedGood.id,
+            workInProgressID: wip.id,
+            finishedGoodQty: 999)
         XCTAssertNoThrow(try finishedGood.inventory.debit(order: order))
 
         // confirm
@@ -281,15 +284,16 @@ extension InventoryAccountTests {
 
     func testCreditProductionOrder() throws {
         // initiate product with empty inventories
-        var finishedGood: FinishedGood = .init()
+        var finishedGood: FinishedGood = .sample
         XCTAssert(finishedGood.inventory.isEmpty)
 
         // create production order
         let wip = WorkInProgress()
-        let order: ProductionOrder = .init(orderType: .recordFinishedGoods(cost: 49),
-                                           finishedGoodID: finishedGood.id,
-                                           workInProgressID: wip.id,
-                                           finishedGoodQty: 999)
+        let order: ProductionOrder = .init(
+            orderType: .recordFinishedGoods(cost: 49),
+            finishedGoodID: finishedGood.id,
+            workInProgressID: wip.id,
+            finishedGoodQty: 999)
         XCTAssertNoThrow(try finishedGood.inventory.credit(order: order))
 
         // confirm

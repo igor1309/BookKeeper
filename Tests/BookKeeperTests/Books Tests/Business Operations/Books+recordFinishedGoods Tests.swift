@@ -9,7 +9,7 @@ extension BooksTests {
         var books: Books = .init()
 
         // initiate product with empty inventories
-        let finishedGood: FinishedGood = .init()
+        let finishedGood: FinishedGood = .sample
         let workInProgress = WorkInProgress()
 
         // create production order with someOtherType

@@ -5,7 +5,7 @@ final class RevenueAccountTests: XCTestCase {
     func testRevenueAccountInit() {
         XCTAssertEqual(RevenueAccount.kind, .passive)
 
-        XCTAssertEqual(RevenueAccount.accountGroup, .incomeStatement(.revenue))
+        XCTAssertEqual(RevenueAccount.group, .incomeStatement(.revenue))
 
         let revenueAccount0: RevenueAccount = .init()
         XCTAssertEqual(revenueAccount0.amount, 0)
@@ -20,9 +20,9 @@ final class RevenueAccountTests: XCTestCase {
 
     func testDescription() {
         XCTAssertEqual(RevenueAccount().description,
-                       "RevenueAccount(0.0)")
+                       "RevenueAccount(Revenue (passive); 0.0)")
         XCTAssertEqual(RevenueAccount(amount: 10_000).description,
-                       "RevenueAccount(10000.0)")
+                       "RevenueAccount(Revenue (passive); 10000.0)")
     }
 }
 
@@ -34,8 +34,8 @@ extension RevenueAccountTests {
         XCTAssertEqual(revenueAccount.balance(), 0)
 
         // create order and try to process (debit)
-        let client = Client()
-        let finishedGood = FinishedGood()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
 
         let qty = 100
         let priceExVAT = 99.0
@@ -67,8 +67,8 @@ extension RevenueAccountTests {
         var revenueAccount: RevenueAccount = .init()
 
         // create order and try to process (credit)
-        let client = Client()
-        let finishedGood = FinishedGood()
+        let client: Client = .sample
+        let finishedGood: FinishedGood = .sample
 
         let qty = 100
         let priceExVAT = 99.0
@@ -102,8 +102,8 @@ extension RevenueAccountTests {
         var revenueAccount: RevenueAccount = .init()
 
         // create order and try to process (credit)
-        let client = Client()
-        let finishedGood = FinishedGood()
+        let client = Client(name: "Finished")
+        let finishedGood = FinishedGood(name: "Client")
 
         let qty = 100
         let priceExVAT = 99.0

@@ -6,7 +6,7 @@ import BookKeeper
 extension BooksTests {
     func testReceiveCash() throws {
         var books: Books = .init()
-        let client0: Client = .init()
+        let client0: Client = .sample
 
         // fail to receive cash from unknown client
         XCTAssertThrowsError(try books.receiveCash(1_000, from: client0.id)) { error in
@@ -15,8 +15,7 @@ extension BooksTests {
         }
 
         // add new client
-        let receivables: AccountsReceivable = .init(amount: 1_500)
-        let client: Client = .init(receivables: receivables)
+        let client: Client = .init(name: "Client", initialReceivables: 1_500)
         books.add(client: client)
 
         // confirm balances
@@ -32,7 +31,7 @@ extension BooksTests {
 
         // cash receive fail with negative amount
         XCTAssertThrowsError(try books.receiveCash(-1_000, from: client.id)) { error in
-            XCTAssertEqual(error as! AccountError<CashAccount>,
+            XCTAssertEqual(error as! AccountError<Cash>,
                            AccountError.negativeAmount)
         }
 

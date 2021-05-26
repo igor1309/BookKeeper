@@ -21,11 +21,12 @@ import Foundation
 ///     - Travel and entertainment (expense account: normally a debit balance)
 ///     - Gain on sale of asset (gain account: normally a credit balance)
 ///     - Loss on sale of asset (loss account: normally a debit balance)
+#warning("do we need this protocol at all?")
 public protocol AccountProtocol: Hashable {
+    var kind: AccountKind { get }
+    var group: AccountGroup { get }
+    
     var amount: Double { get set }
-
-    static var kind: AccountKind { get }
-    static var accountGroup: AccountGroup { get }
 
     func balance() -> Double
 
@@ -43,9 +44,6 @@ public protocol AccountProtocol: Hashable {
 }
 
 public extension AccountProtocol {
-    var kind: AccountKind { Self.kind }
-    var group: AccountGroup { Self.accountGroup }
-
     func balance() -> Double {
         return amount
     }

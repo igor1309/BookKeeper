@@ -2,35 +2,18 @@ import XCTest
 import BookKeeper
 
 final class SimpleAccountTests: XCTestCase {
-    struct ActiveAccount: SimpleAccount {
-        var amount: Double = 0
-        static var kind: AccountKind = .active
-        static var accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.cash)))
-    }
-
-    struct PassiveAccount: SimpleAccount {
-        var amount: Double = 0
-        static var kind: AccountKind = .passive
-        static var accountGroup: AccountGroup = .balanceSheet(.liability(.currentLiability(.accountsPayable)))
-    }
-
-    struct BothActivePassiveAccount: SimpleAccount {
-        var amount: Double = 0
-        static var kind: AccountKind = .bothActivePassive
-        static var accountGroup: AccountGroup = .balanceSheet(.equity(.retainedEarnings))
-    }
-
-    func testDebitCreditSimpleAccountDefaultImplementation() throws {
+    #warning("rename and rewrite test because Simple account is now struct not protocol")
+    func test_RENAME_THIS_FUNC_DebitCreditSimpleAccountDefaultImplementation() throws {
         // active account
-        var activeAccount: ActiveAccount = .init()
+        var activeAccount: Account<Cash> = .init()
 
         XCTAssertThrowsError(try activeAccount.debit(amount: -100)) { error in
-            XCTAssertEqual(error as! AccountError<ActiveAccount>,
+            XCTAssertEqual(error as! AccountError<Cash>,
                            AccountError.negativeAmount)
         }
 
         XCTAssertThrowsError(try activeAccount.credit(amount: -100)) { error in
-            XCTAssertEqual(error as! AccountError<ActiveAccount>,
+            XCTAssertEqual(error as! AccountError<Cash>,
                            AccountError.negativeAmount)
         }
 
@@ -38,7 +21,7 @@ final class SimpleAccountTests: XCTestCase {
         XCTAssertEqual(activeAccount.balance(), 100)
 
         XCTAssertThrowsError(try activeAccount.credit(amount: 200)) { error in
-            XCTAssertEqual(error as! AccountError<ActiveAccount>,
+            XCTAssertEqual(error as! AccountError,
                            AccountError.insufficientBalance(activeAccount))
         }
 
@@ -46,15 +29,15 @@ final class SimpleAccountTests: XCTestCase {
         XCTAssertEqual(activeAccount.balance(), 50)
 
         // passive account
-        var passiveAccount: PassiveAccount = .init()
+        var passiveAccount: Account<AccountsPayable> = .init()
 
         XCTAssertThrowsError(try passiveAccount.debit(amount: -100)) { error in
-            XCTAssertEqual(error as! AccountError<PassiveAccount>,
+            XCTAssertEqual(error as! AccountError<AccountsPayable>,
                            AccountError.negativeAmount)
         }
 
         XCTAssertThrowsError(try passiveAccount.credit(amount: -100)) { error in
-            XCTAssertEqual(error as! AccountError<PassiveAccount>,
+            XCTAssertEqual(error as! AccountError<AccountsPayable>,
                            AccountError.negativeAmount)
         }
 
@@ -62,7 +45,7 @@ final class SimpleAccountTests: XCTestCase {
         XCTAssertEqual(passiveAccount.balance(), 100)
 
         XCTAssertThrowsError(try passiveAccount.debit(amount: 200)) { error in
-            XCTAssertEqual(error as! AccountError<PassiveAccount>,
+            XCTAssertEqual(error as! AccountError,
                            AccountError.insufficientBalance(passiveAccount))
         }
 
@@ -70,15 +53,20 @@ final class SimpleAccountTests: XCTestCase {
         XCTAssertEqual(passiveAccount.balance(), 50)
 
         // both active passive account
-        var bothActivePassiveAccount: BothActivePassiveAccount = .init()
+        enum BothActivePassive: AccountTypeProtocol {
+            static let defaultName = ""
+            static let kind: AccountKind = .bothActivePassive
+            static let group: AccountGroup = .balanceSheet(.liability(.currentLiability(.taxesPayable)))
+        }
+        var bothActivePassiveAccount: Account<BothActivePassive> = .init(name: "taxes")
 
         XCTAssertThrowsError(try bothActivePassiveAccount.debit(amount: -100)) { error in
-            XCTAssertEqual(error as! AccountError<BothActivePassiveAccount>,
+            XCTAssertEqual(error as! AccountError<BothActivePassive>,
                            AccountError.negativeAmount)
         }
 
         XCTAssertThrowsError(try bothActivePassiveAccount.credit(amount: -100)) { error in
-            XCTAssertEqual(error as! AccountError<BothActivePassiveAccount>,
+            XCTAssertEqual(error as! AccountError<BothActivePassive>,
                            AccountError.negativeAmount)
         }
 
@@ -86,7 +74,7 @@ final class SimpleAccountTests: XCTestCase {
         XCTAssertEqual(bothActivePassiveAccount.balance(), 100)
 
         XCTAssertThrowsError(try bothActivePassiveAccount.credit(amount: 200)) { error in
-            XCTAssertEqual(error as! AccountError<BothActivePassiveAccount>,
+            XCTAssertEqual(error as! AccountError<BothActivePassive>,
                            AccountError.insufficientBalance(bothActivePassiveAccount))
         }
 
@@ -94,4 +82,26 @@ final class SimpleAccountTests: XCTestCase {
         XCTAssertEqual(bothActivePassiveAccount.balance(), 50)
 
     }
+
+    func testDescription() {
+        enum Active: AccountTypeProtocol {
+            static let defaultName = ""
+            static let kind: AccountKind = .active
+            static let group: AccountGroup = .balanceSheet(.asset(.currentAsset(.cash)))
+        }
+        let active: Account<Active> = .init(name: "Active Account", amount: 99_999)
+        XCTAssertEqual(active.description,
+                       "Active Account(Cash (active); 99999.0)")
+
+        enum Passive: AccountTypeProtocol {
+            static let defaultName = ""
+            static let kind: AccountKind = .passive
+            static let group: AccountGroup = .balanceSheet(.liability(.currentLiability(.interestPayable)))
+        }
+
+        let passive: Account<Passive> = .init(name: "Passive Account", amount: 88_999)
+        XCTAssertEqual(passive.description,
+                       "Passive Account(Interest Payable (passive); 88999.0)")
+    }
+
 }
