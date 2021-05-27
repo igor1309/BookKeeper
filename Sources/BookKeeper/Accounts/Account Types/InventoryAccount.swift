@@ -14,6 +14,10 @@ public struct InventoryAccount {
         self.qty = qty
         self.amount = amount
     }
+
+    public func balance() -> Double {
+        return amount
+    }
 }
 
 extension InventoryAccount: AccountProtocol {

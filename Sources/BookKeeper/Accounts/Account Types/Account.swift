@@ -4,13 +4,17 @@
 /// For comparison, an Order is needed to debit or credit `Inventory` account.
 public struct Account<AccountType: AccountTypeProtocol> {
     public let name: String
-    public var amount: Double
+    private(set) var amount: Double
 
     public init(name: String = AccountType.defaultName,
                 amount: Double = 0
     ) {
         self.name = name
         self.amount = amount
+    }
+
+    public func balance() -> Double {
+        return amount
     }
 
     public mutating func debit(amount: Double) throws {
@@ -55,4 +59,3 @@ extension Account: CustomStringConvertible {
         "\(name)(\(group.rawValue) (\(kind)); \(amount))"
     }
 }
-

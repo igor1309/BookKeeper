@@ -26,8 +26,6 @@ public protocol AccountProtocol: Hashable {
     var kind: AccountKind { get }
     var group: AccountGroup { get }
     
-    var amount: Double { get set }
-
     func balance() -> Double
 
     /// Each account should implement a function to calculate
@@ -41,10 +39,4 @@ public protocol AccountProtocol: Hashable {
     // func balance(at date: Date) -> Double
     /// Function to calculate change of account money value for some time period.
     // func balance(for timeframe: Timeframe) -> Double
-}
-
-public extension AccountProtocol {
-    func balance() -> Double {
-        return amount
-    }
 }

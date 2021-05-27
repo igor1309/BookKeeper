@@ -8,7 +8,6 @@ final class FinishedGoodTests: XCTestCase {
         XCTAssertEqual(finishedNoInventory.inventory.qty, 0)
         XCTAssertEqual(finishedNoInventory.inventory.amount, 0)
         XCTAssertEqual(finishedNoInventory.inventory.balance(), 0)
-        XCTAssertEqual(finishedNoInventory.cogs.amount, 0)
         XCTAssertEqual(finishedNoInventory.cogs.balance(), 0)
 
         let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
@@ -19,7 +18,6 @@ final class FinishedGoodTests: XCTestCase {
         XCTAssertEqual(finishedWithInventory.inventory.qty, 1_000)
         XCTAssertEqual(finishedWithInventory.inventory.amount, 49_000)
         XCTAssertEqual(finishedWithInventory.inventory.balance(), 49_000)
-        XCTAssertEqual(finishedWithInventory.cogs.amount, 0)
         XCTAssertEqual(finishedWithInventory.cogs.balance(), 0)
 
         #warning("no cogs in init any more")

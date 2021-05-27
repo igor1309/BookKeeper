@@ -20,7 +20,7 @@ extension BooksTests {
         }
 
         #warning("this is a bad API - amount should not be accessible like this!!")
-        activeAccount2.amount = 200
+        try activeAccount2.debit(amount: 200)
         XCTAssertNoThrow(
             try books.doubleEntry(debitAccount: &activeAccount1, creditAccount: &activeAccount2, amount: 100)
         )
@@ -77,7 +77,7 @@ extension BooksTests {
         }
 
         #warning("this is a bad API - amount should not be accessible like this!!")
-        passiveAccount1.amount = 200
+        try passiveAccount1.credit(amount: 200)
         XCTAssertNoThrow(
             try books.doubleEntry(debitAccount: &passiveAccount1, creditAccount: &passiveAccount2, amount: 100)
         )
