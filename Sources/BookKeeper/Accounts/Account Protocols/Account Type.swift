@@ -75,15 +75,8 @@ public enum AccountsPayable: AccountTypeProtocol {
 /// while the original cost of the asset less the amount of accumulated depreciation and any impairment
 /// is known as its `net cost` or `carrying amount`.
 /// https://www.accountingtools.com/articles/what-is-accumulated-depreciation.html
-public enum AccumulatedDepreciation: AccountTypeProtocol {
-    public static var defaultName = "Accumulated Depreciation"
-    public static let kind = AccountKind.passive
-    public static let group = AccountGroup.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))
-}
-
-#warning("это вообще правильно? или нужно переименовать??? см group: accumulatedDepreciationEquipment")
-public enum EquipmentDepreciation: AccountTypeProtocol {
-    public static var defaultName = "Equipment Depreciation"
+public enum AccumulatedDepreciationEquipment: AccountTypeProtocol {
+    public static var defaultName = "Accumulated Depreciation Equipment"
     public static let kind = AccountKind.passive
     public static let group = AccountGroup.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))
 }

@@ -9,7 +9,7 @@ public struct Books {
 
     // balance sheet
     public var cashAccount: Account<Cash>
-    public var accumulatedDepreciation: Account<AccumulatedDepreciation>
+    public var accumulatedDepreciation: Account<AccumulatedDepreciationEquipment>
     public var payables: Account<AccountsPayable>
     public var taxLiabilities: Account<TaxLiabilities>
 
@@ -23,7 +23,7 @@ public struct Books {
                 clients: [Client.ID: Client] = [:],
                 fixedAssets: [FixedAsset.ID: FixedAsset] = [:],
                 cashAccount: Account<Cash> = .init(),
-                accumulatedDepreciation: Account<AccumulatedDepreciation> = .init(),
+                accumulatedDepreciation: Account<AccumulatedDepreciationEquipment> = .init(),
                 payables: Account<AccountsPayable> = .init(),
                 revenueAccount: Account<Revenue> = .init(),
                 depreciationExpensesAccount: Account<DepreciationExpenses> = .init(),
