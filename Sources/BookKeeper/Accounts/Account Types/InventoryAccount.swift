@@ -25,7 +25,6 @@ extension InventoryAccount: AccountProtocol {
 }
 
 extension InventoryAccount: CustomStringConvertible {
-    #warning("kind and accountGroup properties are not used in description")
     public var description: String {
         "Inventory(qty: \(qty), amount: \(amount))"
     }

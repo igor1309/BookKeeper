@@ -2,7 +2,8 @@ import XCTest
 // @testable
 import BookKeeper
 
-final class BooksPayInvoiceTests: XCTestCase {
+// MARK: - Business Operations
+extension BooksTests {
     func testPayInvoice() throws {
         var books: Books = .init(cashAccount: .init(amount: 700_000))
         XCTAssertEqual(books.cashBalance, 700_000)

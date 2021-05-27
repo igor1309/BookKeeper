@@ -1,6 +1,9 @@
 // MARK: - Business Operations
 public extension Books {
+
+    /// `Purchase Fixed Asset`
     mutating func purchaseFixedAsset(name: String, lifetimeInYears: Int, amount: Double) throws {
+        
         guard lifetimeInYears > 0 else {
             throw BooksError.incorrectLifetime
         }

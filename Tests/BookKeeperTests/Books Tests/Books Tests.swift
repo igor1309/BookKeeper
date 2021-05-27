@@ -124,16 +124,3 @@ final class BooksTests: XCTestCase {
         XCTFail("finish with test: test with some products, clients. etc - after operations")
     }
 }
-
-// MARK: - TBD
-extension BooksTests {
-    func testPurchaseInventory() {
-        // initiate empty books
-        let books: Books = .init()
-        //let purchaseInventory = books.purchaseInventory()
-        //XCTAssertEqual(purchaseInventory, 0)
-
-        XCTFail("finish with test")
-    }
-
-}
