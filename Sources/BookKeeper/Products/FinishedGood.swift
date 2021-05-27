@@ -38,24 +38,6 @@ public struct FinishedGood: Product {
         self.cogs = .init(name: name)
     }
 
-    #warning("this init conflicts. fix & write tests. see FinishedGoodTests")
-    /// Failable initialiser that checks Account Kind and AccountGroup
-//    public init?(id: UUID = UUID(),
-//                 name: String,
-//                 inventory: InventoryAccount = .init(),
-//                 cogs: SimpleAccount
-//    ) {
-//        guard cogs.kind == .active,
-//              cogs.group == AccountGroup.incomeStatement(.expense(.cogs)) else {
-//            return nil
-//        }
-//
-//        self.id = id
-//        self.name = name
-//        self.inventory = inventory
-//        self.cogs = cogs
-//    }
-
 }
 
 extension FinishedGood: CustomStringConvertible {
