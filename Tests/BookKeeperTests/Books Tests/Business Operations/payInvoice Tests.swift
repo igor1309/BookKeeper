@@ -26,6 +26,7 @@ extension BooksTests {
         // confirm no change after error
         XCTAssert(books.suppliers.totalBalance(for: \.payables).isZero)
         XCTAssert(books.payables.balance.isZero)
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 0)
         XCTAssertEqual(books.cashAccount.balance, 700_000)
 
         // add supplier and try to pay invoice
@@ -38,9 +39,10 @@ extension BooksTests {
         )
 
         // confirm change
-        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_000_000)
-        XCTAssertEqual(books.payables.balance, 1_000_000)
-        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.payables.balance, 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000, "Should not include VAT")
+        XCTAssertEqual(books.cashAccount.balance, 700_000)
 
         // try to pay smaller invoice
         XCTAssertThrowsError(
@@ -50,16 +52,18 @@ extension BooksTests {
                            AccountError.insufficientBalance(books.cashAccount))
         }
         // confirm no change after error
-        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_000_000)
-        XCTAssertEqual(books.payables.balance, 1_000_000)
-        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.payables.balance, 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000, "Should not include VAT")
+        XCTAssertEqual(books.cashAccount.balance, 700_000)
 
         XCTAssertNoThrow(
             try books.payInvoice(supplierID: supplier.id, amount: 600_000)
         )
         // confirm change
-        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 400_000)
-        XCTAssertEqual(books.payables.balance, 400_000)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 600_000)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 600_000)
+        XCTAssertEqual(books.payables.balance, 600_000)
         XCTAssertEqual(books.cashAccount.balance, 100_000)
     }
 
@@ -69,6 +73,7 @@ extension BooksTests {
         // confirm
         XCTAssert(books.suppliers.totalBalance(for: \.payables).isZero)
         XCTAssert(books.payables.balanceIsZero)
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 0)
         XCTAssertEqual(books.cashAccount.balance, 2_000_000)
 
         let supplier: Supplier = .init(name: "Supplier")
@@ -85,6 +90,7 @@ extension BooksTests {
         // confirm no change after error
         XCTAssert(books.suppliers.totalBalance(for: \.payables).isZero)
         XCTAssert(books.payables.balanceIsZero)
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 0)
         XCTAssertEqual(books.cashAccount.balance, 2_000_000)
 
         // add supplier and try to purchase asset
@@ -96,9 +102,10 @@ extension BooksTests {
         )
 
         // confirm
-        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_000_000)
-        XCTAssertEqual(books.payables.balance, 1_000_000)
-        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.payables.balance, 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000, "Should not include VAT")
+        XCTAssertEqual(books.cashAccount.balance, 2_000_000)
 
         // try to pay more than owed
         XCTAssertThrowsError(
@@ -109,9 +116,9 @@ extension BooksTests {
         }
 
         // confirm no change after error
-        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_000_000)
-        XCTAssertEqual(books.payables.balance, 1_000_000)
-        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.payables.balance, 1_200_000, "Should include VAT")
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000, "Should not include VAT")
         XCTAssertEqual(books.cashAccount.balance, 2_000_000)
 
         // try to pay invoice
@@ -120,8 +127,9 @@ extension BooksTests {
             )
 
         // confirm
-        XCTAssert(books.suppliers.totalBalance(for: \.payables).isZero)
-        XCTAssert(books.payables.balanceIsZero)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 200_000)
+        XCTAssertEqual(books.payables.balance, 200_000)
+        XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000, "Should not include VAT")
         XCTAssertEqual(books.cashAccount.balance, 1_000_000)
     }
 

@@ -1,8 +1,8 @@
 import Foundation
+import Tagged
 
 public struct Supplier: Equatable, Hashable, Identifiable {
-    #warning("change id to type safe id")
-    public let id: UUID
+    public let id: Tagged<Self, UUID>
     public let name: String
     public var payables: Account<AccountsPayable>
 
@@ -10,7 +10,7 @@ public struct Supplier: Equatable, Hashable, Identifiable {
                 name: String,
                 initialPayables amount: Double = 0
     ) {
-        self.id = id
+        self.id = Tagged<Self, UUID>(rawValue: id)
         self.name = name
         self.payables = .init(name: name, amount: amount)
     }

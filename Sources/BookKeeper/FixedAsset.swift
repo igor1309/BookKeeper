@@ -1,4 +1,6 @@
 import Foundation
+import Tagged
+
 /// A `fixed asset` is also known as `Property, Plant, and Equipment`.
 ///
 /// A fixed asset is property with a useful life greater than one reporting period,
@@ -21,17 +23,7 @@ import Foundation
 /// financial reporting standards to revalue a fixed asset, so that its net book value can increase.
 
 public struct FixedAsset: Identifiable, Equatable {
-    #warning("change id to type safe id")
-    /// # Type-safe identifiers
-    ///
-    /// Sources:
-    /// https://www.swiftbysundell.com/articles/type-safe-identifiers-in-swift/)
-    /// https://www.donnywals.com/creating-type-safe-identifiers-for-your-codable-models/
-    /// https://www.pointfree.co/episodes/ep12-tagged
-    ///
-    /// Best polished solution is https://github.com/pointfreeco/swift-tagged/ wrapped is Swift Package.
-    ///
-    public let id: UUID
+    public let id: Tagged<Self, UUID>
     public var name: String
     public let lifetime: Int
 
@@ -57,7 +49,7 @@ public struct FixedAsset: Identifiable, Equatable {
                 vatRate: Double = 20/100,
                 depreciation: Double = 0
     ) {
-        self.id = id
+        self.id = Tagged<Self, UUID>(rawValue: id)
         self.name = name
         self.lifetime = lifetime
         self.value = value

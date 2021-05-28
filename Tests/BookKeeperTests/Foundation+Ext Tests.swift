@@ -9,7 +9,7 @@ final class FoundationExtTests: XCTestCase {
         let finishedGoods = dict.mapValues { (value: Double) -> FinishedGood in
             let inventory: InventoryAccount = .init(qty: Int(value), amount: value * 10.0)
             return FinishedGood(name: "FinishedGood \(value)",
-                         inventory: inventory)
+                                inventory: inventory)
         }
         XCTAssertEqual(finishedGoods.totalBalance(for: \.cogs), 0)
         XCTAssertEqual(finishedGoods.totalBalance(for: \.inventory), 550)
@@ -18,7 +18,17 @@ final class FoundationExtTests: XCTestCase {
     }
 
     func testTotalBalanceIsZero() {
-        XCTFail("finish test")
+        let pairs = (1...10).map { _ in (UUID(), 0.0) }
+        let dict = Dictionary(uniqueKeysWithValues: pairs)
+
+        let finishedGoods = dict.mapValues { (value: Double) -> FinishedGood in
+            let inventory: InventoryAccount = .init(qty: Int(value), amount: value * 10.0)
+            return FinishedGood(name: "FinishedGood \(value)",
+                                inventory: inventory)
+        }
+
+        XCTAssert(finishedGoods.totalBalanceIsZero(for: \.cogs))
+        XCTAssert(finishedGoods.totalBalanceIsZero(for: \.inventory))
     }
 
     func testCombineAccounts() {

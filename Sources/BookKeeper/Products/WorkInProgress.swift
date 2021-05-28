@@ -1,15 +1,14 @@
 import Foundation
+import Tagged
 
 public struct WorkInProgress: Product {
-    #warning("replace with type-safe ID")
-    public let id: UUID
-
+    public let id: Tagged<Self, UUID>
     public var inventory: InventoryAccount
 
     public init(id: UUID = UUID(),
                 inventory: InventoryAccount = .init()
     ) {
-        self.id = id
+        self.id = Tagged<Self, UUID>(rawValue: id)
         self.inventory = inventory
     }
 }

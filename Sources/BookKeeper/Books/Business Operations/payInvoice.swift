@@ -9,7 +9,7 @@ public extension Books {
     ///     Cash                             120
     ///
     ///
-    mutating func payInvoice(supplierID: Client.ID, amount: Double) throws {
+    mutating func payInvoice(supplierID: Supplier.ID, amount: Double) throws {
 
         guard suppliers[supplierID] != nil else {
             throw BooksError.unknownClient

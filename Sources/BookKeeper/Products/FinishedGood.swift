@@ -1,8 +1,8 @@
 import Foundation
+import Tagged
 
 public struct FinishedGood: Product {
-    #warning("change id to type safe id")
-    public let id: UUID
+    public let id: Tagged<Self, UUID>
     public let name: String
 
     public var inventory: InventoryAccount
@@ -32,7 +32,7 @@ public struct FinishedGood: Product {
                 name: String,
                 inventory: InventoryAccount = .init()
     ) {
-        self.id = id
+        self.id = Tagged<Self, UUID>(rawValue: id)
         self.name = name
         self.inventory = inventory
         self.cogs = .init(name: name)
