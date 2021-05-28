@@ -7,13 +7,13 @@ final class RawMaterialTests: XCTestCase {
         let rawMaterialNoInventory: RawMaterial = .init()
         XCTAssertEqual(rawMaterialNoInventory.inventory.qty, 0)
         XCTAssertEqual(rawMaterialNoInventory.inventory.amount, 0)
-        XCTAssertEqual(rawMaterialNoInventory.inventory.balance(), 0)
+        XCTAssert(rawMaterialNoInventory.inventory.balanceIsZero)
 
         let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
         let rawMaterialWithInventory: RawMaterial = .init(inventory: inventory)
         XCTAssertEqual(rawMaterialWithInventory.inventory.qty, 1_000)
         XCTAssertEqual(rawMaterialWithInventory.inventory.amount, 49_000)
-        XCTAssertEqual(rawMaterialWithInventory.inventory.balance(), 49_000)
+        XCTAssertEqual(rawMaterialWithInventory.inventory.balance, 49_000)
     }
 
     func testDescription() {

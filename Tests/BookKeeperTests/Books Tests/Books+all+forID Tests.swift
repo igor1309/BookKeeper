@@ -56,6 +56,15 @@ extension BooksTests {
         XCTAssertEqual(books.client(forID: client.id), client)
     }
 
+    func testSupplierForID() {
+        var books: Books = .init()
+        let supplier: Supplier = .sample
+        XCTAssertNil(books.supplier(forID: supplier.id))
+
+        books.add(supplier: supplier)
+        XCTAssertEqual(books.supplier(forID: supplier.id), supplier)
+    }
+
     func testFixedAssetForID() {
         let fixedAsset: FixedAsset = .init(name: "freezer", lifetime: 7, value: 1_000_000)
 

@@ -11,12 +11,12 @@ extension AccountTests {
                        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
 
         let accumulatedDepreciationZero: Account<AccumulatedDepreciationEquipment> = .init()
-        XCTAssertEqual(accumulatedDepreciationZero.balance(), 0)
+        XCTAssert(accumulatedDepreciationZero.balanceIsZero)
         XCTAssertEqual(accumulatedDepreciationZero.group,
                        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
 
         let accumulatedDepreciationWithValue: Account<AccumulatedDepreciationEquipment> = .init(amount: 10_000)
-        XCTAssertEqual(accumulatedDepreciationWithValue.balance(), 10_000)
+        XCTAssertEqual(accumulatedDepreciationWithValue.balance, 10_000)
         XCTAssertEqual(accumulatedDepreciationWithValue.group,
                        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
     }

@@ -10,12 +10,12 @@ extension AccountTests {
                        .incomeStatement(.expense(.depreciation)))
 
         let depreciationExpenses0: Account<DepreciationExpenses> = .init()
-        XCTAssertEqual(depreciationExpenses0.balance(), 0)
+        XCTAssert(depreciationExpenses0.balanceIsZero)
         XCTAssertEqual(depreciationExpenses0.group,
                        .incomeStatement(.expense(.depreciation)))
 
         let depreciationExpenses1: Account<DepreciationExpenses> = .init(amount: 1_000)
-        XCTAssertEqual(depreciationExpenses1.balance(), 1_000)
+        XCTAssertEqual(depreciationExpenses1.balance, 1_000)
         XCTAssertEqual(depreciationExpenses1.group,
                        .incomeStatement(.expense(.depreciation)))
     }

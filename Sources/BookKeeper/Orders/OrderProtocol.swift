@@ -1,4 +1,4 @@
-public protocol OrderProtocol {
+public protocol OrderProtocol: Equatable {
     //associatedtype OrderType: Equatable
     var orderType: OrderType { get }
 
@@ -22,4 +22,7 @@ public enum OrderType: Equatable {
     /// when products are returns we should provide cost (from previous records)
     case salesReturn(cost: Double)
 
+    /// `Purchase`
+    case purchaseRawMaterial(RawMaterial)
+    case purchasePackaging//(Packaging)
 }

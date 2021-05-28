@@ -21,12 +21,12 @@ import Foundation
 ///     - Travel and entertainment (expense account: normally a debit balance)
 ///     - Gain on sale of asset (gain account: normally a credit balance)
 ///     - Loss on sale of asset (loss account: normally a debit balance)
-#warning("do we need this protocol at all?")
 public protocol AccountProtocol: Hashable {
     var kind: AccountKind { get }
     var group: AccountGroup { get }
-    
-    func balance() -> Double
+    var balanceIsZero: Bool { get }
+
+    var balance: Double { get }
 
     /// Each account should implement a function to calculate
     /// account balance for a given 'date', meaning "up to this date",
@@ -39,4 +39,8 @@ public protocol AccountProtocol: Hashable {
     // func balance(at date: Date) -> Double
     /// Function to calculate change of account money value for some time period.
     // func balance(for timeframe: Timeframe) -> Double
+}
+
+extension AccountProtocol {
+    public var balanceIsZero: Bool { balance == 0 }
 }

@@ -8,7 +8,14 @@ final class AccountTypeTests: XCTestCase {
         XCTAssertEqual(AccountsReceivable.group,
                        AccountGroup.balanceSheet(.asset(.currentAsset(.accountsReceivable))))
     }
-    
+
+    func testVATReceivable() {
+        XCTAssertEqual(VATReceivable.defaultName, "VAT Receivable")
+        XCTAssertEqual(VATReceivable.kind, AccountKind.active)
+        XCTAssertEqual(VATReceivable.group,
+                       AccountGroup.balanceSheet(.asset(.currentAsset(.vatReceivable))))
+    }
+
     func testCash() {
         XCTAssertEqual(Cash.defaultName, "Cash")
         XCTAssertEqual(Cash.kind, AccountKind.active)

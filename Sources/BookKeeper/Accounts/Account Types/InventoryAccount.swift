@@ -15,9 +15,7 @@ public struct InventoryAccount {
         self.amount = amount
     }
 
-    public func balance() -> Double {
-        return amount
-    }
+    public var balance: Double { amount }
 }
 
 extension InventoryAccount: AccountProtocol {
@@ -49,7 +47,6 @@ extension InventoryAccount {
 }
 
 // MARK: - Order Processing
-#warning("finish with documentation - you can do better")
 extension InventoryAccount: OrderProcessingAccount {
     
     /// `Debit`.
@@ -71,7 +68,12 @@ extension InventoryAccount: OrderProcessingAccount {
                 let amount = Double(order.qty) * cost
                 self.amount += amount
                 self.qty += order.qty
-                
+
+            case .purchaseRawMaterial(_):
+                let amount = Double(order.qty) * (order.cost ?? 0)
+                self.amount += amount
+                self.qty += order.qty
+
             default:
                 throw OrderProcessingError.wrongOrderType
         }

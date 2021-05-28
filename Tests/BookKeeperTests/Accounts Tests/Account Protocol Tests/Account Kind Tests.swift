@@ -7,8 +7,12 @@ final class AccountKindTests: XCTestCase {
                        [AccountKind.active, .passive, .bothActivePassive])
     }
 
-    #warning("more tests here ?")
-    
+    func testRawValue() {
+        XCTAssertEqual(AccountKind.active.rawValue, "Active")
+        XCTAssertEqual(AccountKind.passive.rawValue, "Passive")
+        XCTAssertEqual(AccountKind.bothActivePassive.rawValue, "Both Active Passive")
+    }
+
     func testString() {
         XCTAssertEqual("\(AccountKind.active)", "active")
         XCTAssertEqual("\(AccountKind.passive)", "passive")

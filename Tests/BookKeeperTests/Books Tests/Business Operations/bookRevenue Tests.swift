@@ -25,11 +25,21 @@ extension BooksTests {
                            Books.BooksError.unknownClient)
         }
 
+        // confirm no change after error
+        XCTAssert(books.clients.totalBalance(for: \.receivables).isZero)
+        XCTAssert(books.revenueAccount.balanceIsZero)
+        XCTAssert(books.taxLiabilities.balanceIsZero)
+
         books.add(client: client)
         XCTAssertThrowsError(try books.bookRevenue(for: order)) { error in
             XCTAssertEqual(error as! Books.BooksError,
                            Books.BooksError.unknownFinishedGood)
         }
+
+        // confirm no change after error
+        XCTAssert(books.clients.totalBalance(for: \.receivables).isZero)
+        XCTAssert(books.revenueAccount.balanceIsZero)
+        XCTAssert(books.taxLiabilities.balanceIsZero)
 
         books.add(finishedGood: finishedGood)
         XCTAssertThrowsError(try books.bookRevenue(for: order),
@@ -39,11 +49,21 @@ extension BooksTests {
                            Books.BooksError.costOfProductNotDefined)
         }
 
+        // confirm no change after error
+        XCTAssert(books.clients.totalBalance(for: \.receivables).isZero)
+        XCTAssert(books.revenueAccount.balanceIsZero)
+        XCTAssert(books.taxLiabilities.balanceIsZero)
+
         XCTAssertThrowsError(try books.bookRevenue(for: order),
                              "Failure due to empty finished goods inventory.") { error in
             XCTAssertEqual(error as! Books.BooksError,
                            Books.BooksError.costOfProductNotDefined)
         }
+
+        // confirm no change after error
+        XCTAssert(books.clients.totalBalance(for: \.receivables).isZero)
+        XCTAssert(books.revenueAccount.balanceIsZero)
+        XCTAssert(books.taxLiabilities.balanceIsZero)
 
         // create production order
         let workInProgress = WorkInProgress()
@@ -52,51 +72,53 @@ extension BooksTests {
                                                      workInProgressID: workInProgress.id,
                                                      finishedGoodQty: 999)
         // add to books
-        books.add(finishedGood: finishedGood)
         books.add(workInProgress: workInProgress)
+        XCTAssertEqual(books.wips.count, 1)
+        XCTAssert(books.wips.totalBalance(for: \.inventory).isZero)
 
-        XCTAssertEqual(books.wipsAll().count, 1)
-        XCTAssertEqual(books.finishedGoodsAll().count, 1)
-
-        XCTAssertEqual(books.wipsAll().first?.value.inventory.balance(), 0)
-        XCTAssertEqual(books.finishedGoodsAll().first?.value.inventory.balance(), 0)
+        books.add(finishedGood: finishedGood)
+        XCTAssertEqual(books.finishedGoods.count, 1)
+        XCTAssert(books.finishedGoods.totalBalance(for: \.inventory).isZero)
 
         // add finished goods inventory
         XCTAssertNoThrow(try books.recordFinishedGoods(for: productionOrder))
 
         // confirm
-        XCTAssertEqual(books.wipsAll().count, 1)
-        XCTAssertEqual(books.finishedGoodsAll().count, 1)
+        XCTAssertEqual(books.wips.count, 1)
+        XCTAssertEqual(books.wips.totalBalance(for: \.inventory), 49 * -999)
 
-        XCTAssertEqual(books.wipsAll().first?.value.inventory.balance(), 49 * -999)
-        XCTAssertEqual(books.finishedGoodsAll().first?.value.inventory.balance(), 49 * 999)
+        XCTAssertEqual(books.finishedGoods.count, 1)
+        XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory), 49 * 999)
 
         // book revenue
         XCTAssertNoThrow(try books.bookRevenue(for: order))
 
         // confirm
-        XCTAssert(books.rawMaterialsAll().isEmpty)
+        XCTAssert(books.rawMaterials.isEmpty)
 
-        XCTAssertEqual(books.wipsAll().count, 1)
+        XCTAssertEqual(books.wips.count, 1)
+        XCTAssertEqual(books.wips.totalBalance(for: \.inventory), 49.0 * -999)
         let wipInventory = try XCTUnwrap(books.workInProgress(forID: workInProgress.id)?.inventory)
         XCTAssertEqual(wipInventory.qty, -999)
-        XCTAssertEqual(wipInventory.balance(), 49.0 * -999)
+        XCTAssertEqual(wipInventory.balance, 49.0 * -999)
 
-        XCTAssertEqual(books.finishedGoodsAll().count, 1)
+        XCTAssertEqual(books.finishedGoods.count, 1)
+        XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory), 49 * (999 - 100))
         let finishedGoodsInventory = try XCTUnwrap(books.finishedGood(forID: finishedGood.id)?.inventory)
         XCTAssertEqual(finishedGoodsInventory.qty, 999 - 100)
-        XCTAssertEqual(finishedGoodsInventory.balance(), 49 * (999 - 100))
+        XCTAssertEqual(finishedGoodsInventory.balance, 49 * (999 - 100))
 
-        XCTAssertEqual(books.clientsAll().count, 1)
+        XCTAssertEqual(books.clients.count, 1)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 99 * 100 * (1 + 0.2))
         let receivables = try XCTUnwrap(books.client(forID: client.id)?.receivables)
-        XCTAssertEqual(receivables.balance(), order.amountWithTax)
-        XCTAssertEqual(receivables.balance(), 99 * 100 * (1 + 0.2))
+        XCTAssertEqual(receivables.balance, order.amountWithTax)
+        XCTAssertEqual(receivables.balance, 99 * 100 * (1 + 0.2))
 
-        XCTAssertEqual(books.revenueAccountBalance, order.amountExTax)
-        XCTAssertEqual(books.taxLiabilitiesBalance, order.tax)
+        XCTAssertEqual(books.revenueAccount.balance, order.amountExTax)
+        XCTAssertEqual(books.taxLiabilities.balance, order.tax)
 
-        XCTAssertEqual(books.revenueAccountBalance, 100 * 99.0)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 100 * 99.0 * 0.2)
+        XCTAssertEqual(books.revenueAccount.balance, 100 * 99.0)
+        XCTAssertEqual(books.taxLiabilities.balance, 100 * 99.0 * 0.2)
     }
 
     func testBookRevenueWithNonEmptyBooks() throws {
@@ -122,13 +144,13 @@ extension BooksTests {
         XCTAssertEqual(books.finishedGoodsAll(), finishedGoods)
         XCTAssertEqual(books.finishedGood(forID: finishedGood.id), finishedGood)
         XCTAssertEqual(books.finishedGood(forID: finishedGood.id)?.cost(), 49)
-        XCTAssertEqual(books.finishedGoodsAll().values.map(\.inventory).totalBalance(), 49_000)
+        XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory), 49_000)
 
         XCTAssertEqual(books.clientsAll(), clients)
         XCTAssertEqual(books.client(forID: client.id), client)
 
-        XCTAssertEqual(books.revenueAccountBalance, 999)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 111)
+        XCTAssertEqual(books.revenueAccount.balance, 999)
+        XCTAssertEqual(books.taxLiabilities.balance, 111)
 
         // create sales order and book revenue
         let qty = 100
@@ -147,13 +169,13 @@ extension BooksTests {
         XCTAssertEqual(booksFinishedGood.inventory.qty, 1_000 - 100)
         XCTAssertEqual(booksFinishedGood.inventory.amount, 49_000 - (49 * 100))
         XCTAssertEqual(booksFinishedGood.inventory.amount, 44_100)
-        XCTAssertEqual(booksFinishedGood.inventory.balance(), 44_100)
-        XCTAssertEqual(booksFinishedGood.cogs.balance(), 49 * 100)
+        XCTAssertEqual(booksFinishedGood.inventory.balance, 44_100)
+        XCTAssertEqual(booksFinishedGood.cogs.balance, 49 * 100)
 
         XCTAssertEqual(books.client(forID: client.id)?.id, client.id)
 
-        XCTAssertEqual(books.revenueAccountBalance, 999 + 100 * 99.0)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 111 + 100 * 99.0 * 0.2)
+        XCTAssertEqual(books.revenueAccount.balance, 999 + 100 * 99.0)
+        XCTAssertEqual(books.taxLiabilities.balance, 111 + 100 * 99.0 * 0.2)
     }
 
 

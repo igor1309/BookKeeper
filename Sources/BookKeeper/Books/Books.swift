@@ -5,12 +5,21 @@ public struct Books {
     public var wips: [WorkInProgress.ID: WorkInProgress]
     public var finishedGoods: [FinishedGood.ID: FinishedGood]
     public var clients: [Client.ID: Client]
+    public var suppliers: [Supplier.ID: Supplier]
     public var fixedAssets: [FixedAsset.ID: FixedAsset]
 
     // balance sheet
     public var cashAccount: Account<Cash>
     public var accumulatedDepreciation: Account<AccumulatedDepreciationEquipment>
-    public var payables: Account<AccountsPayable>
+
+    public var receivables: Account<AccountsReceivable> {
+        clients.combined(\.receivables)
+    }
+    public var payables: Account<AccountsPayable> {
+        suppliers.combined(\.payables)
+    }
+
+    public var vatReceivable: Account<VATReceivable>
     public var taxLiabilities: Account<TaxLiabilities>
 
     // income statement
@@ -21,24 +30,26 @@ public struct Books {
                 wips: [WorkInProgress.ID: WorkInProgress] = [:],
                 finishedGoods: [FinishedGood.ID: FinishedGood] = [:],
                 clients: [Client.ID: Client] = [:],
+                suppliers: [Supplier.ID: Supplier] = [:],
                 fixedAssets: [FixedAsset.ID: FixedAsset] = [:],
                 cashAccount: Account<Cash> = .init(),
                 accumulatedDepreciation: Account<AccumulatedDepreciationEquipment> = .init(),
-                payables: Account<AccountsPayable> = .init(),
                 revenueAccount: Account<Revenue> = .init(),
                 depreciationExpensesAccount: Account<DepreciationExpenses> = .init(),
+                vatReceivable: Account<VATReceivable> = .init(),
                 taxLiabilities: Account<TaxLiabilities> = .init()
     ) {
         self.rawMaterials = rawMaterials
         self.wips = wips
         self.finishedGoods = finishedGoods
         self.clients = clients
+        self.suppliers = suppliers
         self.fixedAssets = fixedAssets
         self.cashAccount = cashAccount
         self.accumulatedDepreciation = accumulatedDepreciation
-        self.payables = payables
         self.revenueAccount = revenueAccount
         self.depreciationExpensesAccount = depreciationExpensesAccount
+        self.vatReceivable = vatReceivable
         self.taxLiabilities = taxLiabilities
     }
 
@@ -50,19 +61,17 @@ public extension Books {
             && wips.isEmpty
             && finishedGoods.isEmpty
             && clients.isEmpty
+            && suppliers.isEmpty
             && fixedAssets.isEmpty
-            && cashBalance == 0
-            && accumulatedDepreciationBalance == 0
-            && payables.balance() == 0
-            && revenueAccountBalance == 0
-            && depreciationExpensesAccount.balance() == 0
-            && taxLiabilitiesBalance == 0
+            && cashAccount.balanceIsZero
+            && accumulatedDepreciation.balanceIsZero
+            && receivables.balanceIsZero
+            && payables.balanceIsZero
+            && revenueAccount.balanceIsZero
+            && depreciationExpensesAccount.balanceIsZero
+            && vatReceivable.balanceIsZero
+            && taxLiabilities.balanceIsZero
     }
-
-    var cashBalance: Double { cashAccount.balance() }
-    var accumulatedDepreciationBalance: Double { accumulatedDepreciation.balance() }
-    var revenueAccountBalance: Double { revenueAccount.balance() }
-    var taxLiabilitiesBalance: Double { taxLiabilities.balance() }
 
 }
 
@@ -82,15 +91,19 @@ extension Books: CustomStringConvertible {
 
 // MARK: - Business Operations
 public extension Books {
-
     enum BooksError: Error {
         case incorrectOrderType
+
         case unknownClient
+        case unknownSupplier
         case unknownFinishedGood
         case unknownWorkInProgress
+        case unknownRawMaterial
+
         case costOfProductNotDefined
         case incorrectLifetime
         case nonPositiveAmount
+        case negativeVAT
         case depreciationFail
     }
 

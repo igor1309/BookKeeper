@@ -34,27 +34,34 @@ public struct FixedAsset: Identifiable, Equatable {
     public let id: UUID
     public var name: String
     public let lifetime: Int
-    #warning("""
-        should I get category from account group?
-        enum BalanceSheet.Asset.PropertyPlantEquipment has a lots of common with enum 'Category'
-        """)
+
+    // MARK: should I get category from account group?
+    // enum BalanceSheet.Asset.PropertyPlantEquipment has a lots of common with enum 'Category'
     // public let category: BalanceSheet.Asset.PropertyPlantEquipment
     // public let category: Category
-    public let value: Double
-    public var depreciation: Double = 0
 
+    public let value: Double
+    public let vatRate: Double
+
+    public var depreciation: Double = 0
     public var carryingAmount: Double { value - depreciation }
+
+    // MARK: depreciationAmountPerMonth could be a method with potentially different depreciation strategies
+    /// https://saldovka.com/provodki/os/amortizatsiya-osnovnyih-sredstv.html
+    public var depreciationAmountPerMonth: Double { value / Double(lifetime) / 12 }
 
     public init(id: UUID = UUID(),
                 name: String,
                 lifetime: Int,
                 value: Double,
+                vatRate: Double = 20/100,
                 depreciation: Double = 0
     ) {
         self.id = id
         self.name = name
         self.lifetime = lifetime
         self.value = value
+        self.vatRate = vatRate
         self.depreciation = depreciation
     }
 
@@ -84,4 +91,5 @@ extension FixedAsset {
         case machinery
         case vehicles
     }
+    
 }

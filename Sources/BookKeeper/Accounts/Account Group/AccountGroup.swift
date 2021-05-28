@@ -27,8 +27,6 @@
 ///
 /// CaseIterable for enum with associated value see https://oleb.net/blog/2018/06/enumerating-enum-cases#manual-conformance
 
-#warning("lots of code added - need to update tests")
-
 public enum AccountGroup: Equatable, Hashable, CaseIterable {
     case balanceSheet(BalanceSheet)
     case incomeStatement(IncomeStatement)
@@ -64,10 +62,10 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
         public enum CurrentAsset: String, Equatable, Hashable, CaseIterable {
             case cash = "Cash"
             case accountsReceivable = "Accounts Receivable"
+            case vatReceivable = "VAT Receivable"
             case inventory = "Inventory"
         }
 
-        #warning("rename to Fixed Asset?")
         public enum PropertyPlantEquipment: String, Equatable, Hashable, CaseIterable {
             case land = "Land"
             case buildings = "Buildings"

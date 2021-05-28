@@ -10,12 +10,12 @@ extension AccountTests {
                        .balanceSheet(.liability(.currentLiability(.taxesPayable))))
 
         let taxLiabilities0: Account<TaxLiabilities> = .init()
-        XCTAssertEqual(taxLiabilities0.balance(), 0)
+        XCTAssert(taxLiabilities0.balanceIsZero)
         XCTAssertEqual(taxLiabilities0.group,
                        .balanceSheet(.liability(.currentLiability(.taxesPayable))))
 
         let taxLiabilities1: Account<TaxLiabilities> = .init(amount: 1_000)
-        XCTAssertEqual(taxLiabilities1.balance(), 1_000)
+        XCTAssertEqual(taxLiabilities1.balance, 1_000)
         XCTAssertEqual(taxLiabilities1.group,
                        .balanceSheet(.liability(.currentLiability(.taxesPayable))))
     }

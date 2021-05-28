@@ -9,7 +9,6 @@ extension IncomeStatement {
     public static var all: [String] { ["Revenue", "Expenses"] }
 }
 
-#warning("lots of code added - need to update tests")
 extension AccountGroup: RawRepresentable {
     public init?(rawValue: String) {
         if let balanceSheet = BalanceSheet(rawValue: rawValue) {

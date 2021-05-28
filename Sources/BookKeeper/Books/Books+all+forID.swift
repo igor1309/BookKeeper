@@ -33,6 +33,9 @@ public extension Books {
     func client(forID id: Client.ID) -> Client? {
         clients[id]
     }
+    func supplier(forID id: Supplier.ID) -> Supplier? {
+        suppliers[id]
+    }
     func fixedAsset(forID id: FixedAsset.ID) -> FixedAsset? {
         fixedAssets[id]
     }

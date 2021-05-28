@@ -4,6 +4,10 @@ public extension Books {
         clients[client.id] = client
     }
 
+    mutating func add(supplier: Supplier) {
+        suppliers[supplier.id] = supplier
+    }
+
     mutating func add(finishedGood: FinishedGood) {
         finishedGoods[finishedGood.id] = finishedGood
     }

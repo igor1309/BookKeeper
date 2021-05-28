@@ -4,10 +4,10 @@ import BookKeeper
 final class ClientTests: XCTestCase {
     func testClientInit() {
         let clientZero: Client = .init(name: "Client0")
-        XCTAssertEqual(clientZero.receivables.balance(), 0)
+        XCTAssert(clientZero.receivables.balanceIsZero)
 
         let client: Client = Client(name: "Client", initialReceivables: 9_900)
-        XCTAssertEqual(client.receivables.balance(), 9_900)
+        XCTAssertEqual(client.receivables.balance, 9_900)
     }
 
     func testDescription() {

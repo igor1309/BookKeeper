@@ -2,6 +2,13 @@
 public extension Books {
     
     /// `Receive Cash` from Client.
+    ///
+    ///                              debit    credit
+    ///     ----------------------------------------
+    ///     Cash                       120
+    ///     Accounts Receivable                  120
+    ///
+    ///
     mutating func receiveCash(_ amount: Double, from clientID: Client.ID) throws {
         let cashAccountBackup = cashAccount
         guard let receivablesBackup = clients[clientID]?.receivables else {

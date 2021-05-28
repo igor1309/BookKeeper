@@ -17,6 +17,12 @@ public enum AccountsReceivable: AccountTypeProtocol {
     public static let group = AccountGroup.balanceSheet(.asset(.currentAsset(.accountsReceivable)))
 }
 
+public enum VATReceivable: AccountTypeProtocol {
+    public static var defaultName = "VAT Receivable"
+    public static let kind = AccountKind.active
+    public static let group = AccountGroup.balanceSheet(.asset(.currentAsset(.vatReceivable)))
+}
+
 public enum Cash: AccountTypeProtocol {
     public static var defaultName = "Cash"
     public static let kind = AccountKind.active

@@ -2,83 +2,30 @@ import XCTest
 import BookKeeper
 
 final class AccountGroupTests: XCTestCase {
-    var accountsReceivable: Account<AccountsReceivable>!
-    var cogsAccount: Account<COGS>!
     var inventoryAccount: InventoryAccount!
-    var revenueAccount: Account<Revenue>!
+
+    var accountsReceivable: Account<AccountsReceivable>!
+    var vatReceivable: Account<VATReceivable>!
+    var cash: Account<Cash>!
+    var cogsAccount: Account<COGS>!
+    var depreciationExpenses: Account<DepreciationExpenses>!
+    var accountsPayable: Account<AccountsPayable>!
+    var accumulatedDepreciationEquipment: Account<AccumulatedDepreciationEquipment>!
     var taxLiabilities: Account<TaxLiabilities>!
+    var revenueAccount: Account<Revenue>!
 
     override func setUpWithError() throws {
-        accountsReceivable = .init(amount: 10_000)
-        cogsAccount = .init(amount: 10_000)
         inventoryAccount = .init(qty: 1_000, amount: 59_000)
-        revenueAccount = .init(amount: 20_000)
+
+        accountsReceivable = .init(amount: 10_000)
+        vatReceivable = .init(amount: 1_200)
+        cash = .init(amount: 99_999)
+        cogsAccount = .init(amount: 10_000)
+        depreciationExpenses = .init(amount: 1_100)
+        accountsPayable = .init(amount: 1_100)
+        accumulatedDepreciationEquipment = .init(amount: 1_100)
         taxLiabilities = .init(amount: 5_000)
+        revenueAccount = .init(amount: 20_000)
     }
 
-    func testAccountGroup() {
-        XCTFail()
-    }
-
-    func testBalanceSheet() {
-        XCTFail()
-    }
-
-    func testAsset() {
-        XCTFail()
-    }
-
-    func testCurrentAsset() {
-        XCTFail()
-    }
-
-    func testPropertyPlantEquipment() {
-        XCTFail()
-    }
-
-    func testLiability() {
-        XCTFail()
-    }
-    
-    func testCurrentLiability() {
-        XCTFail()
-    }
-
-    func testLongtermLiability() {
-        XCTFail()
-    }
-
-    func testEquity() {
-        XCTFail()
-    }
-
-    func testIncomeStatement() {
-        XCTFail()
-    }
-
-    func testExpense() {
-        XCTFail()
-    }
-
-    func testBalance() {
-        XCTFail("finish with this test")
-        //        let accounts: [Any] = [accountsReceivable,
-        //                                        cogs,
-        //                                        inventory,
-        //                                        revenue,
-        //                                        taxes]
-        //
-        //        let assets = accounts.filter { $0.group.isAsset }
-        //            .reduce(0, { $0 + $1.balance() })
-        //        XCTAssertEqual(assets, 20_000 + 100_000)
-        //
-        //        let liabilities = accounts.filter { $0.group.isLiability }
-        //            .reduce(0, { $0 + $1.balance() })
-        //        XCTAssertEqual(liabilities, 5_000)
-        //
-        //        let equity = accounts.filter { $0.group.isEquity }
-        //            .reduce(0, { $0 + $1.balance() })
-        //        XCTAssertEqual(equity, 0)
-    }
 }
-

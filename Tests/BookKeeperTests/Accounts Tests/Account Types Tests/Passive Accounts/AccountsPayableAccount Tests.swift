@@ -11,12 +11,12 @@ extension AccountTests {
                        .balanceSheet(.liability(.currentLiability(.accountsPayable))))
 
         let accountsPayableZero: Account<AccountsPayable> = .init()
-        XCTAssertEqual(accountsPayableZero.balance(), 0)
+        XCTAssert(accountsPayableZero.balanceIsZero)
         XCTAssertEqual(accountsPayableZero.group,
                        .balanceSheet(.liability(.currentLiability(.accountsPayable))))
 
         let accountsPayableWithValue: Account<AccountsPayable> = .init(amount: 10_000)
-        XCTAssertEqual(accountsPayableWithValue.balance(), 10_000)
+        XCTAssertEqual(accountsPayableWithValue.balance, 10_000)
         XCTAssertEqual(accountsPayableWithValue.group,
                        .balanceSheet(.liability(.currentLiability(.accountsPayable))))
     }

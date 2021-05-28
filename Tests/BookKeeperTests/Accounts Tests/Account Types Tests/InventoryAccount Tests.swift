@@ -11,14 +11,14 @@ final class InventoryAccountTests: XCTestCase {
         let inventoryAccountZero: InventoryAccount = .init()
         XCTAssertEqual(inventoryAccountZero.qty, 0)
         XCTAssertEqual(inventoryAccountZero.amount, 0)
-        XCTAssertEqual(inventoryAccountZero.balance(), 0)
+        XCTAssert(inventoryAccountZero.balanceIsZero)
         XCTAssertEqual(inventoryAccountZero.group,
                        .balanceSheet(.asset(.currentAsset(.inventory))))
 
         let inventoryAccount: InventoryAccount = .init(qty: 1_000, amount: 59_000)
         XCTAssertEqual(inventoryAccount.qty, 1_000)
         XCTAssertEqual(inventoryAccount.amount, 59_000)
-        XCTAssertEqual(inventoryAccount.balance(), 59_000)
+        XCTAssertEqual(inventoryAccount.balance, 59_000)
         XCTAssertEqual(inventoryAccount.group,
                        .balanceSheet(.asset(.currentAsset(.inventory))))
     }
@@ -277,7 +277,7 @@ extension InventoryAccountTests {
         XCTAssertNoThrow(try finishedGood.inventory.debit(order: order))
 
         // confirm
-        XCTAssertEqual(finishedGood.inventory.balance(), 999 * 49)
+        XCTAssertEqual(finishedGood.inventory.balance, 999 * 49)
         XCTAssertEqual(finishedGood.inventory.amount, 999 * 49)
         XCTAssertEqual(finishedGood.inventory.qty, 999)
     }
@@ -297,7 +297,7 @@ extension InventoryAccountTests {
         XCTAssertNoThrow(try finishedGood.inventory.credit(order: order))
 
         // confirm
-        XCTAssertEqual(finishedGood.inventory.balance(), -999 * 49)
+        XCTAssertEqual(finishedGood.inventory.balance, -999 * 49)
         XCTAssertEqual(finishedGood.inventory.amount, -999 * 49)
         XCTAssertEqual(finishedGood.inventory.qty, -999)
     }

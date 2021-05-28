@@ -18,6 +18,10 @@ extension BooksTests {
                                                         workInProgressID: workInProgress.id,
                                                         finishedGoodQty: 999)
 
+        // confirm
+        XCTAssert(books.finishedGoods.totalBalance(for: \.inventory).isZero)
+        XCTAssert(books.wips.totalBalance(for: \.inventory).isZero)
+
         XCTAssertThrowsError(try books.recordFinishedGoods(for: orderWithOtherType),
                              "Should fail: incorrect order type."
         ) { error in
@@ -25,19 +29,29 @@ extension BooksTests {
                            Books.BooksError.incorrectOrderType)
         }
 
+        // confirm no change after error
+        XCTAssert(books.finishedGoods.totalBalance(for: \.inventory).isZero)
+        XCTAssert(books.wips.totalBalance(for: \.inventory).isZero)
+
         // create production order
         let order: ProductionOrder = .init(orderType: .recordFinishedGoods(cost: 49),
                                            finishedGoodID: finishedGood.id,
                                            workInProgressID: workInProgress.id,
                                            finishedGoodQty: 999)
 
-        XCTAssertThrowsError(try books.recordFinishedGoods(for: order),
-                             "Should fail since finishedGood is not in books."
+        XCTAssertThrowsError(
+            try books.recordFinishedGoods(for: order),
+            "Should fail since finishedGood is not in books."
         ) { error in
             XCTAssertEqual(error as! Books.BooksError,
                            Books.BooksError.unknownFinishedGood)
         }
-        // add to books
+
+        // confirm no change after error
+        XCTAssert(books.finishedGoods.totalBalance(for: \.inventory).isZero)
+        XCTAssert(books.wips.totalBalance(for: \.inventory).isZero)
+
+        // add to books and try
         books.add(finishedGood: finishedGood)
         XCTAssertThrowsError(try books.recordFinishedGoods(for: order),
                              "Should fail since workInProgress is not in books."
@@ -46,25 +60,30 @@ extension BooksTests {
                            Books.BooksError.unknownWorkInProgress)
         }
 
+        // confirm no change after error
+        XCTAssert(books.finishedGoods.totalBalance(for: \.inventory).isZero)
+        XCTAssert(books.wips.totalBalance(for: \.inventory).isZero)
+
+        // add and try
         books.add(workInProgress: workInProgress)
         XCTAssertNoThrow(try books.recordFinishedGoods(for: order))
 
         // confirm
-        XCTAssert(books.rawMaterialsAll().isEmpty)
-        XCTAssertFalse(books.wipsAll().isEmpty)
-        XCTAssertFalse(books.finishedGoodsAll().isEmpty)
-        XCTAssert(books.clientsAll().isEmpty)
-        XCTAssertEqual(books.revenueAccountBalance, 0)
-        XCTAssertEqual(books.taxLiabilitiesBalance, 0)
+        XCTAssert(books.rawMaterials.isEmpty)
+        XCTAssertFalse(books.wips.isEmpty)
+        XCTAssertFalse(books.finishedGoods.isEmpty)
+        XCTAssert(books.clients.isEmpty)
+        XCTAssert(books.revenueAccount.balanceIsZero)
+        XCTAssert(books.taxLiabilities.balanceIsZero)
 
         let wipInventory = try XCTUnwrap(books.workInProgress(forID: workInProgress.id)?.inventory)
         XCTAssertEqual(wipInventory.qty, -999)
         XCTAssertEqual(wipInventory.amount, 49 * -999)
-        XCTAssertEqual(wipInventory.balance(), 49 * -999)
+        XCTAssertEqual(wipInventory.balance, 49 * -999)
 
         let finishedGoodInventory = try XCTUnwrap(books.finishedGood(forID: finishedGood.id)?.inventory)
         XCTAssertEqual(finishedGoodInventory.qty, 999)
         XCTAssertEqual(finishedGoodInventory.amount, 49 * 999)
-        XCTAssertEqual(finishedGoodInventory.balance(), 49 * 999)
+        XCTAssertEqual(finishedGoodInventory.balance, 49 * 999)
     }
 }

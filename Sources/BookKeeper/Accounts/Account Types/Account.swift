@@ -13,16 +13,29 @@ public struct Account<AccountType: AccountTypeProtocol> {
         self.amount = amount
     }
 
-    public func balance() -> Double {
-        return amount
-    }
+    public var balance: Double { amount }
 
+}
+
+extension Account: AccountProtocol {
+    public var kind: AccountKind { AccountType.kind }
+    public var group: AccountGroup { AccountType.group }
+}
+
+extension Account: CustomStringConvertible {
+    public var description: String {
+        "\(name)(\(group.rawValue) (\(kind)); \(amount))"
+    }
+}
+
+extension Account {
     public mutating func debit(amount: Double) throws {
         guard amount >= 0 else { throw AccountError<AccountType>.negativeAmount}
 
         switch kind {
             case .active, .bothActivePassive:
                 self.amount += amount
+
             case .passive:
                 if self.amount < amount {
                     throw AccountError<AccountType>.insufficientBalance(self)
@@ -42,6 +55,7 @@ public struct Account<AccountType: AccountTypeProtocol> {
                 } else {
                     self.amount -= amount
                 }
+
             case .passive:
                 self.amount += amount
         }
@@ -49,13 +63,3 @@ public struct Account<AccountType: AccountTypeProtocol> {
 
 }
 
-extension Account: AccountProtocol {
-    public var kind: AccountKind { AccountType.kind }
-    public var group: AccountGroup { AccountType.group }
-}
-
-extension Account: CustomStringConvertible {
-    public var description: String {
-        "\(name)(\(group.rawValue) (\(kind)); \(amount))"
-    }
-}

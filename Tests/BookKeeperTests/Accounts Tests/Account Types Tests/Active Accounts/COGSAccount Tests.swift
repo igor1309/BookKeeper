@@ -9,12 +9,12 @@ extension AccountTests {
                        .incomeStatement(.expense(.cogs)))
 
         let cogsAccountZero: Account<COGS> = .init()
-        XCTAssertEqual(cogsAccountZero.balance(), 0)
+        XCTAssert(cogsAccountZero.balanceIsZero)
         XCTAssertEqual(cogsAccountZero.group,
                        .incomeStatement(.expense(.cogs)))
 
         let cogsAccount: Account<COGS> = .init(amount: 10_000)
-        XCTAssertEqual(cogsAccount.balance(), 10_000)
+        XCTAssertEqual(cogsAccount.balance, 10_000)
         XCTAssertEqual(cogsAccount.group,
                        .incomeStatement(.expense(.cogs)))
     }
