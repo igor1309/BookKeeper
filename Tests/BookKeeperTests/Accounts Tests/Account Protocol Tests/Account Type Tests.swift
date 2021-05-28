@@ -22,28 +22,28 @@ final class AccountTypeTests: XCTestCase {
         XCTAssertEqual(Cash.group,
                        AccountGroup.balanceSheet(.asset(.currentAsset(.cash))))
     }
-    
+
     func testCOGS() {
         XCTAssertEqual(COGS.defaultName, "COGS")
         XCTAssertEqual(COGS.kind, AccountKind.active)
         XCTAssertEqual(COGS.group,
                        AccountGroup.incomeStatement(.expense(.cogs)))
     }
-    
+
     func testDepreciationExpenses() {
         XCTAssertEqual(DepreciationExpenses.defaultName, "Depreciation Expenses")
         XCTAssertEqual(DepreciationExpenses.kind, AccountKind.active)
         XCTAssertEqual(DepreciationExpenses.group,
                        AccountGroup.incomeStatement(.expense(.depreciation)))
     }
-    
+
     func testAccountsPayable() {
         XCTAssertEqual(AccountsPayable.defaultName, "Accounts Payable")
         XCTAssertEqual(AccountsPayable.kind, AccountKind.passive)
         XCTAssertEqual(AccountsPayable.group,
                        AccountGroup.balanceSheet(.liability(.currentLiability(.accountsPayable))))
     }
-    
+
     func testAccumulatedDepreciationEquipment() {
         XCTAssertEqual(AccumulatedDepreciationEquipment.defaultName, "Accumulated Depreciation Equipment")
         XCTAssertEqual(AccumulatedDepreciationEquipment.kind, AccountKind.passive)
@@ -57,5 +57,5 @@ final class AccountTypeTests: XCTestCase {
         XCTAssertEqual(TaxLiabilities.group,
                        AccountGroup.balanceSheet(.liability(.currentLiability(.taxesPayable))))
     }
-    
+
 }

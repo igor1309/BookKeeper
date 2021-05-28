@@ -4,6 +4,7 @@ import BookKeeper
 
 // MARK: - Business Operations
 extension BooksTests {
+    // swiftlint:disable function_body_length
     func testPurchaseFixedAsset() throws {
         var books: Books = .init()
         XCTAssert(books.fixedAssets.isEmpty)
@@ -19,7 +20,7 @@ extension BooksTests {
                                          lifetimeInYears: 7,
                                          amountExVAT: 1_000_000)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownSupplier)
         }
 
@@ -37,7 +38,7 @@ extension BooksTests {
                                          lifetimeInYears: 0,
                                          amountExVAT: 1_000_000)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.incorrectLifetime)
         }
 
@@ -54,7 +55,7 @@ extension BooksTests {
                                          lifetimeInYears: 7,
                                          amountExVAT: 0)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.nonPositiveAmount)
         }
 
@@ -72,10 +73,10 @@ extension BooksTests {
                                          amountExVAT: 0,
                                          vatRate: -10/100)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.nonPositiveAmount)
         }
-        
+
         // confirm no change after error
         XCTAssert(books.fixedAssets.isEmpty)
         XCTAssert(books.vatReceivable.balanceIsZero)
@@ -103,5 +104,6 @@ extension BooksTests {
         XCTAssertEqual(books.payables.balance, 1_200_000,
                        "Should include VAT")
     }
+    // swiftlint:enable function_body_length
 
 }

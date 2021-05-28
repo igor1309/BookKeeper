@@ -34,8 +34,8 @@ public protocol AccountProtocol: Hashable {
     /// Other possible "balances", that use non-money measurements
     /// (like inventory account balance as mass or volume
     /// or pieces measurement), should be implemented by those types.
-    //  MARK: Note: we could have account currency as well, but that is not a feature for MVP.
-    //  MARK: Time is difficult.
+    // MARK: Note: we could have account currency as well, but that is not a feature for MVP.
+    // MARK: Time is difficult.
     // func balance(at date: Date) -> Double
     /// Function to calculate change of account money value for some time period.
     // func balance(for timeframe: Timeframe) -> Double

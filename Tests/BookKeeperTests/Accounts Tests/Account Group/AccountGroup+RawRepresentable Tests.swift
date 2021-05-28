@@ -75,7 +75,7 @@ extension AccountGroupTests {
 
     func testLiabilityRawRepresentable() {
         XCTAssertNil(BalanceSheet.Liability(rawValue: "Cash Equivalent"))
-        
+
         XCTAssertEqual(BalanceSheet.Liability(rawValue: "Notes Payable"),
                        BalanceSheet.Liability.currentLiability(.notesPayable))
 
@@ -109,6 +109,5 @@ extension AccountGroupTests {
         XCTAssertEqual(IncomeStatement.expense(.cogs).rawValue,
                        "COGS")
     }
-
 
 }

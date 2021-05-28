@@ -4,6 +4,7 @@ import BookKeeper
 
 // MARK: - Business Operations
 extension BooksTests {
+    // swiftlint:disable function_body_length
     func testRecordFinishedGoods() throws {
         // initiate empty books
         var books: Books = .init()
@@ -25,7 +26,7 @@ extension BooksTests {
         XCTAssertThrowsError(try books.recordFinishedGoods(for: orderWithOtherType),
                              "Should fail: incorrect order type."
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.incorrectOrderType)
         }
 
@@ -43,7 +44,7 @@ extension BooksTests {
             try books.recordFinishedGoods(for: order),
             "Should fail since finishedGood is not in books."
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownFinishedGood)
         }
 
@@ -56,7 +57,7 @@ extension BooksTests {
         XCTAssertThrowsError(try books.recordFinishedGoods(for: order),
                              "Should fail since workInProgress is not in books."
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownWorkInProgress)
         }
 
@@ -86,4 +87,5 @@ extension BooksTests {
         XCTAssertEqual(finishedGoodInventory.amount, 49 * 999)
         XCTAssertEqual(finishedGoodInventory.balance, 49 * 999)
     }
+    // swiftlint:enable function_body_length
 }

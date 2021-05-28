@@ -1,11 +1,10 @@
 public protocol OrderProtocol: Equatable {
-    //associatedtype OrderType: Equatable
+    // associatedtype OrderType: Equatable
     var orderType: OrderType { get }
 
     var qty: Int { get }
     var cost: Double? { get }
 }
-
 
 public enum OrderType: Equatable {
     /// `Produced`
@@ -24,5 +23,5 @@ public enum OrderType: Equatable {
 
     /// `Purchase`
     case purchaseRawMaterial(RawMaterial)
-    case purchasePackaging//(Packaging)
+    case purchasePackaging// (Packaging)
 }

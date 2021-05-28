@@ -4,6 +4,7 @@ import BookKeeper
 
 // MARK: - Business Operations
 extension BooksTests {
+    // swiftlint:disable function_body_length
     func testPayInvoice() throws {
         var books: Books = .init(cashAccount: .init(amount: 700_000))
 
@@ -19,7 +20,7 @@ extension BooksTests {
                                          lifetimeInYears: 7,
                                          amountExVAT: 1_000_000)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownSupplier)
         }
 
@@ -48,7 +49,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.payInvoice(supplierID: supplier.id, amount: 800_000)
         ) { error in
-            XCTAssertEqual(error as! AccountError,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.insufficientBalance(books.cashAccount))
         }
         // confirm no change after error
@@ -66,7 +67,9 @@ extension BooksTests {
         XCTAssertEqual(books.payables.balance, 600_000)
         XCTAssertEqual(books.cashAccount.balance, 100_000)
     }
+    // swiftlint:enable function_body_length
 
+    // swiftlint:disable function_body_length
     func testPayInvoice2() throws {
         var books: Books = .init(cashAccount: .init(amount: 2_000_000))
 
@@ -83,7 +86,7 @@ extension BooksTests {
                                          lifetimeInYears: 7,
                                          amountExVAT: 1_000_000)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownSupplier)
         }
 
@@ -111,7 +114,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.payInvoice(supplierID: supplier.id, amount: 2_000_000)
         ) { error in
-            XCTAssertEqual(error as! AccountError,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.insufficientBalance(books.suppliers[supplier.id]!.payables))
         }
 
@@ -132,5 +135,6 @@ extension BooksTests {
         XCTAssertEqual(books.fixedAssets.sum(for: \.value), 1_000_000, "Should not include VAT")
         XCTAssertEqual(books.cashAccount.balance, 1_000_000)
     }
+    // swiftlint:enable function_body_length
 
 }

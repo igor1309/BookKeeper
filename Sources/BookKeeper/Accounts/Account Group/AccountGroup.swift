@@ -1,14 +1,23 @@
-/// The five major accounts provide the structure for your chart of accounts, breaking it down into separate categories of information. Several important financial reports are built around the same five categories. The five major accounts you’ll use to create your chart of accounts are:
+/// The five major accounts provide the structure for your chart of accounts, breaking it down
+/// into separate categories of information. Several important financial reports are built around
+/// the same five categories. The five major accounts you’ll use to create your chart of accounts are:
 
-///     `Assets`: Assets are resources owned by your business that can be converted into cash and therefore have monetary value. Examples of assets include your accounts receivable, vehicles, property and equipment.
+///     `Assets`: Assets are resources owned by your business that can be converted into cash
+///     and therefore have monetary value. Examples of assets include your accounts receivable,
+///     vehicles, property and equipment.
 ///
-///     `Liabilities`: Liabilities are debts that your company owes to someone else. This would include your accounts payable and any taxes you owe the government.
+///     `Liabilities`: Liabilities are debts that your company owes to someone else.
+///     This would include your accounts payable and any taxes you owe the government.
 ///
-///     `Equity`: The role of equity differs in the chart of accounts based on whether your business is set up as a sole proprietorship, LLC or corporation. But the basic equation for determining equity is a company’s assets minus its debts.
+///     `Equity`: The role of equity differs in the chart of accounts based on whether your business
+///     is set up as a sole proprietorship, LLC or corporation. But the basic equation for determining
+///     equity is a company’s assets minus its debts.
 ///
-///     `Revenue`: Revenue is the amount of money your business brings in by selling its products or services to clients.
+///     `Revenue`: Revenue is the amount of money your business brings in by selling its products
+///     or services to clients.
 ///
-///     `Expenses`: Expenses refer to the costs you incur in the process of running your business. This would include your office rent, utilities and office supplies.
+///     `Expenses`: Expenses refer to the costs you incur in the process of running your business.
+///     This would include your office rent, utilities and office supplies.
 ///
 /// Other listed at https://www.principlesofaccounting.com/account-types/
 
@@ -22,10 +31,12 @@
 ///
 /// The `huge downside`
 ///
-///     can't iterate over type values: can't conform to CaseIterable up until `leafs' like CurrentAsset, CurrentLiability, etc (CaseIterable enums without associated values)
+///     can't iterate over type values: can't conform to CaseIterable up until `leafs'
+///     like CurrentAsset, CurrentLiability, etc (CaseIterable enums without associated values)
 ///     if can't iterate then how to create, for example, an AccountGroupPicker, that should show the hierarchy
 ///
-/// CaseIterable for enum with associated value see https://oleb.net/blog/2018/06/enumerating-enum-cases#manual-conformance
+/// CaseIterable for enum with associated value see
+/// https://oleb.net/blog/2018/06/enumerating-enum-cases#manual-conformance
 
 public enum AccountGroup: Equatable, Hashable, CaseIterable {
     case balanceSheet(BalanceSheet)
@@ -55,6 +66,7 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
     case liability(Liability)
     case equity(Equity)
 
+    // // swiftlint:disable nesting
     public enum Asset: Equatable, Hashable, CaseIterable {
         case currentAsset(CurrentAsset)
         case propertyPlantEquipment(PropertyPlantEquipment)

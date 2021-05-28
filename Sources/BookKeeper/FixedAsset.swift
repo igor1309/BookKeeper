@@ -11,7 +11,8 @@ import Tagged
 /// with the intent of either reselling it directly or incorporating it into a product
 /// that is then sold.
 ///
-/// Fixed assets are initially recorded as assets, and are then subject to the following general types of accounting transactions:
+/// Fixed assets are initially recorded as assets, and are then subject to the following
+/// general types of accounting transactions:
 ///
 ///     Periodic depreciation (for tangible assets) or amortization (for intangible assets)
 ///     Impairment write-downs (if the value of an asset declines below its net book value)
@@ -83,5 +84,5 @@ extension FixedAsset {
         case machinery
         case vehicles
     }
-    
+
 }

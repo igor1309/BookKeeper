@@ -16,7 +16,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.receiveCash(1_000, from: Client.sample.id)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownClient)
         }
 
@@ -46,7 +46,7 @@ extension BooksTests {
 
         // cash receive fail with negative amount
         XCTAssertThrowsError(try books.receiveCash(-1_000, from: client.id)) { error in
-            XCTAssertEqual(error as! AccountError<Cash>,
+            XCTAssertEqual(error as? AccountError<Cash>,
                            AccountError.negativeAmount)
         }
 

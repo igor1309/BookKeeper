@@ -12,7 +12,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "BookKeeper",
-            targets: ["BookKeeper"]),
+            targets: ["BookKeeper"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-tagged.git", from: "0.5.0")
@@ -27,6 +27,6 @@ let package = Package(
             ]),
         .testTarget(
             name: "BookKeeperTests",
-            dependencies: ["BookKeeper"]),
+            dependencies: ["BookKeeper"])
     ]
 )

@@ -90,7 +90,7 @@ extension InventoryAccountTests {
                                                  qty: 100,
                                                  priceExTax: 99)
         XCTAssertThrowsError(try inventory.debit(order: orderBookRevenue)) { error in
-            XCTAssertEqual(error as! OrderProcessingError,
+            XCTAssertEqual(error as? OrderProcessingError,
                            OrderProcessingError.wrongOrderType)
         }
     }
@@ -106,7 +106,7 @@ extension InventoryAccountTests {
                                       qty: 100,
                                       priceExTax: 99)
         XCTAssertThrowsError(try inventory.credit(order: order)) { error in
-            XCTAssertEqual(error as! OrderProcessingError,
+            XCTAssertEqual(error as? OrderProcessingError,
                            OrderProcessingError.emptyInventoryHasNoCost)
         }
 
@@ -152,7 +152,7 @@ extension InventoryAccountTests {
                                       priceExTax: priceExTax)
 
         XCTAssertThrowsError(try inventory.credit(order: order)) { error in
-            XCTAssertEqual(error as! OrderProcessingError,
+            XCTAssertEqual(error as? OrderProcessingError,
                            OrderProcessingError.wrongOrderType)
         }
     }
@@ -190,8 +190,8 @@ extension InventoryAccountTests {
         XCTAssertEqual(inventory.amount, 49 * 200 + 69 * 500)
 
         let cost2 = try XCTUnwrap(inventory.cost())
-        let c = Double(49 * 200 + 69 * 500) / Double(200 + 500)
-        XCTAssertEqual(cost2, c, accuracy: 0.00001)
+        let cost = Double(49 * 200 + 69 * 500) / Double(200 + 500)
+        XCTAssertEqual(cost2, cost, accuracy: 0.00001)
         XCTAssertEqual(cost2, 63.2857, accuracy: 0.001)
 
         // create and try order that can't be processed
@@ -200,7 +200,7 @@ extension InventoryAccountTests {
             finishedGoodID: finishedGood.id,
             qty: 100)
         XCTAssertThrowsError(try inventory.debit(order: order3)) { error in
-            XCTAssertEqual(error as! OrderProcessingError,
+            XCTAssertEqual(error as? OrderProcessingError,
                            OrderProcessingError.wrongOrderType)
         }
     }
@@ -217,7 +217,7 @@ extension InventoryAccountTests {
             finishedGoodID: finishedGood.id,
             qty: 100)
         XCTAssertThrowsError(try inventory.credit(order: trashInventoryOrder)) { error in
-            XCTAssertEqual(error as! OrderProcessingError,
+            XCTAssertEqual(error as? OrderProcessingError,
                            OrderProcessingError.emptyInventoryHasNoCost)
         }
 
@@ -254,7 +254,7 @@ extension InventoryAccountTests {
                                            finishedGoodID: finishedGood.id,
                                            qty: 100)
         XCTAssertThrowsError(try inventory.credit(order: order3)) { error in
-            XCTAssertEqual(error as! OrderProcessingError,
+            XCTAssertEqual(error as? OrderProcessingError,
                            OrderProcessingError.wrongOrderType)
         }
     }

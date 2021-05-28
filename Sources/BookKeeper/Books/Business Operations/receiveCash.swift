@@ -1,6 +1,6 @@
 // MARK: - Business Operations
 public extension Books {
-    
+
     /// `Receive Cash` from Client.
     ///
     ///                              debit    credit

@@ -1,6 +1,6 @@
 // MARK: - Business Operations
 public extension Books {
-    
+
     /// `Record Finished Goods`
     /// Once the production facility has converted the work-in-process into completed goods,
     /// you then shift the cost of these materials into the finished goods account.

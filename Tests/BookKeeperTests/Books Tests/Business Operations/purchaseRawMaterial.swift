@@ -20,7 +20,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.purchaseRawMaterial(for: order)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownRawMaterial)
         }
 
@@ -34,7 +34,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.purchaseRawMaterial(for: order)
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownSupplier)
         }
 

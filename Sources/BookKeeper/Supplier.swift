@@ -22,4 +22,3 @@ extension Supplier: CustomStringConvertible {
         "Supplier \(name)(payables: \(payables))"
     }
 }
-

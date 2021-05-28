@@ -21,7 +21,7 @@ public struct InventoryAccount {
 extension InventoryAccount: AccountProtocol {
     public static let kind: AccountKind = .active
     public static let accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory)))
-    
+
     public var kind: AccountKind { Self.kind }
     public var group: AccountGroup { Self.accountGroup }
 }
@@ -48,12 +48,13 @@ extension InventoryAccount {
 
 // MARK: - Order Processing
 extension InventoryAccount: OrderProcessingAccount {
-    
+
     /// `Debit`.
     /// Inventory Account is `active` account hence `increase` is recorded by `debit` on the account.
     /// The reasons for `inventory increase` are:
     ///
-    ///     - new products were manufactured and moved from production to warehouse, this is handled by credit(inventoryOrder:)
+    ///     - new products were manufactured and moved from production to warehouse,
+    ///     this is handled by credit(inventoryOrder:)
     ///     - sales return, this is handled by credit(salesOrder:)
     ///
     /// `Production order`

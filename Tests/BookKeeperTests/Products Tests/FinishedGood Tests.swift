@@ -32,16 +32,20 @@ final class FinishedGoodTests: XCTestCase {
 
     func testDescription() {
         let finishedNoInventory: FinishedGood = .init(name: "Finished good without Inventory")
+        // swiftlint:disable line_length
         XCTAssertEqual(finishedNoInventory.description,
                        "FinishedGood 'Finished good without Inventory'\n\tinventory: Inventory(qty: 0, amount: 0.0)\n\tcogs: Finished good without Inventory(COGS (active); 0.0))")
+        // swiftlint:enable line_length
 
         let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
         let finishedWithInventory: FinishedGood = .init(
             name: "Finished Good with Inventory",
             inventory: inventory
         )
+        // swiftlint:disable line_length
         XCTAssertEqual(finishedWithInventory.description,
                        "FinishedGood 'Finished Good with Inventory'\n\tinventory: Inventory(qty: 1000, amount: 49000.0)\n\tcogs: Finished Good with Inventory(COGS (active); 0.0))")
+        // swiftlint:enable line_length
     }
 
 }

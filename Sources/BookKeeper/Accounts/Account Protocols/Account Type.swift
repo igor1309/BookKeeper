@@ -84,7 +84,9 @@ public enum AccountsPayable: AccountTypeProtocol {
 public enum AccumulatedDepreciationEquipment: AccountTypeProtocol {
     public static var defaultName = "Accumulated Depreciation Equipment"
     public static let kind = AccountKind.passive
+    // swiftlint:disable line_length
     public static let group = AccountGroup.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))
+    // swiftlint:enable line_length
 }
 
 public enum TaxLiabilities: AccountTypeProtocol {

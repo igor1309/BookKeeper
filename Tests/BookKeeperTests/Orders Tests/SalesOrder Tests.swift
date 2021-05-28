@@ -72,7 +72,6 @@ final class SalesOrderTests: XCTestCase {
         XCTAssertEqual(salesOrderSalesReturn.description,
                        "Sales Order(salesReturn(cost: 49.0) 9900.0: 100 @ 99.0, tax: 0.2)")
 
-
     }
 
 }

@@ -55,7 +55,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.depreciateFixedAssets()
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.depreciationFail)
         }
 

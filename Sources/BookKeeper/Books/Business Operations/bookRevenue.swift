@@ -1,6 +1,8 @@
 // MARK: - Business Operations
 
-/// A `transaction` is a business event that has a monetary impact on an entity's financial statements, and is recorded as an entry in its accounting records. Examples of transactions are as follows:
+/// A `transaction` is a business event that has a monetary impact on an entity's
+/// financial statements, and is recorded as an entry in its accounting records.
+/// Examples of transactions are as follows:
 ///
 ///     Paying a supplier for services rendered or goods delivered.
 ///     Paying a seller with cash and a note in order to obtain ownership of a property formerly owned by the seller.

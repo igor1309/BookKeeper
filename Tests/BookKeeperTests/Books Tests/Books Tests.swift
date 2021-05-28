@@ -2,12 +2,6 @@ import XCTest
 // @testable
 import BookKeeper
 
-//extension Sequence where Element: AccountProtocol {
-//    func totalBalance() -> Double {
-//        reduce(0) { $0 + $1.balance }
-//    }
-//}
-
 final class BooksTests: XCTestCase {
     func testInitNoParameters() {
         let books: Books = .init()
@@ -28,6 +22,7 @@ final class BooksTests: XCTestCase {
         XCTAssert(books.depreciationExpensesAccount.balanceIsZero)
     }
 
+    // swiftlint:disable function_body_length
     func testInitWithParameters() {
         // initiate books
         let rawMaterial: RawMaterial = .sample
@@ -89,6 +84,7 @@ final class BooksTests: XCTestCase {
         XCTAssertEqual(books.vatReceivable.balance, 66)
         XCTAssertEqual(books.taxLiabilities.balance, 111)
     }
+    // swiftlint:enable function_body_length
 
     func testIsEmpty() {
         var books: Books = .init()
@@ -143,6 +139,7 @@ final class BooksTests: XCTestCase {
         books.add(client: client)
 
         XCTAssertEqual([books.description],
+                       // swiftlint:disable line_length
                        ["""
                         Finished Goods:
                         \tFinishedGood(inventory: Inventory(amount: 0.0, qty: 0), cogs: COGS(0.0))
@@ -151,9 +148,9 @@ final class BooksTests: XCTestCase {
                         Revenue: 0.0
                         Tax Liabilities: 0.0
                         """])
-
         XCTAssertEqual([books.description],
                        ["Finished Goods:\n\tFinishedGood(inventory: Inventory(amount: 0.0, qty: 0), cogs: COGS(0.0))\nClients:\n\tClient(receivables: AccountsReceivable(0.0))\nRevenue: 0.0\nTax Liabilities: 0.0"],
+                       // swiftlint:enable line_length
                        "Using array to see escaped special characters")
 
         XCTFail("finish with test: test with some products, clients. etc - after operations")

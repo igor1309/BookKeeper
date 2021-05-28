@@ -4,6 +4,7 @@ import BookKeeper
 
 // MARK: - Business Operations
 extension BooksTests {
+    // swiftlint:disable function_body_length
     func testBookRevenueWithEmptyBooks() throws {
         // initiate empty books
         var books: Books = .init()
@@ -21,7 +22,7 @@ extension BooksTests {
                                       qty: qty,
                                       priceExTax: priceExTax)
         XCTAssertThrowsError(try books.bookRevenue(for: order)) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownClient)
         }
 
@@ -32,7 +33,7 @@ extension BooksTests {
 
         books.add(client: client)
         XCTAssertThrowsError(try books.bookRevenue(for: order)) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownFinishedGood)
         }
 
@@ -45,7 +46,7 @@ extension BooksTests {
         XCTAssertThrowsError(try books.bookRevenue(for: order),
                              "Throws error if inventory is empty and cost can't be determined."
         ) { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.costOfProductNotDefined)
         }
 
@@ -56,7 +57,7 @@ extension BooksTests {
 
         XCTAssertThrowsError(try books.bookRevenue(for: order),
                              "Failure due to empty finished goods inventory.") { error in
-            XCTAssertEqual(error as! Books.BooksError,
+            XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.costOfProductNotDefined)
         }
 
@@ -120,6 +121,7 @@ extension BooksTests {
         XCTAssertEqual(books.revenueAccount.balance, 100 * 99.0)
         XCTAssertEqual(books.taxLiabilities.balance, 100 * 99.0 * 0.2)
     }
+    // swiftlint:enable function_body_length
 
     func testBookRevenueWithNonEmptyBooks() throws {
         // initiate books (as in testInitWithParameters())
@@ -177,6 +179,5 @@ extension BooksTests {
         XCTAssertEqual(books.revenueAccount.balance, 999 + 100 * 99.0)
         XCTAssertEqual(books.taxLiabilities.balance, 111 + 100 * 99.0 * 0.2)
     }
-
 
 }
