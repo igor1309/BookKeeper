@@ -12,7 +12,7 @@ public extension Books {
     ///
     ///
     mutating func recordFinishedGoods(for order: ProductionOrder) throws {
-        guard case .recordFinishedGoods(_) = order.orderType else {
+        guard case .recordFinishedGoods = order.orderType else {
             throw BooksError.incorrectOrderType
         }
 

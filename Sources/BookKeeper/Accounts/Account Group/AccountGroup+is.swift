@@ -1,7 +1,7 @@
 extension AccountGroup {
     public var isAsset: Bool {
         switch self {
-            case .balanceSheet(.asset(_)):
+            case .balanceSheet(.asset):
                 return true
             default:
                 return false
@@ -10,7 +10,7 @@ extension AccountGroup {
 
     public var isCurrentAsset: Bool {
         switch self {
-            case .balanceSheet(.asset(.currentAsset(_))):
+            case .balanceSheet(.asset(.currentAsset)):
                 return true
             default:
                 return false
@@ -19,7 +19,7 @@ extension AccountGroup {
 
     public var isPropertyPlantEquipment: Bool {
         switch self {
-            case .balanceSheet(.asset(.propertyPlantEquipment(_))):
+            case .balanceSheet(.asset(.propertyPlantEquipment)):
                 return true
             default:
                 return false
@@ -28,7 +28,7 @@ extension AccountGroup {
 
     public var isLiability: Bool {
         switch self {
-            case .balanceSheet(.liability(_)):
+            case .balanceSheet(.liability):
                 return true
             default:
                 return false
@@ -37,7 +37,7 @@ extension AccountGroup {
 
     public var isCurrentLiability: Bool {
         switch self {
-            case .balanceSheet(.liability(.currentLiability(_))):
+            case .balanceSheet(.liability(.currentLiability)):
                 return true
             default:
                 return false
@@ -46,7 +46,7 @@ extension AccountGroup {
 
     public var isLongtermLiability: Bool {
         switch self {
-            case .balanceSheet(.liability(.longtermLiability(_))):
+            case .balanceSheet(.liability(.longtermLiability)):
                 return true
             default:
                 return false
@@ -55,7 +55,7 @@ extension AccountGroup {
 
     public var isEquity: Bool {
         switch self {
-            case .balanceSheet(.equity(_)):
+            case .balanceSheet(.equity):
                 return true
             default:
                 return false
@@ -73,7 +73,7 @@ extension AccountGroup {
 
     public var isExpense: Bool {
         switch self {
-            case .incomeStatement(.expense(_)):
+            case .incomeStatement(.expense):
                 return true
             default:
                 return false

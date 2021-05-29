@@ -48,8 +48,8 @@ public enum AccountGroup: Equatable, Hashable, CaseIterable {
         @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
         func _assertExhaustiveness(of accountGroup: AccountGroup, never: Never) {
             switch accountGroup {
-                case .balanceSheet(_),
-                     .incomeStatement(_):
+                case .balanceSheet,
+                     .incomeStatement:
                     break
             }
         }
@@ -94,8 +94,8 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
             @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
             func _assertExhaustiveness(of asset: BalanceSheet.Asset, never: Never) {
                 switch asset {
-                    case .currentAsset(_),
-                         .propertyPlantEquipment(_):
+                    case .currentAsset,
+                         .propertyPlantEquipment:
                         break
                 }
             }
@@ -128,8 +128,8 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
             @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
             func _assertExhaustiveness(of liability: BalanceSheet.Liability, never: Never) {
                 switch liability {
-                    case .currentLiability(_),
-                         .longtermLiability(_):
+                    case .currentLiability,
+                         .longtermLiability:
                         break
                 }
             }
@@ -151,9 +151,9 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
         @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
         func _assertExhaustiveness(of balanceSheet: BalanceSheet, never: Never) {
             switch balanceSheet {
-                case .asset(_),
-                     .liability(_),
-                     .equity(_):
+                case .asset,
+                     .liability,
+                     .equity:
                     break
             }
         }
@@ -219,7 +219,7 @@ public enum IncomeStatement: Equatable, Hashable, CaseIterable {
         func _assertExhaustiveness(of incomeStatement: IncomeStatement, never: Never) {
             switch incomeStatement {
                 case .revenue,
-                     .expense(_):
+                     .expense:
                     break
             }
         }

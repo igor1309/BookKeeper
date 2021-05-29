@@ -70,7 +70,7 @@ extension InventoryAccount: OrderProcessingAccount {
                 self.amount += amount
                 self.qty += order.qty
 
-            case .purchaseRawMaterial(_):
+            case .purchaseRawMaterial:
                 let amount = Double(order.qty) * (order.cost ?? 0)
                 self.amount += amount
                 self.qty += order.qty
