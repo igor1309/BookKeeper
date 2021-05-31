@@ -22,14 +22,24 @@ A description of this package.
 
 
 ## Account
-### Generic Account
+`AccountProtocol` defines basic properties for account, such as `kind` (active/passive/both), `group` (balance sheet/income statement; asset/liability, etc - as defined in `AccountGroup` enum) and account `balance`.
+
+### The `Account` type
+
+The `Account` type describes **generic** account for tracking monetary value, conforms to `AccountProtocol`.
+
 ```swift
 struct Account<AccountType: AccountTypeProtocol>
 ```
-### Inventory Account
+
+`AccountTypeProtocol` demands static properties for kind and group.
+A bunch of types, conforming to AccountTypeProtocol, are defined as case-less enums with static properties `kind` and `group`, for example `AccountsReceivable`, `Cash`, `COGS`, `Revenue`, etc.
+
+### The `Inventory Account` type
 
 ## Order
-Conforming to `OrderProtocol`.
+
+Types conforming to `OrderProtocol`:
 
 * Inventory Order
 * Production Order
@@ -43,11 +53,13 @@ Conforming to `OrderProtocol`.
 ## Fixed Asset
 
 ## Product
+
 * Raw Material
 * Work in Progress
 * Finished Good
 
 ## Books
+
 * Business Operations: Book Revenue, Depreciate Fixed Asset, Purchase Raw Material, Receive Cash, Record Finished Goods
 
 
@@ -68,4 +80,3 @@ Type-safe identifiers - sources:
 * [Creating type-safe identifiers for your Codable models – Donny Wals](https://www.donnywals.com/creating-type-safe-identifiers-for-your-codable-models/)
 
 Best polished solution is [pointfreeco/swift-tagged: 🏷 A wrapper type for safer, expressive code.](https://github.com/pointfreeco/swift-tagged/) wrapped is Swift Package.
-
