@@ -3,21 +3,21 @@
 A description of this package.
 
 * [Account](#account)
-    * Generic Account
-    * Inventory Account
-* Order
-    * Inventory Order
-    * Production Order
-    * Purchase Order
-    * Sales Order
-* Client
-* Supplier
-* Fixed Asset
-* Product
-    * Raw Material
-    * Work in Progress
-    * Finished Good
-* Books:
+    * [Generic Account](#generic-account)
+    * [Inventory Account](#inventory-account)
+* [Order](#order)
+    * [Inventory Order](#inventory-order)
+    * [Production Order](#production-order)
+    * [Purchase Order](#purchase-order)
+    * [Sales Order](#sales-order)
+* [Client](#client)
+* [Supplier](#supplier)
+* [Fixed Asset](#fixed-asset)
+* [Product](#product)
+    * [Raw Material](#raw-material)
+    * [Work in Progress](#work-in-progress)
+    * [Finished Good](#finished-good)
+* [Books](#books)
     * Business Operations: Book Revenue, Depreciate Fixed Asset, Purchase Raw Material, Receive Cash, Record Finished Goods
 
 
@@ -29,6 +29,8 @@ struct Account<AccountType: AccountTypeProtocol>
 ### Inventory Account
 
 ## Order
+Conforming to `OrderProtocol`.
+
 * Inventory Order
 * Production Order
 * Purchase Order
