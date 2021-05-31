@@ -2,7 +2,7 @@
 
 A description of this package.
 
-* Account
+* [Account](#account)
     * Generic Account
     * Inventory Account
 * Order
