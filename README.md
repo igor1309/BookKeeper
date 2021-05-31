@@ -2,6 +2,24 @@
 
 A description of this package.
 
+* Account
+    * Generic Account
+    * Inventory Account
+* Order
+    * Inventory Order
+    * Production Order
+    * Purchase Order
+    * Sales Order
+* Client
+* Supplier
+* Fixed Asset
+* Product
+    * Raw Material
+    * Work in Progress
+    * Finished Good
+* Books:
+    * Business Operations: Book Revenue, Depreciate Fixed Asset, Purchase Raw Material, Receive Cash, Record Finished Goods
+
 
 ## Account
 ### Generic Account
