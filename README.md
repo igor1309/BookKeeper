@@ -1,6 +1,16 @@
 # BookKeeper
 
-A description of this package.
+The BookKeeper is a Swift Package with a set of tools that are used to describe top-level business operations of the factory that is producing goods and selling them.
+
+Using predefined set of business operations.
+Business operations are top level operations That’s all right cool dude to the books via set off transactions two relevant accounts stop
+
+The collection of business operations are closed, hard coded.
+
+
+?? Should I have a tool to define custom business operations with underlying debit credit transactions?
+
+
 
 * [Account](#account)
     * [Generic Account](#generic-account)
