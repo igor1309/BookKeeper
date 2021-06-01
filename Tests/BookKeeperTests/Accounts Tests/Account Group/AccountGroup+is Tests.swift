@@ -2,6 +2,32 @@ import XCTest
 import BookKeeper
 
 extension AccountGroupTests {
+    func testAccountGroupIsBalanceSheet() {
+        XCTAssert(inventoryAccount.group.isBalanceSheet)
+        XCTAssert(accountsReceivable.group.isBalanceSheet)
+        XCTAssert(vatReceivable.group.isBalanceSheet)
+        XCTAssert(cash.group.isBalanceSheet)
+        XCTAssertFalse(cogsAccount.group.isBalanceSheet)
+        XCTAssertFalse(depreciationExpenses.group.isBalanceSheet)
+        XCTAssert(accountsPayable.group.isBalanceSheet)
+        XCTAssert(accumulatedDepreciationEquipment.group.isBalanceSheet)
+        XCTAssert(taxLiabilities.group.isBalanceSheet)
+        XCTAssertFalse(revenueAccount.group.isBalanceSheet)
+    }
+
+    func testAccountGroupIsIncomeStatement() {
+        XCTAssertFalse(inventoryAccount.group.isIncomeStatement)
+        XCTAssertFalse(accountsReceivable.group.isIncomeStatement)
+        XCTAssertFalse(vatReceivable.group.isIncomeStatement)
+        XCTAssertFalse(cash.group.isIncomeStatement)
+        XCTAssert(cogsAccount.group.isIncomeStatement)
+        XCTAssert(depreciationExpenses.group.isIncomeStatement)
+        XCTAssertFalse(accountsPayable.group.isIncomeStatement)
+        XCTAssertFalse(accumulatedDepreciationEquipment.group.isIncomeStatement)
+        XCTAssertFalse(taxLiabilities.group.isIncomeStatement)
+        XCTAssert(revenueAccount.group.isIncomeStatement)
+    }
+
     func testAccountGroupIsAsset() {
         XCTAssert(inventoryAccount.group.isAsset)
         XCTAssert(accountsReceivable.group.isAsset)

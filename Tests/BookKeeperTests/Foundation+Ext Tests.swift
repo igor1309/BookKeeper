@@ -58,4 +58,85 @@ final class FoundationExtTests: XCTestCase {
         )
     }
 
+    let receivables = Account<AccountsReceivable>(amount: 1_000)
+    let vatReceivable = Account<VATReceivable>(amount: 100)
+    let cash = Account<Cash>(amount: 500)
+    let payables = Account<AccountsPayable>(amount: 900)
+    let accumulatedDepreciationEquipment = Account<AccumulatedDepreciationEquipment>(amount: 66)
+    let taxLiabilities = Account<TaxLiabilities>(amount: 999)
+
+    let cogs = Account<COGS>(amount: 100)
+    let depreciationExpenses = Account<DepreciationExpenses>(amount: 100)
+    let revenue = Account<Revenue>(amount: 100)
+
+    var simpleAccounts: [SimpleAccount] {
+        [receivables.simpleAccount,
+         vatReceivable.simpleAccount,
+         cash.simpleAccount,
+         payables.simpleAccount,
+         accumulatedDepreciationEquipment.simpleAccount,
+         taxLiabilities.simpleAccount,
+
+         cogs.simpleAccount,
+         depreciationExpenses.simpleAccount,
+         revenue.simpleAccount,
+        ]
+    }
+
+    var accounts: [AccountGroup : SimpleAccount] { simpleAccounts.byGroup }
+
+    func testArrayOfAccountProtocolByGroup() {
+        XCTAssertEqual(accounts.count, 9)
+
+        XCTAssertEqual(accounts[.balanceSheet(.asset(.currentAsset(.accountsReceivable)))],
+                       receivables.simpleAccount)
+        XCTAssertEqual(accounts[.balanceSheet(.asset(.currentAsset(.vatReceivable)))],
+                       vatReceivable.simpleAccount)
+        XCTAssertEqual(accounts[.balanceSheet(.asset(.currentAsset(.cash)))],
+                       cash.simpleAccount)
+        XCTAssertEqual(accounts[.balanceSheet(.liability(.currentLiability(.accountsPayable)))],
+                       payables.simpleAccount)
+        XCTAssertEqual(accounts[.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))],
+                       accumulatedDepreciationEquipment.simpleAccount)
+        XCTAssertEqual(accounts[.balanceSheet(.liability(.currentLiability(.taxesPayable)))],
+                       taxLiabilities.simpleAccount)
+
+        XCTAssertEqual(accounts[.incomeStatement(.expense(.cogs))],
+                       cogs.simpleAccount)
+        XCTAssertEqual(accounts[.incomeStatement(.expense(.depreciation))],
+                       depreciationExpenses.simpleAccount)
+        XCTAssertEqual(accounts[.incomeStatement(.revenue)],
+                       revenue.simpleAccount)
+    }
+
+    func testDictionaryProperties() {
+        let balanceSheet = accounts.balanceSheet
+        XCTAssertEqual(balanceSheet.balance,
+                       receivables.balance + vatReceivable.balance + cash.balance - payables.balance - accumulatedDepreciationEquipment.balance - taxLiabilities.balance)
+
+        let assets = accounts.assets
+        XCTAssertEqual(assets.balance,
+                       receivables.balance + vatReceivable.balance + cash.balance - accumulatedDepreciationEquipment.balance)
+
+        let liabilities = accounts.liabilities
+        XCTAssertEqual(liabilities.balance,
+                       -payables.balance - taxLiabilities.balance)
+
+        let currentAssets = accounts.currentAssets
+        XCTAssertEqual(currentAssets.balance,
+                       receivables.balance + vatReceivable.balance + cash.balance)
+    }
+
+}
+
+struct SimpleAccount: AccountProtocol {
+    var kind: AccountKind
+    var group: AccountGroup
+    var balance: Double
+}
+
+extension Account {
+    var simpleAccount: SimpleAccount {
+        SimpleAccount(kind: kind, group: group, balance: balance)
+    }
 }

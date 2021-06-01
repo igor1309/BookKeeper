@@ -31,3 +31,22 @@ public extension Dictionary {
                 amount: totalBalance(for: keyPath))
     }
 }
+
+extension Array where Element: AccountProtocol {
+    var byGroup: [AccountGroup: Element] {
+        Dictionary(uniqueKeysWithValues: self.map { ($0.group, $0) })
+    }
+}
+
+extension Dictionary where Key == AccountGroup, Value: AccountProtocol {
+    var balanceSheet:   Self { filter { $0.key.isBalanceSheet } }
+    var assets:         Self { filter { $0.key.isAsset } }
+    var liabilities:    Self { filter { $0.key.isLiability } }
+    var currentAssets:  Self { filter { $0.key.isCurrentAsset } }
+
+    var balance: Double {
+        values.reduce(0, { $0 + ($1.kind == .active ? 1 : -1) * $1.balance })
+    }
+
+}
+

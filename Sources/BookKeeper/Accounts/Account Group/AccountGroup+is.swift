@@ -1,4 +1,23 @@
 extension AccountGroup {
+
+    public var isBalanceSheet: Bool {
+        switch self {
+            case .balanceSheet:
+                return true
+            default:
+                return false
+        }
+    }
+
+    public var isIncomeStatement: Bool {
+        switch self {
+            case .incomeStatement:
+                return true
+            default:
+                return false
+        }
+    }
+
     public var isAsset: Bool {
         switch self {
             case .balanceSheet(.asset):
