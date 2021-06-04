@@ -11,6 +11,7 @@ public extension Books {
     ///     Fixed Asset Depreciation               120
     ///
     ///
+    /// - Throws: If carryingAmount of the asset is less than depreciation per month.
     mutating func depreciateEquipment() throws {
         for assetID in equipments.keys {
             guard var asset = equipments[assetID] else {

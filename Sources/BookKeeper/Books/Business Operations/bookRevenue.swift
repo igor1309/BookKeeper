@@ -15,9 +15,10 @@ public extension Books {
     /// `Booking Revenue` occurs when Finished Goods are shipped to Client:
     /// delivery started by goods leaving the warehouse.
     ///
-    /// NB: this could be slightly more nuanced, see
-    /// https://www.accountingtools.com/articles/revenue-recognition.html
-    /// for example, but that is not significant in our case of financial modeling.
+    /// NB: this could be slightly more nuanced,
+    /// [see example](https://www.accountingtools.com/articles/revenue-recognition.html),
+    ///
+    /// but that is not significant in our case of financial modeling.
     ///
     ///                                debit    credit
     ///     ------------------------------------------
@@ -42,11 +43,15 @@ public extension Books {
     ///     - debit COGS (Product).
     ///     - credit Inventory (Product).
     ///
-    /// https://www.accountingtools.com/articles/sales-journal-entry.html
-    /// https://saldovka.com/provodki/tovary/prodazha-tovara.html
+    /// [Source 1](https://www.accountingtools.com/articles/sales-journal-entry.html)
+    ///
+    /// [Source 2](https://saldovka.com/provodki/tovary/prodazha-tovara.html)
     ///
     /// Net revenue (excluding VAT) minus COGS is a financial result of this operation (sale).
     ///
+    /// - Throws: If incorrect order type is used, or unknown `Client`, unknown `Finished Good`,
+    /// if cost of finished good can't be determined, or accounts in this transaction do not have
+    /// sufficient balance.
     mutating func bookRevenue(for order: SalesOrder) throws {
         guard order.orderType == .bookRevenue else {
             throw BooksError.incorrectOrderType

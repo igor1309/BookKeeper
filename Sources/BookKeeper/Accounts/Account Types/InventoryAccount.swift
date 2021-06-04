@@ -75,6 +75,7 @@ extension InventoryAccount: OrderProcessingAccount {
     /// `Production order`
     /// When finished Goods are moved from production floor
     ///
+    /// - Throws: If order is of wrong type or cost can't be determined.
     public mutating func debit<Order: OrderProtocol>(order: Order) throws {
 
         switch order.orderType {
@@ -105,6 +106,7 @@ extension InventoryAccount: OrderProcessingAccount {
     /// `Production order`
     /// When finished Goods are moved from production floor
     ///
+    /// - Throws: If order is of wrong type or cost can't be determined.
     public mutating func credit<Order: OrderProtocol>(order: Order) throws {
 
         switch order.orderType {

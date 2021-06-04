@@ -25,6 +25,10 @@ extension Account: CustomStringConvertible {
 }
 
 extension Account {
+    /// `Debit` is increase of active account balance and decrease of passive account balance.
+    /// - Parameter amount: The amount to be debited to account.
+    /// - Throws: If amount is zero or negative, or if balance of the `passive account`
+    /// is less that sufficient to conduct debit operation, error it thrown.
     public mutating func debit(amount: Double) throws {
         guard amount >= 0 else { throw AccountError.negativeAmount}
 
@@ -41,6 +45,10 @@ extension Account {
         }
     }
 
+    /// `Credit` is decrease of active account balance and increase of passive account balance.
+    /// - Parameter amount: The amount to be credited to account.
+    /// - Throws: If amount is zero or negative, or if balance of the `active account`
+    /// is less that sufficient to conduct credit operation, error it thrown.
     public mutating func credit(amount: Double) throws {
         guard amount >= 0 else { throw AccountError.negativeAmount}
 

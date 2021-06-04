@@ -2,9 +2,11 @@
 
 public extension Books {
 
-    /// `Purchase Raw Materials`
+    /// `Purchase Raw Materials` records changes to books to reflect the operation of purchasing
+    /// Raw Materials fron Supplier.
+    ///
     /// Бухгалтерские проводки при покупке товара с постоплатой
-    /// https://saldovka.com/provodki/tovary/pokupka-tovara-ili-uslugi.html
+    /// [Source](https://saldovka.com/provodki/tovary/pokupka-tovara-ili-uslugi.html)
     ///
     ///                                 debit    credit
     ///     -------------------------------------------
@@ -13,6 +15,9 @@ public extension Books {
     ///     Accounts Payable (100+20)               120
     ///
     ///
+    /// - Parameter order: Purchase Order with details.
+    /// - Throws: If incorrect order type is used, or if Raw Material is unknown (not in books),
+    /// or unknown Supplier.
     mutating func purchaseRawMaterial(for order: PurchaseOrder) throws {
         guard case let .purchaseRawMaterial(rawMaterial) = order.orderType else {
             throw BooksError.incorrectOrderType

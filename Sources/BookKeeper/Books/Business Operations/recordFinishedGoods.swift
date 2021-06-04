@@ -2,9 +2,9 @@
 
 public extension Books {
 
-    /// `Record Finished Goods`
-    /// Once the production facility has converted the work-in-process into completed goods,
-    /// you then shift the cost of these materials into the finished goods account.
+    /// `Record Finished Goods`. Once the production facility has converted
+    /// the work-in-process into completed goods, you then shift the cost of these materials
+    /// into the finished goods account.
     ///
     ///                                  debit    credit
     ///     --------------------------------------------
@@ -12,6 +12,9 @@ public extension Books {
     ///     WIP Inventory                            120
     ///
     ///
+    /// - Parameter order: Production Order with operation details.
+    /// - Throws: If `Finished Good` is unknown, or `Work in Progress` is unknown,
+    /// or `cost` can't be determined, or Work in Progress `inventory` balance is less than in order.
     mutating func recordFinishedGoods(for order: ProductionOrder) throws {
         guard case .recordFinishedGoods = order.orderType else {
             throw BooksError.incorrectOrderType

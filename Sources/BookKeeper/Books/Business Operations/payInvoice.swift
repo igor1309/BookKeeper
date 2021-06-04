@@ -10,6 +10,11 @@ public extension Books {
     ///     Cash                             120
     ///
     ///
+    /// - Parameters:
+    ///   - amount: Amount to be payed.
+    ///   - supplierID: ID of the supplier to be payed to.
+    /// - Throws: If unknown SupplierID is used or accounts have insufficient balances,
+    /// like having less cash than is going to pay, or to pay more that owed to.
     mutating func payInvoice(amount: Double, to supplierID: Supplier.ID) throws {
 
         guard var supplier = suppliers[supplierID] else {

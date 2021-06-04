@@ -57,12 +57,17 @@ public struct Equipment: Identifiable, Equatable {
         self.depreciation = depreciation
     }
 
-    mutating func depreciate() throws {
+    /// Records monthly depreciation to Equipment.
+    /// - Throws: If monthly depreciation it larger then carrying amount.
+    /// - Returns: Monthly depreciation.
+    @discardableResult
+    mutating func depreciate() throws -> Double {
         guard depreciationAmountPerMonth <= carryingAmount else {
             throw Books.BooksError.depreciationFail
         }
 
         depreciation += depreciationAmountPerMonth
+        return depreciation
     }
 
 }

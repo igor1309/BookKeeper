@@ -3,8 +3,7 @@
 The BookKeeper is a Swift Package with a set of tools that are used to describe top-level business operations of the factory that is producing goods and selling them.
 
 Using predefined set of business operations.
-Business operations are top level operations That’s all right cool dude to the books via set off transactions two relevant accounts stop
-
+Business operations are top level operations that are reflected in the books via set of transactions.
 The collection of business operations are closed, hard coded.
 
 
@@ -13,7 +12,7 @@ The collection of business operations are closed, hard coded.
 
 
 * [Account](#account)
-    * [Generic Account](#generic-account)
+    * [Common Account](#common-account)
     * [Inventory Account](#inventory-account)
 * [Order](#order)
     * [Inventory Order](#inventory-order)
@@ -36,7 +35,7 @@ The collection of business operations are closed, hard coded.
 
 ### The `Account` type
 
-The `Account` type describes **generic** account for tracking monetary value, conforms to `AccountProtocol`.
+The `Account` type describes **common** account for tracking monetary value, conforms to `AccountProtocol`.
 
 ```swift
 struct Account<AccountType: AccountTypeProtocol>

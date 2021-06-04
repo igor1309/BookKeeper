@@ -2,7 +2,7 @@
 
 public extension Books {
 
-    /// `Receive Cash` from Client.
+    /// `Receive Cash` reflects in books the operation of receiving cash from Client.
     ///
     ///                              debit    credit
     ///     ----------------------------------------
@@ -10,6 +10,10 @@ public extension Books {
     ///     Accounts Receivable                  120
     ///
     ///
+    /// - Parameters:
+    ///   - amount: Amount of cash to receive.
+    ///   - clientID: The ID if the Client.
+    /// - Throws: If Client is unknown or amount is larger than Client's liability.
     mutating func receiveCash(_ amount: Double, from clientID: Client.ID) throws {
         guard var client = clients[clientID] else {
             throw BooksError.unknownClient
