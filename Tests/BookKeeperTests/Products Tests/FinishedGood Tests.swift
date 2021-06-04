@@ -6,13 +6,10 @@ final class FinishedGoodTests: XCTestCase {
     func testFinishedGoodInit() {
         let finishedNoInventory: FinishedGood = .init(name: "Finished good without Inventory")
         XCTAssertEqual(finishedNoInventory.inventory.qty, 0)
-        XCTAssertEqual(finishedNoInventory.inventory.amount, 0)
-        XCTAssert(finishedNoInventory.inventory.balanceIsZero)
-        XCTAssert(finishedNoInventory.cogs.balanceIsZero)
+        XCTAssertEqual(finishedNoInventory.inventory.balance, 0)        
 
         let finishedWithInventory: FinishedGood = .sample
         XCTAssertEqual(finishedWithInventory.inventory.qty, 1_000)
-        XCTAssertEqual(finishedWithInventory.inventory.amount, 49_000)
         XCTAssertEqual(finishedWithInventory.inventory.balance, 49_000)
         XCTAssertEqual(finishedWithInventory.cogs.balance, 35_000)
     }

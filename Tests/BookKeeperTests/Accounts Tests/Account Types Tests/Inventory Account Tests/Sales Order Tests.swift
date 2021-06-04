@@ -56,7 +56,7 @@ extension InventoryAccountTests {
 
         // confirm
         XCTAssertEqual(inventory.qty, 999 + 100)
-        XCTAssertEqual(inventory.amount, 20_979 + 100 * 49)
+        XCTAssertEqual(inventory.balance, 20_979 + 100 * 49)
         let cost = try XCTUnwrap(inventory.cost())
         XCTAssertEqual((20_979 + 100 * 49) / (999 + 100), 23.54777, accuracy: 0.00001)
         XCTAssertEqual(cost, 23.54777, accuracy: 0.00001)

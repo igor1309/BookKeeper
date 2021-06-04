@@ -6,12 +6,10 @@ final class WorkInProgressTests: XCTestCase {
     func testWorkInProgressInit() {
         let wipNoInventory: WorkInProgress = .init(name: "WIP without Inventory")
         XCTAssertEqual(wipNoInventory.inventory.qty, 0)
-        XCTAssertEqual(wipNoInventory.inventory.amount, 0)
-        XCTAssert(wipNoInventory.inventory.balanceIsZero)
+        XCTAssertEqual(wipNoInventory.inventory.balance, 0)
 
         let wipWithInventory: WorkInProgress = .sample
         XCTAssertEqual(wipWithInventory.inventory.qty, 1_000)
-        XCTAssertEqual(wipWithInventory.inventory.amount, 77_777)
         XCTAssertEqual(wipWithInventory.inventory.balance, 77_777)
     }
 

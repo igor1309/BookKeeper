@@ -1,4 +1,5 @@
 // MARK: - Double Entry
+
 public extension Books {
 
     /// Perform debit and credit operation on the pair of accounts.

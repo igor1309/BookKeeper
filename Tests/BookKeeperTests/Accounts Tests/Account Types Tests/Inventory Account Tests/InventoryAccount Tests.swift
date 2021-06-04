@@ -11,13 +11,11 @@ final class InventoryAccountTests: XCTestCase {
 
         let inventoryAccountZero: InventoryAccount = .init(type: .finishedGoods)
         XCTAssertEqual(inventoryAccountZero.qty, 0)
-        XCTAssertEqual(inventoryAccountZero.amount, 0)
         XCTAssert(inventoryAccountZero.balanceIsZero)
         XCTAssertEqual(inventoryAccountZero.group, .finishedInventory)
 
         let inventoryAccount: InventoryAccount = .init(type: .finishedGoods, qty: 1_000, amount: 59_000)
         XCTAssertEqual(inventoryAccount.qty, 1_000)
-        XCTAssertEqual(inventoryAccount.amount, 59_000)
         XCTAssertEqual(inventoryAccount.balance, 59_000)
         XCTAssertEqual(inventoryAccount.group, .finishedInventory)
     }

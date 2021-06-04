@@ -14,7 +14,6 @@ public struct InventoryAccount: AccountProtocol {
 
     #warning("make qty private(set)")
     public var qty: Int
-    #warning("make amount private")
     internal var amount: Double
 
     public init(type: InventoryType,
@@ -62,6 +61,7 @@ extension InventoryAccount {
 }
 
 // MARK: - Order Processing
+
 extension InventoryAccount: OrderProcessingAccount {
 
     /// `Debit`.
