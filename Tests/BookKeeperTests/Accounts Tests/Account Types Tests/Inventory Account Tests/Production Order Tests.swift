@@ -15,12 +15,7 @@ extension InventoryAccountTests {
         XCTAssertEqual(inventory.cost(), 21.0)
 
         // create and try production order
-        let order: ProductionOrder = .init(
-            orderType: .bookRevenue,
-            finishedGoodID: FinishedGood.sample.id,
-            workInProgressID: WorkInProgress.sample.id,
-            finishedGoodQty: 888
-        )
+        let order: ProductionOrder = .bookRevenue
         XCTAssertThrowsError(
             try inventory.debit(order: order)
         ) { error in

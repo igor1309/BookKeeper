@@ -4,7 +4,7 @@ import XCTest
 // MARK: Business Operations
 
 extension BooksTests {
-    func testRecordFinishedGoodsIncorrectOrderTypeError() {
+    func testRecordFinishedGoodsIncorrectOrderTypeError() throws {
         // initiate empty books
         var books: Books = .init()
 
@@ -12,13 +12,7 @@ extension BooksTests {
         XCTAssert(books.isEmpty)
 
         // create production order with someOtherType
-        let orderWithOtherType: ProductionOrder = .init(
-            orderType: .someOtherType,
-            finishedGoodID: FinishedGood.sample.id,
-            workInProgressID: WorkInProgress.sample.id,
-            finishedGoodQty: 999
-        )
-
+        let orderWithOtherType: ProductionOrder = .someOtherType
         XCTAssertThrowsError(
             try books.recordFinishedGoods(for: orderWithOtherType),
             "Should fail: incorrect order type."
@@ -129,7 +123,7 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
     }
 
-    func testRecordFinishedGoodsNegativeAmountError() {
+    func testRecordFinishedGoodsNegativeAmountError() throws {
         // initiate empty books
         var books: Books = .init(
             wips: .sample,

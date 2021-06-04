@@ -76,7 +76,12 @@ extension ProductionOrder {
         workInProgressID: WorkInProgress.sample.id,
         finishedGoodQty: 444
     )
-
+    static let someOtherType: Self = .init(
+        orderType: .someOtherType,
+        finishedGoodID: FinishedGood.sample.id,
+        workInProgressID: WorkInProgress.sample.id,
+        finishedGoodQty: 200
+    )
     #warning("""
         this is not a ProductionOrder, this is InventoryOrder
 
@@ -291,6 +296,16 @@ final class HelpersTests: XCTestCase {
 
         XCTAssertEqual(order.orderType, .trash)
         XCTAssertEqual(order.qty, 333)
+        XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
+        XCTAssertEqual(order.wipID, WorkInProgress.sample.id)
+        XCTAssertEqual(order.cost, nil)
+    }
+
+    func testProductionOrderSampleSomeOtherType() {
+        let order: ProductionOrder = .someOtherType
+
+        XCTAssertEqual(order.orderType, .someOtherType)
+        XCTAssertEqual(order.qty, 200)
         XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
         XCTAssertEqual(order.wipID, WorkInProgress.sample.id)
         XCTAssertEqual(order.cost, nil)

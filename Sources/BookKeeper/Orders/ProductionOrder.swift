@@ -9,10 +9,10 @@ public struct ProductionOrder: OrderProtocol {
         }
     }
 
-//    public enum OrderType: Equatable {
-//        case recordFinishedGoods(cost: Double)
-//        case someOtherType
-//    }
+    //    public enum OrderType: Equatable {
+    //        case recordFinishedGoods(cost: Double)
+    //        case someOtherType
+    //    }
 
     public let orderType: OrderType
 
