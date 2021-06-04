@@ -1,13 +1,17 @@
+// MARK: All
+
 extension AccountGroup {
     public static var all: [String] { ["Balance Sheet", "Income Statement"] }
 }
 
-extension BalanceSheet {
+extension AccountGroup.BalanceSheet {
     public static var all: [String] { ["Asset", "Liability", "Equity"] }
 }
-extension IncomeStatement {
+extension AccountGroup.IncomeStatement {
     public static var all: [String] { ["Revenue", "Expenses"] }
 }
+
+// MARK: RawRepresentable
 
 extension AccountGroup: RawRepresentable {
     public init?(rawValue: String) {
@@ -30,7 +34,7 @@ extension AccountGroup: RawRepresentable {
     }
 }
 
-extension BalanceSheet: RawRepresentable {
+extension AccountGroup.BalanceSheet: RawRepresentable {
     public init?(rawValue: String) {
         if let asset = Asset(rawValue: rawValue) {
             self = .asset(asset)
@@ -55,7 +59,7 @@ extension BalanceSheet: RawRepresentable {
     }
 }
 
-extension BalanceSheet.Asset: RawRepresentable {
+extension AccountGroup.BalanceSheet.Asset: RawRepresentable {
     public init?(rawValue: String) {
         if let currentAsset = CurrentAsset(rawValue: rawValue) {
             self = .currentAsset(currentAsset)
@@ -76,7 +80,7 @@ extension BalanceSheet.Asset: RawRepresentable {
     }
 }
 
-extension BalanceSheet.Asset.CurrentAsset: RawRepresentable {
+extension AccountGroup.BalanceSheet.Asset.CurrentAsset: RawRepresentable {
     public init?(rawValue: String) {
         switch rawValue {
             case "Cash":
@@ -86,7 +90,7 @@ extension BalanceSheet.Asset.CurrentAsset: RawRepresentable {
             case "VAT Receivable":
                 self = .vatReceivable
             default:
-                guard let inventory = BalanceSheet.Asset.CurrentAsset.Inventory(rawValue: rawValue) else {
+                guard let inventory = AccountGroup.BalanceSheet.Asset.CurrentAsset.Inventory(rawValue: rawValue) else {
                     return nil
                 }
                 self = .inventory(inventory)
@@ -107,7 +111,7 @@ extension BalanceSheet.Asset.CurrentAsset: RawRepresentable {
     }
 }
 
-extension BalanceSheet.Liability: RawRepresentable {
+extension AccountGroup.BalanceSheet.Liability: RawRepresentable {
     public init?(rawValue: String) {
         if let currentLiability = CurrentLiability(rawValue: rawValue) {
             self = .currentLiability(currentLiability)
@@ -128,7 +132,7 @@ extension BalanceSheet.Liability: RawRepresentable {
     }
 }
 
-extension IncomeStatement: RawRepresentable {
+extension AccountGroup.IncomeStatement: RawRepresentable {
     public init?(rawValue: String) {
         switch rawValue {
             case "Revenue":

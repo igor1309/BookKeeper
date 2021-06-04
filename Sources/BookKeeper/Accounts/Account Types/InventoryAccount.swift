@@ -7,7 +7,7 @@
 /// https://www.accountingtools.com/articles/2017/5/13/journal-entries-for-inventory-transactions
 ///
 public struct InventoryAccount: AccountProtocol {
-    public typealias InventoryType = BalanceSheet.Asset.CurrentAsset.Inventory
+    public typealias InventoryType = AccountGroup.BalanceSheet.Asset.CurrentAsset.Inventory
 
     public let kind: AccountKind = .active
     public var type: InventoryType

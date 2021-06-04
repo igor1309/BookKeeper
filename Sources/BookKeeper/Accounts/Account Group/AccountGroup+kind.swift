@@ -7,7 +7,7 @@ extension AccountGroup {
     }
 }
 
-extension BalanceSheet {
+extension AccountGroup.BalanceSheet {
     var kind: AccountKind {
         switch self {
             case let .asset(asset): return asset.kind
@@ -17,7 +17,7 @@ extension BalanceSheet {
     }
 }
 
-extension BalanceSheet.Asset {
+extension AccountGroup.BalanceSheet.Asset {
     var kind: AccountKind {
         switch self {
             case .currentAsset:
@@ -28,7 +28,7 @@ extension BalanceSheet.Asset {
     }
 }
 
-extension BalanceSheet.Asset.PropertyPlantEquipment {
+extension AccountGroup.BalanceSheet.Asset.PropertyPlantEquipment {
     var kind: AccountKind {
         switch self {
             case .land,
@@ -45,7 +45,7 @@ extension BalanceSheet.Asset.PropertyPlantEquipment {
     }
 }
 
-extension IncomeStatement {
+extension AccountGroup.IncomeStatement {
     var kind: AccountKind {
         switch self {
             case .revenue: return .passive
