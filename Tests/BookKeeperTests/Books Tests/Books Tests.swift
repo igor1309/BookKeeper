@@ -84,7 +84,7 @@ final class BooksTests: XCTestCase {
         // confirm
         XCTAssertEqual(books.rawMaterials.count, 1)
         XCTAssertEqual(books.rawMaterials.first?.value, RawMaterial.sample)
-        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 35_000,
+        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 37_555,
                        "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.wips.count, 1)
@@ -106,7 +106,7 @@ final class BooksTests: XCTestCase {
 
         XCTAssertEqual(books.suppliers.count, 1)
         XCTAssertEqual(books.suppliers.first?.value, Supplier.sample)
-        XCTAssertEqual(books.ledger[.payables]?.balance, 55_555,
+        XCTAssertEqual(books.ledger[.payables]?.balance, 37_555,
                        "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.equipments.count, 1)
@@ -134,6 +134,32 @@ final class BooksTests: XCTestCase {
 
         try books.addClient(name: "client")
         XCTAssertFalse(books.isEmpty)
+    }
+
+    func testBooksBalance() {
+        var books: Books = .init()
+        XCTAssertEqual(books.balance, 0)
+
+        books = .init(rawMaterials: .sample)
+        XCTAssertEqual(books.balance, 37_555)
+
+        books = .init(wips: .sample)
+        XCTAssertEqual(books.balance, 77_777)
+
+        books = .init(finishedGoods: .sample)
+        XCTAssertEqual(books.balance, 49_000 + 35_000)
+
+        books = .init(clients: .sample)
+        XCTAssertEqual(books.balance, 66_666)
+
+        books = .init(suppliers: .sample)
+        XCTAssertEqual(books.balance, -37_555)
+
+        books = .init(
+            rawMaterials: .sample,
+            suppliers: .sample
+        )
+        XCTAssertEqual(books.balance, 0)
     }
 
     func testCashBalance() {

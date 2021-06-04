@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Core structure to run book keeping.
 public struct Books: Equatable {
+    
     // MARK: Inventory
     public var rawMaterials: [RawMaterial.ID: RawMaterial]
     public var wips: [WorkInProgress.ID: WorkInProgress]
@@ -54,7 +55,6 @@ public struct Books: Equatable {
                   ledger: ledger.keyedBy(keyPath: \.group))
     }
 
-    #warning("think about making it failable or throwing if it does not balance")
     /// InItialise Books with `dictionaries` for raw materials, work in progress, finished goods, clients, suppliers, equipment and ledger
     internal init(rawMaterials: [RawMaterial.ID: RawMaterial] = [:],
                   wips: [WorkInProgress.ID: WorkInProgress] = [:],
@@ -151,6 +151,10 @@ public extension Books {
             && suppliers.isEmpty
             && equipments.isEmpty
             && ledger.values.allSatisfy { $0.balance == 0 }
+    }
+
+    var balance: Double {
+        ledger.balance
     }
 
 }

@@ -48,7 +48,7 @@ extension BooksTests {
         // confirm
         XCTAssertEqual(books.rawMaterials.count, 1)
         XCTAssertEqual(books.rawMaterials.first?.value, RawMaterial.sample)
-        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 35_000,
+        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 37_555,
                        "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.wips.count, 1)
@@ -70,7 +70,7 @@ extension BooksTests {
 
         XCTAssertEqual(books.suppliers.count, 1)
         XCTAssertEqual(books.suppliers.first?.value, Supplier.sample)
-        XCTAssertEqual(books.ledger[.payables]?.balance, 55_555,
+        XCTAssertEqual(books.ledger[.payables]?.balance, 37_555,
                        "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.equipments.count, 1)
@@ -82,8 +82,8 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.depreciationExpenses]?.balance, 47_619,
                        "Account balance from parameter ledger should be overwritten.")
 
-        XCTAssertEqual(books.ledger.count, 9)
         XCTAssertEqual(ledger.count, 9)
+        XCTAssertEqual(books.ledger.count, 9)
 
         XCTAssertNil(books.ledger[.cash], "Account should not be created")
         XCTAssertNil(books.ledger[.revenue], "Account should not be created")

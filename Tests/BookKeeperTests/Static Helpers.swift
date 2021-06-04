@@ -15,14 +15,14 @@ extension Client {
 }
 
 extension Supplier {
-    static let sample: Self = .init(name: "Supplier", initialPayables: 55_555)
+    static let sample: Self = .init(name: "Supplier", initialPayables: 37_555)
 }
 
 extension RawMaterial {
     static let sample: Self = .init(
         name: "RawMaterial",
         initialInventoryQty: 1_000,
-        initialInventoryValue: 35_000
+        initialInventoryValue: 37_555
     )
 }
 
@@ -123,10 +123,10 @@ final class HelpersTests: XCTestCase {
         XCTAssertNotEqual(supplier, Supplier(name: "Supplier"), "Should have different ID")
         XCTAssertNotEqual(supplier.id, Supplier(name: "Supplier").id, "Should have different ID")
         XCTAssertEqual(supplier.name, "Supplier")
-        XCTAssertEqual(supplier.payables, Account(group: .payables, amount: 55_555))
+        XCTAssertEqual(supplier.payables, Account(group: .payables, amount: 37_555))
         XCTAssertEqual(supplier.payables.kind, .passive)
         XCTAssertEqual(supplier.payables.group, .payables)
-        XCTAssertEqual(supplier.payables.balance, 55_555)
+        XCTAssertEqual(supplier.payables.balance, 37_555)
     }
 
     func testRawMaterialSample() {
@@ -136,11 +136,11 @@ final class HelpersTests: XCTestCase {
         XCTAssertNotEqual(rawMaterial.id, RawMaterial(name: "RawMaterial").id, "Should have different ID")
 
         XCTAssertEqual(rawMaterial.inventory,
-                       InventoryAccount(type: .rawMaterials, qty: 1_000, amount: 35_000))
+                       InventoryAccount(type: .rawMaterials, qty: 1_000, amount: 37_555))
         XCTAssertEqual(rawMaterial.inventory.kind, .active)
         XCTAssertEqual(rawMaterial.inventory.type, .rawMaterials)
         XCTAssertEqual(rawMaterial.inventory.qty, 1_000)
-        XCTAssertEqual(rawMaterial.inventory.balance, 35_000)
+        XCTAssertEqual(rawMaterial.inventory.balance, 37_555)
     }
 
     func testWorkInProgressSample() {

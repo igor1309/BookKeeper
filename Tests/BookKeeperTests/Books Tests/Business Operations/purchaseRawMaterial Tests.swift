@@ -33,9 +33,9 @@ extension BooksTests {
         XCTAssert(books.suppliers.isEmpty)
         XCTAssertEqual(books.rawMaterials.count, 1)
         XCTAssertEqual(Array(books.rawMaterials.values), [.sample])
-        XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory), 35_000)
+        XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory), 37_555)
         XCTAssertEqual(books.ledger.count, 1)
-        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 35_000)
+        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 37_555)
 
         // try purchase
         let order: PurchaseOrder = .sample
@@ -50,9 +50,9 @@ extension BooksTests {
         XCTAssert(books.suppliers.isEmpty)
         XCTAssertEqual(books.rawMaterials.count, 1)
         XCTAssertEqual(Array(books.rawMaterials.values), [.sample])
-        XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory), 35_000)
+        XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory), 37_555)
         XCTAssertEqual(books.ledger.count, 1)
-        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 35_000)
+        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 37_555)
     }
 
     func testPurchaseRawMaterialNoErrors() {
@@ -65,15 +65,15 @@ extension BooksTests {
         // confirm
         XCTAssertEqual(books.rawMaterials.count, 1)
         XCTAssertEqual(Array(books.rawMaterials.values), [.sample])
-        XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory), 35_000)
+        XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory), 37_555)
 
         XCTAssertEqual(books.suppliers.count, 1)
         XCTAssertEqual(Array(books.suppliers.values), [.sample])
-        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 55_555)
+        XCTAssertEqual(books.suppliers.totalBalance(for: \.payables), 37_555)
 
         XCTAssertEqual(books.ledger.count, 2)
-        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 35_000)
-        XCTAssertEqual(books.ledger[.payables]?.balance, 55_555)
+        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 37_555)
+        XCTAssertEqual(books.ledger[.payables]?.balance, 37_555)
 
         // try purchase
         let order: PurchaseOrder = .sample
@@ -84,17 +84,17 @@ extension BooksTests {
         // confirm change
         XCTAssertEqual(books.rawMaterials.count, 1)
         XCTAssertEqual(books.rawMaterials.totalBalance(for: \.inventory),
-                       35_000 + order.amountExVAT)
+                       37_555 + order.amountExVAT)
 
         XCTAssertEqual(books.suppliers.count, 1)
         XCTAssertEqual(books.suppliers.totalBalance(for: \.payables),
-                       55_555 + order.amountWithVAT)
+                       37_555 + order.amountWithVAT)
 
         XCTAssertEqual(books.ledger.count, 3)
         XCTAssertEqual(books.ledger[.rawInventory]?.balance,
-                       35_000 + order.amountExVAT)
+                       37_555 + order.amountExVAT)
         XCTAssertEqual(books.ledger[.payables]?.balance,
-                       55_555 + order.amountWithVAT)
+                       37_555 + order.amountWithVAT)
         XCTAssertEqual(books.ledger[.vatReceivable]?.balance,
                        order.vat)
     }

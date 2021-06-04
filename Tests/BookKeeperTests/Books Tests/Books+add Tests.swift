@@ -22,8 +22,8 @@ extension BooksTests {
             try books.addClient(name: "New Client"),
             "Should throw an error if same name is used."
         ) { error in
-            XCTAssertEqual(error as? Books.AddError,
-                           Books.AddError.duplicateName)
+            XCTAssertEqual(error as? Books.BooksError,
+                           Books.BooksError.duplicateName)
         }
 
         // confirm no change after error
@@ -79,8 +79,8 @@ extension BooksTests {
             try books.addSupplier(name: "New Supplier"),
             "Should throw an error if same name is used."
         ) { error in
-            XCTAssertEqual(error as? Books.AddError,
-                           Books.AddError.duplicateName)
+            XCTAssertEqual(error as? Books.BooksError,
+                           Books.BooksError.duplicateName)
         }
 
         // confirm no change after error
@@ -136,8 +136,8 @@ extension BooksTests {
             try books.addRawMaterial(name: "New RawMaterial"),
             "Should throw an error if same name is used."
         ) { error in
-            XCTAssertEqual(error as? Books.AddError,
-                           Books.AddError.duplicateName)
+            XCTAssertEqual(error as? Books.BooksError,
+                           Books.BooksError.duplicateName)
         }
 
         // confirm no change after error
@@ -192,8 +192,8 @@ extension BooksTests {
             try books.addWorkInProgress(name: "New WorkInProgress"),
             "Should throw an error if same name is used."
         ) { error in
-            XCTAssertEqual(error as? Books.AddError,
-                           Books.AddError.duplicateName)
+            XCTAssertEqual(error as? Books.BooksError,
+                           Books.BooksError.duplicateName)
         }
 
         // confirm no change after error
@@ -249,8 +249,8 @@ extension BooksTests {
             try books.addFinishedGood(name: "New FinishedGood"),
             "Should throw an error if same name is used."
         ) { error in
-            XCTAssertEqual(error as? Books.AddError,
-                           Books.AddError.duplicateName)
+            XCTAssertEqual(error as? Books.BooksError,
+                           Books.BooksError.duplicateName)
         }
 
         // confirm no change after error

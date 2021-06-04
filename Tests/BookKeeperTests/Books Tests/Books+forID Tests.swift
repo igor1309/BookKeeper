@@ -1,23 +1,8 @@
 import XCTest
-// @testable
 import BookKeeper
 
-// MARK: - All
-extension BooksTests {
+// MARK: forID
 
-    func testRawMaterialsAll() { XCTFail("finish test") }
-
-    func testWipsAll() { XCTFail("finish test") }
-
-    func testFinishedGoodsAll() { XCTFail("finish test") }
-
-    func testClientsAll() { XCTFail("finish test") }
-
-    func testEquipmentAll() { XCTFail("finish test") }
-
-}
-
-// MARK: - forID
 extension BooksTests {
 
     func testRawMaterialForID() throws {

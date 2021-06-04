@@ -1,15 +1,11 @@
 // MARK: Add Objects to Books
 
 public extension Books {
-    #warning("rename")
-    enum AddError: Error {
-        case duplicateName
-    }
 
     @discardableResult
     mutating func addClient(name: String) throws -> Client {
         guard !clients.contains(name, at: \.name) else {
-            throw AddError.duplicateName
+            throw BooksError.duplicateName
         }
 
         let client: Client = .init(name: name)
@@ -20,7 +16,7 @@ public extension Books {
     @discardableResult
     mutating func addSupplier(name: String) throws -> Supplier {
         guard !suppliers.contains(name, at: \.name) else {
-            throw AddError.duplicateName
+            throw BooksError.duplicateName
         }
 
         let supplier: Supplier = .init(name: name)
@@ -31,7 +27,7 @@ public extension Books {
     @discardableResult
     mutating func addRawMaterial(name: String) throws -> RawMaterial {
         guard !rawMaterials.contains(name, at: \.name) else {
-            throw AddError.duplicateName
+            throw BooksError.duplicateName
         }
 
         let rawMaterial: RawMaterial = .init(name: name)
@@ -42,7 +38,7 @@ public extension Books {
     @discardableResult
     mutating func addWorkInProgress(name: String) throws -> WorkInProgress {
         guard !wips.contains(name, at: \.name) else {
-            throw AddError.duplicateName
+            throw BooksError.duplicateName
         }
 
         let workInProgress: WorkInProgress = .init(name: name)
@@ -53,7 +49,7 @@ public extension Books {
     @discardableResult
     mutating func addFinishedGood(name: String) throws -> FinishedGood {
         guard !finishedGoods.contains(name, at: \.name) else {
-            throw AddError.duplicateName
+            throw BooksError.duplicateName
         }
 
         let finishedGood: FinishedGood = .init(name: name)

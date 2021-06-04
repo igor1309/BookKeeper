@@ -11,8 +11,8 @@ final class RawMaterialTests: XCTestCase {
 
         let rawMaterialWithInventory: RawMaterial = .sample
         XCTAssertEqual(rawMaterialWithInventory.inventory.qty, 1_000)
-        XCTAssertEqual(rawMaterialWithInventory.inventory.amount, 35_000)
-        XCTAssertEqual(rawMaterialWithInventory.inventory.balance, 35_000)
+        XCTAssertEqual(rawMaterialWithInventory.inventory.amount, 37_555)
+        XCTAssertEqual(rawMaterialWithInventory.inventory.balance, 37_555)
     }
 
     func testDescription() {
@@ -22,7 +22,7 @@ final class RawMaterialTests: XCTestCase {
 
         let rawMaterialWithInventory: RawMaterial = .sample
         XCTAssertEqual(rawMaterialWithInventory.description,
-                       "RawMaterial RawMaterial(inventory: Inventory(qty: 1000, amount: 35000.0))")
+                       "RawMaterial RawMaterial(inventory: Inventory(qty: 1000, amount: 37555.0))")
     }
 
 }

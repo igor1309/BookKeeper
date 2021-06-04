@@ -13,5 +13,7 @@ public extension Books {
         case nonPositiveAmount
         case negativeVAT
         case depreciationFail
+
+        case duplicateName
     }
 }
