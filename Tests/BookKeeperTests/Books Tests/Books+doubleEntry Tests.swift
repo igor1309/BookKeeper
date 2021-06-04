@@ -94,7 +94,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.doubleEntry(debit: passive, credit: active, amount: 200)
         ) { error in
-            XCTAssertEqual(error as! AccountError,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.insufficientBalance(passive))
         }
 
@@ -148,7 +148,7 @@ extension BooksTests {
         XCTAssertThrowsError(
             try books.doubleEntry(debit: passive1, credit: passive2, amount: 500)
         ) { error in
-            XCTAssertEqual(error as! AccountError,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.insufficientBalance(passive1))
         }
 
@@ -178,4 +178,3 @@ extension BooksTests {
     }
 
 }
-

@@ -13,7 +13,7 @@ final class SalesOrderTests: XCTestCase {
             qty: 100,
             priceExTax: 99
         )
-        
+
         XCTAssertEqual(salesOrderBookRevenue.orderType, .bookRevenue)
         XCTAssertEqual(salesOrderBookRevenue.clientID, client.id)
         XCTAssertEqual(salesOrderBookRevenue.finishedGoodID, finishedGood.id)

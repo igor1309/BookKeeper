@@ -1,14 +1,13 @@
 import XCTest
-// @testable
-import BookKeeper
+@testable import BookKeeper
 
 final class EquipmentTests: XCTestCase {
     func testEquipment() {
         let equipment: Equipment = .init(name: "Freezer",
-                                           lifetime: 7,
-                                           value: 7 * 12 * 9_999,
-                                           vatRate: 20/100,
-                                           depreciation: 200)
+                                         lifetime: 7,
+                                         value: 7 * 12 * 9_999,
+                                         vatRate: 20/100,
+                                         depreciation: 200)
 
         XCTAssertEqual(equipment.name, "Freezer")
         XCTAssertEqual(equipment.initialValue, 7 * 12 * 9_999)

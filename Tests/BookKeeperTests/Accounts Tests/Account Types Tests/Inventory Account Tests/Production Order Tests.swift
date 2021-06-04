@@ -44,7 +44,10 @@ extension InventoryAccountTests {
         XCTAssertNoThrow(try inventory.credit(order: order))
 
         // confirm
-        #warning("what is the economic reason of debiting production order? does it make sense to debit production order?")
+        #warning("""
+            what is the economic reason of debiting production order?
+            does it make sense to debit production order?
+            """)
         XCTAssertEqual(inventory.qty, 999)
         XCTAssertEqual(inventory.balance, 20_979)
         XCTAssertEqual(inventory.cost(), 21.0)

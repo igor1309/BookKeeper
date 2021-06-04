@@ -3,7 +3,8 @@ public extension AccountGroup {
     static let receivables: AccountGroup = .balanceSheet(.asset(.currentAsset(.accountsReceivable)))
     static let vatReceivable: AccountGroup = .balanceSheet(.asset(.currentAsset(.vatReceivable)))
     static let equipment: AccountGroup = .balanceSheet(.asset(.propertyPlantEquipment(.equipment)))
-    static let accumulatedDepreciation: AccountGroup = .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))
+    static let accumulatedDepreciation: AccountGroup =
+        .balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))
 
     static let payables: AccountGroup = .balanceSheet(.liability(.currentLiability(.accountsPayable)))
     static let taxesPayable: AccountGroup = .balanceSheet(.liability(.currentLiability(.taxesPayable)))
@@ -18,4 +19,3 @@ public extension AccountGroup {
     static let wipsInventory: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory(.workInProgress))))
     static let finishedInventory: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory(.finishedGoods))))
 }
-

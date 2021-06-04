@@ -19,7 +19,8 @@ public struct Books: Equatable {
     // MARK: General Ledger
     internal var ledger: [AccountGroup: Account]
 
-    /// InItialise Books with `variadic parameters` for raw materials, work in progress, finished goods, clients, suppliers, equipment and ledger
+    /// InItialise Books with `variadic parameters` for raw materials, work in progress,
+    /// finished goods, clients, suppliers, equipment and ledger
     public init(rawMaterials: RawMaterial...,
                 wips: WorkInProgress...,
                 finishedGoods: FinishedGood...,
@@ -37,7 +38,8 @@ public struct Books: Equatable {
                   ledger: ledger.keyedBy(keyPath: \.group))
     }
 
-    /// InItialise Books with `arrays` for raw materials, work in progress, finished goods, clients, suppliers, equipment and ledger
+    /// InItialise Books with `arrays` for raw materials, work in progress,
+    /// finished goods, clients, suppliers, equipment and ledger
     public init(rawMaterials: [RawMaterial] = [],
                 wips: [WorkInProgress] = [],
                 finishedGoods: [FinishedGood] = [],
@@ -55,14 +57,16 @@ public struct Books: Equatable {
                   ledger: ledger.keyedBy(keyPath: \.group))
     }
 
-    /// InItialise Books with `dictionaries` for raw materials, work in progress, finished goods, clients, suppliers, equipment and ledger
+    /// InItialise Books with `dictionaries` for raw materials, work in progress,
+    /// finished goods, clients, suppliers, equipment and ledger
+    // swiftlint:disable function_body_length
     private init(rawMaterials: [RawMaterial.ID: RawMaterial] = [:],
-                  wips: [WorkInProgress.ID: WorkInProgress] = [:],
-                  finishedGoods: [FinishedGood.ID: FinishedGood] = [:],
-                  clients: [Client.ID: Client] = [:],
-                  suppliers: [Supplier.ID: Supplier] = [:],
-                  equipments: [Equipment.ID: Equipment] = [:],
-                  ledger: [AccountGroup: Account] = [:]
+                 wips: [WorkInProgress.ID: WorkInProgress] = [:],
+                 finishedGoods: [FinishedGood.ID: FinishedGood] = [:],
+                 clients: [Client.ID: Client] = [:],
+                 suppliers: [Supplier.ID: Supplier] = [:],
+                 equipments: [Equipment.ID: Equipment] = [:],
+                 ledger: [AccountGroup: Account] = [:]
     ) {
         self.rawMaterials = rawMaterials
         self.wips = wips
@@ -137,8 +141,8 @@ public struct Books: Equatable {
             self.ledger[.accumulatedDepreciation] = .init(group: .accumulatedDepreciation, amount: depreciation)
             self.ledger[.depreciationExpenses] = .init(group: .depreciationExpenses, amount: depreciation)
         }
-
     }
+    // swiftlint:enable function_body_length
 
 }
 

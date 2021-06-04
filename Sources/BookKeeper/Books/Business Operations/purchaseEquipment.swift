@@ -21,10 +21,10 @@ public extension Books {
     /// Подчинен счету "НДС по приобретенным ценностям" (19).
     ///
     mutating func purchaseEquipment(supplierID: Supplier.ID,
-                                     assetName name: String,
-                                     lifetimeInYears: Int,
-                                     amountExVAT: Double,
-                                     vatRate: Double = 20/100
+                                    assetName name: String,
+                                    lifetimeInYears: Int,
+                                    amountExVAT: Double,
+                                    vatRate: Double = 20/100
     ) throws {
 
         // input validation

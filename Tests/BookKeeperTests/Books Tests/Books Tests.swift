@@ -56,7 +56,6 @@ final class BooksTests: XCTestCase {
         XCTAssertNil(books.ledger[active2], "Empty clients should overwrite receivables (active2).")
     }
 
-    #warning("split test into shorter tests")
     // swiftlint:disable function_body_length
     func testBooksInitWithParameters() {
         // initiate books

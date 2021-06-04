@@ -14,7 +14,8 @@ public extension Books {
     /// When entries are made in the double entry system, there must be a debit entry and a credit entry
     /// into the general ledger. A debit records an entry on the left side of an account ledger,
     /// while a credit records an entry on the right side of the ledger. The totals for all debit entries made
-    /// must always match the totals for all credit entries made; when this is the case, an entry is said to be in balance.
+    /// must always match the totals for all credit entries made; when this is the case, an entry is said
+    ///  to be in balance.
     /// - Parameters:
     ///   - debit: Account group to be debited.
     ///   - credit: Account group to be credited.

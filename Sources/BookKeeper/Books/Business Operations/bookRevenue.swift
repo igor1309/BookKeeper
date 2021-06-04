@@ -5,7 +5,8 @@
 /// Examples of transactions are as follows:
 ///
 ///     Paying a supplier for services rendered or goods delivered.
-///     Paying a seller with cash and a note in order to obtain ownership of a property formerly owned by the seller.
+///     Paying a seller with cash and a note in order to obtain ownership
+///      of a property formerly owned by the seller.
 ///     Paying an employee for hours worked.
 ///     Receiving payment from a customer in exchange for goods or services delivered.
 ///
@@ -70,7 +71,7 @@ public extension Books {
 
         do {
             // MARK: Ledger
-            
+
             /// 1. For amount including Value Added Tax (VAT):
             ///
             ///     - debit Accounts Receivable (Client or Channel).

@@ -15,7 +15,7 @@ public struct InventoryAccount: AccountProtocol {
     #warning("make qty private(set)")
     public var qty: Int
     #warning("make amount private")
-    public var amount: Double
+    internal var amount: Double
 
     public init(type: InventoryType,
                 qty: Int,

@@ -1,5 +1,5 @@
 import XCTest
-//@testable
+// @testable
 import BookKeeper
 
 final class FoundationExtTests: XCTestCase {
@@ -104,7 +104,7 @@ final class FoundationExtTests: XCTestCase {
 
          cogs.simpleAccount,
          depreciationExpenses.simpleAccount,
-         revenue.simpleAccount,
+         revenue.simpleAccount
         ]
     }
 
@@ -138,11 +138,13 @@ final class FoundationExtTests: XCTestCase {
     func testDictionaryProperties() {
         let balanceSheet = accounts.balanceSheet
         XCTAssertEqual(balanceSheet.balance,
-                       receivables.balance + vatReceivable.balance + cash.balance - payables.balance - accumulatedDepreciationEquipment.balance - taxLiabilities.balance)
+                       receivables.balance + vatReceivable.balance + cash.balance - payables.balance
+                        - accumulatedDepreciationEquipment.balance - taxLiabilities.balance)
 
         let assets = accounts.assets
         XCTAssertEqual(assets.balance,
-                       receivables.balance + vatReceivable.balance + cash.balance - accumulatedDepreciationEquipment.balance)
+                       receivables.balance + vatReceivable.balance + cash.balance
+                        - accumulatedDepreciationEquipment.balance)
 
         let liabilities = accounts.liabilities
         XCTAssertEqual(liabilities.balance,

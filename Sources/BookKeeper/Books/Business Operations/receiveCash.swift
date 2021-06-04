@@ -19,7 +19,6 @@ public extension Books {
         let ledgerBackup = ledger
 
         do {
-            #warning("test so that both try fail")
             // 3. local var change; throws is client owes less than amount
             try client.receivables.credit(amount: amount)
 

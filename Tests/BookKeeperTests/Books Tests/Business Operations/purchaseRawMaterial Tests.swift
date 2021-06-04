@@ -2,10 +2,8 @@ import XCTest
 @testable import BookKeeper
 
 extension BooksTests {
-    #warning("test passes but not confirming everything here - check all elements that could change")
 
     func testPurchaseRawMaterialUnknownRawMaterialError() {
-        #warning("should purchaseRawMaterial create rawMaterial and add it to books?")
         var books: Books = .init()
 
         // confirm
@@ -25,7 +23,6 @@ extension BooksTests {
     }
 
     func testPurchaseRawMaterialUnknownSupplierError() {
-        #warning("should purchaseRawMaterial create Supplier and add it to books?")
         // create books with raw materials
         var books: Books = .init(rawMaterials: .sample)
 

@@ -12,12 +12,11 @@ extension BooksTests {
 
         // create supplier and try to purchase asset
         let supplier: Supplier = .sample
-        #warning("should purchaseEquipment create Supplier and add it to books?")
         XCTAssertThrowsError(
             try books.purchaseEquipment(supplierID: supplier.id,
-                                         assetName: "freezer",
-                                         lifetimeInYears: 7,
-                                         amountExVAT: 1_000_000)
+                                        assetName: "freezer",
+                                        lifetimeInYears: 7,
+                                        amountExVAT: 1_000_000)
         ) { error in
             XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.unknownSupplier)
@@ -40,9 +39,9 @@ extension BooksTests {
         // try to purchase asset with wrong lifetime
         XCTAssertThrowsError(
             try books.purchaseEquipment(supplierID: supplier.id,
-                                         assetName: "freezer",
-                                         lifetimeInYears: 0,
-                                         amountExVAT: 1_000_000)
+                                        assetName: "freezer",
+                                        lifetimeInYears: 0,
+                                        amountExVAT: 1_000_000)
         ) { error in
             XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.incorrectLifetime)
@@ -68,9 +67,9 @@ extension BooksTests {
         // try to purchase asset with wrong amount
         XCTAssertThrowsError(
             try books.purchaseEquipment(supplierID: supplier.id,
-                                         assetName: "freezer",
-                                         lifetimeInYears: 7,
-                                         amountExVAT: 0)
+                                        assetName: "freezer",
+                                        lifetimeInYears: 7,
+                                        amountExVAT: 0)
         ) { error in
             XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.nonPositiveAmount)
@@ -96,10 +95,10 @@ extension BooksTests {
         // try to purchase asset with negative VAT rate
         XCTAssertThrowsError(
             try books.purchaseEquipment(supplierID: supplier.id,
-                                         assetName: "freezer",
-                                         lifetimeInYears: 7,
-                                         amountExVAT: 1_000_000,
-                                         vatRate: -10/100)
+                                        assetName: "freezer",
+                                        lifetimeInYears: 7,
+                                        amountExVAT: 1_000_000,
+                                        vatRate: -10/100)
         ) { error in
             XCTAssertEqual(error as? Books.BooksError,
                            Books.BooksError.negativeVAT)
@@ -123,7 +122,6 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.payables]?.balance, 0)
 
         // try to purchase
-        #warning("should we add parameter initialDepreciation to purchaseEquipment func?")
         XCTAssertNoThrow(
             try books.purchaseEquipment(supplierID: supplier.id,
                                         assetName: "freezer",

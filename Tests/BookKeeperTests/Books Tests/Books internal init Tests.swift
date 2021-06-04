@@ -3,7 +3,6 @@
 @testable import BookKeeper
 
 extension BooksTests {
-    // swiftlint:disable function_body_length
     func testInternalInitWithParameters() {
         // initiate books
         let rawMaterial: RawMaterial = .sample
@@ -91,7 +90,6 @@ extension BooksTests {
         XCTAssertNil(books.ledger[.vatReceivable], "Account should not be created")
         XCTAssertNil(books.ledger[.taxesPayable], "Account should not be created")
     }
-    // swiftlint:enable function_body_length
 
 }
 */

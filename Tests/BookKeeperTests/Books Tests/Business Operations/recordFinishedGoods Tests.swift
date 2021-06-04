@@ -4,7 +4,6 @@ import XCTest
 // MARK: Business Operations
 
 extension BooksTests {
-    #warning("not sure this test is finished")
     func testRecordFinishedGoodsIncorrectOrderTypeError() {
         // initiate empty books
         var books: Books = .init()
@@ -17,7 +16,8 @@ extension BooksTests {
             orderType: .someOtherType,
             finishedGoodID: FinishedGood.sample.id,
             workInProgressID: WorkInProgress.sample.id,
-            finishedGoodQty: 999)
+            finishedGoodQty: 999
+        )
 
         XCTAssertThrowsError(
             try books.recordFinishedGoods(for: orderWithOtherType),
@@ -30,9 +30,6 @@ extension BooksTests {
         // confirm no change after error
         XCTAssert(books.isEmpty)
     }
-
-    #warning("make test for negative finishedGoodQty: 999")
-    #warning("should ProductionOrder have throwing init? for ex, nonPositive qty?")
 
     func testRecordFinishedGoodsUnknownFinishedGoodError() {
         // initiate empty books
@@ -59,8 +56,7 @@ extension BooksTests {
 
     func testRecordFinishedGoodsUnknownWorkInProgressError() {
         // initiate books with finished goods
-        let finishedGood: FinishedGood = .sample
-        var books: Books = .init(finishedGoods: finishedGood)
+        var books: Books = .init(finishedGoods: .sample)
 
         // confirm
         XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory), 49_000)
@@ -93,11 +89,9 @@ extension BooksTests {
 
     func testRecordFinishedGoodsInsufficientBalanceForWorkInProgressInventoryError() throws {
         // initiate books with work in progress and finished goods
-        let finishedGood: FinishedGood = .sample
-        let workInProgress: WorkInProgress = .sample
         var books: Books = .init(
-            wips: workInProgress,
-            finishedGoods: finishedGood
+            wips: .sample,
+            finishedGoods: .sample
         )
 
         // confirm
@@ -135,13 +129,53 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
     }
 
+    func testRecordFinishedGoodsNegativeAmountError() {
+        // initiate empty books
+        var books: Books = .init(
+            wips: .sample,
+            finishedGoods: .sample
+        )
+
+        // confirm
+        XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory), 49_000)
+        XCTAssertEqual(books.wips.totalBalance(for: \.inventory), 77_777)
+
+        XCTAssertEqual(books.ledger.count, 3)
+        XCTAssertEqual(books.ledger[.wipsInventory]?.balance, 77_777)
+        XCTAssertEqual(books.ledger[.finishedInventory]?.balance, 49_000)
+        XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
+
+        // create production order with negative qty
+        let orderWithOtherType: ProductionOrder = .init(
+            orderType: .recordFinishedGoods(cost: 49),
+            finishedGoodID: FinishedGood.sample.id,
+            workInProgressID: WorkInProgress.sample.id,
+            finishedGoodQty: -999
+        )
+
+        XCTAssertThrowsError(
+            try books.recordFinishedGoods(for: orderWithOtherType),
+            "Should fail: incorrect order type."
+        ) { error in
+            XCTAssertEqual(error as? AccountError,
+                           AccountError.negativeAmount)
+        }
+
+        // confirm no change after error
+        XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory), 49_000)
+        XCTAssertEqual(books.wips.totalBalance(for: \.inventory), 77_777)
+
+        XCTAssertEqual(books.ledger.count, 3)
+        XCTAssertEqual(books.ledger[.wipsInventory]?.balance, 77_777)
+        XCTAssertEqual(books.ledger[.finishedInventory]?.balance, 49_000)
+        XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
+    }
+
     func testRecordFinishedGoods() throws {
         // initiate books with work in progress and finished goods
-        let finishedGood: FinishedGood = .sample
-        let workInProgress: WorkInProgress = .sample
         var books: Books = .init(
-            wips: workInProgress,
-            finishedGoods: finishedGood
+            wips: .sample,
+            finishedGoods: .sample
         )
 
         // confirm

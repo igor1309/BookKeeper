@@ -22,10 +22,9 @@ import Tagged
 /// minus accumulated depreciation, minus any impairment charges. Because of ongoing depreciation,
 /// the net book value of an asset is always declining. However, it is possible under international
 /// financial reporting standards to revalue a equipment, so that its net book value can increase.
-#warning("rename to Equipment")
 public struct Equipment: Identifiable, Equatable {
     public let id: Tagged<Self, UUID>
-    public var name: String
+    public let name: String
     public let lifetime: Int
 
     // MARK: should I get category from account group?
@@ -36,8 +35,7 @@ public struct Equipment: Identifiable, Equatable {
     public let initialValue: Double
     public let vatRate: Double
 
-    #warning("make depreciation private")
-    public var depreciation: Double = 0
+    internal var depreciation: Double = 0
     public var carryingAmount: Double { initialValue - depreciation }
 
     // MARK: depreciationAmountPerMonth could be a method with potentially different depreciation strategies
