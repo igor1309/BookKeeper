@@ -1,27 +1,62 @@
 import BookKeeper
 
+extension Books {
+    static let sample: Self = .init(
+        ledger: [
+            .init(group: .cash, amount: 1_000_000),
+            .init(group: .loan, amount: 800_000),
+            .init(group: .stocks, amount: 200_000)
+        ]
+    )
+}
+
 extension Client {
-    static let sample: Self = .init(name: "Client")
+    static let sample: Self = .init(name: "Client", initialReceivables: 66_666)
 }
 
 extension Supplier {
-    static let sample: Self = .init(name: "Supplier")
+    static let sample: Self = .init(name: "Supplier", initialPayables: 55_555)
 }
 
 extension RawMaterial {
-    static let sample: Self = .init(inventory: InventoryAccount.init())
+    static let sample: Self = .init(
+        name: "RawMaterial",
+        initialInventoryQty: 1_000,
+        initialInventoryValue: 35_000
+    )
 }
 
 extension WorkInProgress {
-    static let sample: Self = .init()
+    static let sample: Self = .init(
+        name: "WorkInProgress",
+        initialInventoryQty: 1_000,
+        initialInventoryValue: 77_777
+    )
 }
 
 extension FinishedGood {
-    static let sample: Self = .init(name: "Finished")
+    static let sample: Self = .init(
+        name: "Finished Good with Inventory",
+        initialInventoryQty: 1_000,
+        initialInventoryValue: 49_000,
+        initialCOGS: 35_000
+    )
 }
 
-extension FixedAsset {
-    static let sample: Self = .init(name: "Equipment", lifetime: 7, value: 999_999)
+extension Equipment {
+    static let sample: Self = .init(
+        name: "Equipment", lifetime: 7, value: 999_999, depreciation: 47_619
+    )
+}
+
+extension SalesOrder {
+    static let sample: Self = .init(
+        orderType: .bookRevenue,
+        clientID: Client.sample.id,
+        finishedGoodID: FinishedGood.sample.id,
+        qty: 100,
+        priceExTax: 99.0
+    )
 }
 
 extension PurchaseOrder {
@@ -30,77 +65,192 @@ extension PurchaseOrder {
         orderType: .purchaseRawMaterial(RawMaterial.sample),
         qty: 9_999,
         priceExTax: 21.0,
-        vatRate: 20 / 100
+        vatRate: 20/100
+    )
+}
+
+extension ProductionOrder {
+    static let sample: Self = .init(
+        orderType: .recordFinishedGoods(cost: 49),
+        finishedGoodID: FinishedGood.sample.id,
+        workInProgressID: WorkInProgress.sample.id,
+        finishedGoodQty: 999
+    )
+}
+
+extension InventoryAccount {
+    static let sample: Self = .init(
+        type: .finishedGoods,
+        qty: 999,
+        amount: 20_979
     )
 }
 
 import XCTest
 
 final class HelpersTests: XCTestCase {
+    func testBooksSample() {
+        let books: Books = .sample
+
+        XCTAssert(books.rawMaterials.isEmpty)
+        XCTAssert(books.wips.isEmpty)
+        XCTAssert(books.finishedGoods.isEmpty)
+        XCTAssert(books.clients.isEmpty)
+        XCTAssert(books.suppliers.isEmpty)
+        XCTAssert(books.equipments.isEmpty)
+
+        XCTAssertEqual(books.ledger.count, 3)
+        XCTAssertEqual(books.ledger[.cash]?.balance, 1_000_000)
+        XCTAssertEqual(books.ledger[.loan]?.balance, 800_000)
+        XCTAssertEqual(books.ledger[.stocks]?.balance, 200_000)
+    }
+
     func testClientSample() {
-        XCTAssertNotEqual(Client.sample, Client(name: "Client"), "Should have different ID")
-        XCTAssertNotEqual(Client.sample.id, Client(name: "Client").id, "Should have different ID")
-        XCTAssertEqual(Client.sample.name, Client(name: "Client").name)
-        XCTAssertEqual(Client.sample.receivables, Client(name: "Client").receivables)
+        let client: Client = .sample
+
+        XCTAssertNotEqual(client, Client(name: "Client"), "Should have different ID")
+        XCTAssertNotEqual(client.id, Client(name: "Client").id, "Should have different ID")
+        XCTAssertEqual(client.name, "Client")
+        XCTAssertEqual(client.receivables, Account(group: .receivables, amount: 66_666))
+        XCTAssertEqual(client.receivables.kind, .active)
+        XCTAssertEqual(client.receivables.group, .receivables)
+        XCTAssertEqual(client.receivables.balance, 66_666)
     }
 
     func testSupplierSample() {
-        XCTAssertNotEqual(Supplier.sample, Supplier(name: "Supplier"), "Should have different ID")
-        XCTAssertNotEqual(Supplier.sample.id, Supplier(name: "Supplier").id, "Should have different ID")
-        XCTAssertEqual(Supplier.sample.name, Supplier(name: "Supplier").name)
-        XCTAssertEqual(Supplier.sample.payables, Supplier(name: "Supplier").payables)
+        let supplier: Supplier = .sample
+
+        XCTAssertNotEqual(supplier, Supplier(name: "Supplier"), "Should have different ID")
+        XCTAssertNotEqual(supplier.id, Supplier(name: "Supplier").id, "Should have different ID")
+        XCTAssertEqual(supplier.name, "Supplier")
+        XCTAssertEqual(supplier.payables, Account(group: .payables, amount: 55_555))
+        XCTAssertEqual(supplier.payables.kind, .passive)
+        XCTAssertEqual(supplier.payables.group, .payables)
+        XCTAssertEqual(supplier.payables.balance, 55_555)
     }
 
     func testRawMaterialSample() {
-        XCTAssertNotEqual(RawMaterial.sample, RawMaterial(), "Should have different ID")
-        XCTAssertNotEqual(RawMaterial.sample.id, RawMaterial().id, "Should have different ID")
-        XCTAssertEqual(RawMaterial.sample.inventory, RawMaterial().inventory)
+        let rawMaterial: RawMaterial = .sample
+
+        XCTAssertNotEqual(rawMaterial, RawMaterial(name: "RawMaterial"), "Should have different ID")
+        XCTAssertNotEqual(rawMaterial.id, RawMaterial(name: "RawMaterial").id, "Should have different ID")
+
+        XCTAssertEqual(rawMaterial.inventory,
+                       InventoryAccount(type: .rawMaterials, qty: 1_000, amount: 35_000))
+        XCTAssertEqual(rawMaterial.inventory.kind, .active)
+        XCTAssertEqual(rawMaterial.inventory.type, .rawMaterials)
+        XCTAssertEqual(rawMaterial.inventory.qty, 1_000)
+        XCTAssertEqual(rawMaterial.inventory.balance, 35_000)
     }
 
     func testWorkInProgressSample() {
-        XCTAssertNotEqual(WorkInProgress.sample, WorkInProgress(), "Should have different ID")
-        XCTAssertNotEqual(WorkInProgress.sample.id, WorkInProgress().id, "Should have different ID")
-        XCTAssertEqual(WorkInProgress.sample.inventory, WorkInProgress().inventory)
+        let workInProgress: WorkInProgress = .sample
+
+        XCTAssertNotEqual(workInProgress, WorkInProgress(name: "WorkInProgress"), "Should have different ID")
+        XCTAssertNotEqual(workInProgress.id, WorkInProgress(name: "WorkInProgress").id, "Should have different ID")
+
+        XCTAssertEqual(workInProgress.inventory,
+                       InventoryAccount(type: .workInProgress, qty: 1_000, amount: 77_777))
+        XCTAssertEqual(workInProgress.inventory.kind, .active)
+        XCTAssertEqual(workInProgress.inventory.type, .workInProgress)
+        XCTAssertEqual(workInProgress.inventory.qty, 1_000)
+        XCTAssertEqual(workInProgress.inventory.balance, 77_777)
     }
 
     func testFinishedGoodSample() {
-        let finishedGood = FinishedGood(name: "Finished")
-        XCTAssertNotEqual(FinishedGood.sample, finishedGood, "Should have different ID")
-        XCTAssertNotEqual(FinishedGood.sample.id, finishedGood.id, "Should have different ID")
-        XCTAssertEqual(FinishedGood.sample.name, finishedGood.name)
-        XCTAssertEqual(FinishedGood.sample.inventory, finishedGood.inventory)
-        XCTAssertEqual(FinishedGood.sample.cogs, finishedGood.cogs)
-        XCTAssertEqual(FinishedGood.sample.cost(), finishedGood.cost())
+        let finishedGood: FinishedGood = .sample
+
+        XCTAssertNotEqual(finishedGood, FinishedGood(name: "Finished Good with Inventory"),
+                          "Should have different ID")
+        XCTAssertNotEqual(finishedGood.id, FinishedGood(name: "Finished Good with Inventory").id,
+                          "Should have different ID")
+
+        XCTAssertEqual(finishedGood.name, "Finished Good with Inventory")
+        XCTAssertEqual(finishedGood.inventory,
+                       InventoryAccount(type: .finishedGoods, qty: 1_000, amount: 49_000))
+        XCTAssertEqual(finishedGood.inventory.kind, .active)
+        XCTAssertEqual(finishedGood.inventory.type, .finishedGoods)
+        XCTAssertEqual(finishedGood.inventory.qty, 1_000)
+        XCTAssertEqual(finishedGood.inventory.balance, 49_000)
+
+        XCTAssertEqual(finishedGood.cogs, Account(group: .cogs, amount: 35_000))
+        XCTAssertEqual(finishedGood.cogs.kind, .active)
+        XCTAssertEqual(finishedGood.cogs.group, .cogs)
+        XCTAssertEqual(finishedGood.cogs.balance, 35_000)
+
+        XCTAssertEqual(finishedGood.cost(), 49)
     }
 
-    func testFixedAssetSample() {
-        let fixedAsset: FixedAsset = .init(name: "Equipment", lifetime: 7, value: 999_999)
-        XCTAssertNotEqual(FixedAsset.sample, fixedAsset, "Should have different ID")
-        XCTAssertNotEqual(FixedAsset.sample.id, fixedAsset.id, "Should have different ID")
-        XCTAssertEqual(FixedAsset.sample.name, fixedAsset.name)
-        XCTAssertEqual(FixedAsset.sample.lifetime, fixedAsset.lifetime)
-        XCTAssertEqual(FixedAsset.sample.value, fixedAsset.value)
-        XCTAssertEqual(FixedAsset.sample.vatRate, fixedAsset.vatRate)
-        XCTAssertEqual(FixedAsset.sample.depreciation, fixedAsset.depreciation)
-        XCTAssertEqual(FixedAsset.sample.carryingAmount, fixedAsset.carryingAmount)
-        XCTAssertEqual(FixedAsset.sample.depreciationAmountPerMonth, fixedAsset.depreciationAmountPerMonth)
+    func testEquipmentSample() {
+        let equipment: Equipment = .sample
+
+        XCTAssertNotEqual(equipment,
+                          Equipment(name: "Equipment", lifetime: 7, value: 999_999, depreciation: 47_619),
+                          "Should have different ID")
+        XCTAssertNotEqual(equipment.id,
+                          Equipment(name: "Equipment", lifetime: 7, value: 999_999, depreciation: 47_619).id,
+                          "Should have different ID")
+
+        XCTAssertEqual(equipment.name, "Equipment")
+        XCTAssertEqual(equipment.lifetime, 7)
+        XCTAssertEqual(equipment.initialValue, 999_999)
+        XCTAssertEqual(equipment.vatRate, 20/100)
+        XCTAssertEqual(equipment.depreciation, 47_619)
+        XCTAssertEqual(equipment.carryingAmount, 999_999 - 47_619)
+        XCTAssertEqual(equipment.depreciationAmountPerMonth, 11_904.75)
+    }
+
+    func testSalesOrderSample() {
+        let order: SalesOrder = .sample
+
+        XCTAssertEqual(order.orderType, .bookRevenue)
+        XCTAssertEqual(order.clientID, Client.sample.id)
+        XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
+        XCTAssertEqual(order.priceExTax, 99)
+        XCTAssertEqual(order.cost, 99)
+        XCTAssertEqual(order.qty, 100)
+        XCTAssertEqual(order.priceExTax, 99)
+        XCTAssertEqual(order.taxRate, 20/100)
+        XCTAssertEqual(order.tax, 100 * 99 * 0.2)
+        XCTAssertEqual(order.amountExTax, 100 * 99)
+        XCTAssertEqual(order.amountWithTax, 100 * 99 * (1 + 20/100))
     }
 
     func testPurchaseOrderSample() {
-        let order = PurchaseOrder(supplierID: Supplier.sample.id,
-                                  orderType: .purchaseRawMaterial(RawMaterial.sample),
-                                  qty: 9_999,
-                                  priceExTax: 21.0,
-                                  vatRate: 20 / 100)
-        XCTAssertEqual(PurchaseOrder.sample, order)
-        XCTAssertEqual(PurchaseOrder.sample.supplierID, order.supplierID)
-        XCTAssertEqual(PurchaseOrder.sample.orderType, order.orderType)
-        XCTAssertEqual(PurchaseOrder.sample.qty, order.qty)
-        XCTAssertEqual(PurchaseOrder.sample.priceExTax, order.priceExTax)
-        XCTAssertEqual(PurchaseOrder.sample.cost, order.cost)
-        XCTAssertEqual(PurchaseOrder.sample.vatRate, order.vatRate)
-        XCTAssertEqual(PurchaseOrder.sample.vat, order.vat)
-        XCTAssertEqual(PurchaseOrder.sample.amountExVAT, order.amountExVAT)
-        XCTAssertEqual(PurchaseOrder.sample.amountWithVAT, order.amountWithVAT)
+        let order: PurchaseOrder = .sample
+
+        XCTAssertEqual(order.supplierID, Supplier.sample.id)
+        XCTAssertEqual(order.orderType, .purchaseRawMaterial(RawMaterial.sample))
+        XCTAssertEqual(order.qty, 9_999)
+        XCTAssertEqual(order.priceExTax, 21.0)
+        XCTAssertEqual(order.cost, 21)
+        XCTAssertEqual(order.vatRate, 20/100)
+        XCTAssertEqual(order.vat, 41_995.8)
+        XCTAssertEqual(order.vat, 9_999 * 21 * 20 / 100)
+        XCTAssertEqual(order.amountExVAT, 209_979.0)
+        XCTAssertEqual(order.amountExVAT, 9_999 * 21)
+        XCTAssertEqual(order.amountWithVAT, 251_974.8)
+        XCTAssertEqual(order.amountWithVAT, 9_999 * 21 * (1 + 20/100))
+    }
+
+    func testProductionOrderSample() {
+        let order: ProductionOrder = .sample
+
+        XCTAssertEqual(order.orderType, .recordFinishedGoods(cost: 49))
+        XCTAssertEqual(order.qty, 999)
+        XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
+        XCTAssertEqual(order.wipID, WorkInProgress.sample.id)
+        XCTAssertEqual(order.cost, 49)
+    }
+
+    func testInventoryAccountSample() throws {
+        let inventory: InventoryAccount = .sample
+
+        XCTAssertEqual(inventory.kind, .active)
+        XCTAssertEqual(inventory.type, .finishedGoods)
+        XCTAssertEqual(inventory.qty, 999)
+        XCTAssertEqual(inventory.amount, 20_979)
+        XCTAssertEqual(inventory.balance, 20_979)
+        XCTAssertEqual(inventory.cost(), 21.0)
     }
 }

@@ -1,16 +1,14 @@
 import XCTest
-// @testable
 import BookKeeper
 
-// MARK: - Business Operations
+// MARK: Business Operations
+
 extension BooksTests {
-    func testReceiveCash() throws {
+    func testReceiveCashUnknownClientError() throws {
         var books: Books = .init()
 
         // confirm
-        XCTAssert(books.cashAccount.balanceIsZero)
-        XCTAssert(books.clients.totalBalance(for: \.receivables).isZero)
-        XCTAssert(books.receivables.balanceIsZero)
+        XCTAssert(books.isEmpty)
 
         // fail to receive cash from unknown client
         XCTAssertThrowsError(
@@ -21,40 +19,81 @@ extension BooksTests {
         }
 
         // confirm no change after error
-        XCTAssert(books.cashAccount.balanceIsZero)
-        XCTAssert(books.clients.totalBalance(for: \.receivables).isZero)
-        XCTAssert(books.receivables.balanceIsZero)
+        XCTAssert(books.isEmpty)
+    }
 
-        // add new client
-        let client: Client = .init(name: "Client", initialReceivables: 1_500)
-        books.add(client: client)
+    func testReceiveCashInsufficientBalanceErrors() {
+        let client: Client = .sample
+        var books: Books = .init(clients: client)
 
         // confirm balances
-        XCTAssert(books.cashAccount.balanceIsZero)
-        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 1_500)
-        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 1_500)
-        XCTAssertEqual(books.receivables.balance, 1_500)
+        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 66_666)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 66_666)
+        XCTAssertNil(books.ledger[.cash], "Should be no such account in the ledger")
+        XCTAssertEqual(books.ledger.count, 1)
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 66_666)
 
-        // receive cash
-        XCTAssertNoThrow(try books.receiveCash(1_000, from: client.id))
+        // receive huge cash
+        XCTAssertThrowsError(
+            try books.receiveCash(1_000_000, from: client.id)
+        ) { error in
+            XCTAssertEqual(error as? AccountError,
+                           AccountError.insufficientBalance(.receivables))
+        }
 
-        // confirm cash received
-        XCTAssertEqual(books.cashAccount.balance, 1_000)
-        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 500)
-        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 500)
-        XCTAssertEqual(books.receivables.balance, 500)
+        // confirm no change after error
+        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 66_666)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 66_666)
+        XCTAssertNil(books.ledger[.cash], "Should be no such account in the ledger")
+        XCTAssertEqual(books.ledger.count, 1)
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 66_666)
+    }
+
+    func testReceiveCashNegativeAmountErrors() {
+        let client: Client = .sample
+        var books: Books = .init(clients: client)
+
+        // confirm balances
+        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 66_666)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 66_666)
+        XCTAssertEqual(books.ledger.count, 1)
+        XCTAssertNil(books.ledger[.cash], "Should be no such account in the ledger")
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 66_666)
 
         // cash receive fail with negative amount
         XCTAssertThrowsError(try books.receiveCash(-1_000, from: client.id)) { error in
-            XCTAssertEqual(error as? AccountError<Cash>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
         // confirm no changes after fail
-        XCTAssertEqual(books.cashAccount.balance, 1_000)
-        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 500)
-        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 500)
-        XCTAssertEqual(books.receivables.balance, 500)
+        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 66_666)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 66_666)
+        XCTAssertEqual(books.ledger.count, 1)
+        XCTAssertNil(books.ledger[.cash], "Should be no such account in the ledger")
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 66_666)
+
     }
 
+    func testReceiveCashNoErrors() {
+        let client: Client = .sample
+        var books: Books = .init(clients: client)
+
+        // confirm balances
+        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 66_666)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 66_666)
+        XCTAssertEqual(books.ledger.count, 1)
+        XCTAssertNil(books.ledger[.cash], "Should be no such account in the ledger")
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 66_666)
+
+        // receive cash
+        XCTAssertNoThrow(try books.receiveCash(10_000, from: client.id))
+
+        // confirm cash received
+        XCTAssertEqual(books.clients[client.id]?.receivables.balance, 56_666)
+        XCTAssertEqual(books.clients.totalBalance(for: \.receivables), 56_666)
+        XCTAssertEqual(books.ledger.count, 2)
+        XCTAssertEqual(books.ledger[.cash]?.balance, 10_000)
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 56_666)
+    }
 }

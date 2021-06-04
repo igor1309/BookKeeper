@@ -3,30 +3,27 @@ import BookKeeper
 
 extension AccountTests {
     func testCashAccount() {
-        XCTAssertEqual(Account<Cash>.init().kind, .active)
+        XCTAssertEqual(Account.init(group: .cash).kind, .active)
 
-        XCTAssertEqual(Account<Cash>.init().group,
-                       .balanceSheet(.asset(.currentAsset(.cash))))
+        XCTAssertEqual(Account.init(group: .cash).group, .cash)
 
-        let cashAccountZero: Account<Cash> = .init()
+        let cashAccountZero: Account = .init(group: .cash)
         XCTAssert(cashAccountZero.balanceIsZero)
-        XCTAssertEqual(cashAccountZero.group,
-                       .balanceSheet(.asset(.currentAsset(.cash))))
+        XCTAssertEqual(cashAccountZero.group, .cash)
 
-        let cashAccount: Account<Cash> = .init(amount: 10_000)
+        let cashAccount: Account = .init(group: .cash, amount: 10_000)
         XCTAssertEqual(cashAccount.balance, 10_000)
-        XCTAssertEqual(cashAccount.group,
-                       .balanceSheet(.asset(.currentAsset(.cash))))
+        XCTAssertEqual(cashAccount.group, .cash)
     }
 
     func testCashAccountDescription() {
-        let cashAccountZero: Account<Cash> = .init()
+        let cashAccountZero: Account = .init(group: .cash)
         XCTAssertEqual(cashAccountZero.description,
-                       "Cash(Cash (active); 0.0)")
+                       "Cash, active: 0.0")
 
-        let cashAccount: Account<Cash> = .init(amount: 10_000)
+        let cashAccount: Account = .init(group: .cash, amount: 10_000)
         XCTAssertEqual(cashAccount.description,
-                       "Cash(Cash (active); 10000.0)")
+                       "Cash, active: 10000.0")
     }
 
 }

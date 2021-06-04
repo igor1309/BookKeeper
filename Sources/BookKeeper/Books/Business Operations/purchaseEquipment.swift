@@ -1,4 +1,5 @@
-// MARK: - Business Operations
+// MARK: Business Operations
+
 public extension Books {
 
     /// `Purchase Fixed Asset`
@@ -19,56 +20,57 @@ public extension Books {
     /// НДС дебетуется по счету 19.01 - НДС при приобретении основных средств.
     /// Подчинен счету "НДС по приобретенным ценностям" (19).
     ///
-    mutating func purchaseFixedAsset(supplierID: Supplier.ID,
+    mutating func purchaseEquipment(supplierID: Supplier.ID,
                                      assetName name: String,
                                      lifetimeInYears: Int,
                                      amountExVAT: Double,
                                      vatRate: Double = 20/100
     ) throws {
 
-        guard suppliers[supplierID] != nil else {
+        // input validation
+        guard var supplier = suppliers[supplierID] else {
             throw BooksError.unknownSupplier
         }
 
-        guard lifetimeInYears > 0 else {
-            throw BooksError.incorrectLifetime
-        }
+        guard lifetimeInYears > 0 else { throw BooksError.incorrectLifetime }
+        guard amountExVAT > 0 else { throw BooksError.nonPositiveAmount }
+        guard vatRate >= 0 else { throw BooksError.negativeVAT }
 
-        guard amountExVAT > 0 else {
-            throw BooksError.nonPositiveAmount
-        }
-
-        guard vatRate >= 0 else {
-            throw BooksError.negativeVAT
-        }
-
-        // backup
-        let fixedAssetsBackup = fixedAssets
-        let vatReceivableBackup = vatReceivable
-        let suppliersBackup = suppliers
+        // backup is needed: transaction #2 could fail after transaction #1
+        let ledgerBackup = ledger
 
         do {
-            // kinda debit fixed assets
-            let fixedAsset: FixedAsset = .init(
+            let vat = amountExVAT * vatRate
+
+            // local var change; journal supplier change
+            try supplier.payables.credit(amount: amountExVAT + vat)
+
+            // transaction #1
+            try doubleEntry(debit: .equipment,
+                            credit: .payables,
+                            amount: amountExVAT)
+
+            // transaction #2
+            try doubleEntry(debit: .vatReceivable,
+                            credit: .payables,
+                            amount: vat)
+
+            // if no errors thrown, journal equipment
+            let equipment: Equipment = .init(
                 name: name,
                 lifetime: lifetimeInYears,
                 value: amountExVAT,
                 vatRate: vatRate
             )
-            fixedAssets[fixedAsset.id] = fixedAsset
+            equipments[equipment.id] = equipment
 
-            // debit VAT Receivable
-            let vat = amountExVAT * vatRate
-            try vatReceivable.debit(amount: vat)
-
-            // credit payables
-            let amount = amountExVAT + vat
-            try suppliers[supplierID]?.payables.credit(amount: amount)
+            // if no error thrown safe to update suppliers
+            suppliers[supplierID] = supplier
         } catch {
-            // restore
-            fixedAssets = fixedAssetsBackup
-            vatReceivable = vatReceivableBackup
-            suppliers = suppliersBackup
+            // restore if needed
+            if ledger != ledgerBackup {
+                ledger = ledgerBackup
+            }
 
             throw error
         }

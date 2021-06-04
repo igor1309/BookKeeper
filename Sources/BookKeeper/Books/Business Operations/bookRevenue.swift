@@ -1,4 +1,4 @@
-// MARK: - Business Operations
+// MARK: Business Operations
 
 /// A `transaction` is a business event that has a monetary impact on an entity's
 /// financial statements, and is recorded as an entry in its accounting records.
@@ -52,42 +52,42 @@ public extension Books {
         }
 
         let clientID = order.clientID
-        guard let receivablesBackup = clients[clientID]?.receivables else {
+        guard var client = clients[clientID] else {
             throw BooksError.unknownClient
         }
 
         let finishedGoodID = order.finishedGoodID
-        guard let cogsBackup = finishedGoods[finishedGoodID]?.cogs else {
-            throw BooksError.unknownFinishedGood
-        }
-        guard let inventoryBackup = finishedGoods[finishedGoodID]?.inventory else {
+        guard var finishedGood = finishedGoods[finishedGoodID] else {
             throw BooksError.unknownFinishedGood
         }
 
-        let revenueAccountBackup = revenueAccount
-        let taxLiabilitiesBackup = taxLiabilities
+        guard let cost = finishedGood.cost() else {
+            throw BooksError.costOfProductNotDefined
+        }
+
+        // backup is needed: transaction #2 could fail after transaction #1
+        let ledgerBackup = ledger
 
         do {
+            // MARK: Ledger
+            
             /// 1. For amount including Value Added Tax (VAT):
             ///
             ///     - debit Accounts Receivable (Client or Channel).
             ///     - credit Revenue (Product).
             ///
-            try clients[clientID]?.receivables.debit(amount: order.amountWithTax)
-            try revenueAccount.credit(amount: order.amountWithTax)
+            try doubleEntry(debit: .receivables,
+                            credit: .revenue,
+                            amount: order.amountWithTax)
 
             /// 2. For amount of VAT:
             ///
             ///     - debit Revenue (Product).
             ///     - credit Tax Liabilities Account (General Ledger).
             ///
-            try revenueAccount.debit(amount: order.tax)
-            try taxLiabilities.credit(amount: order.tax)
-
-            guard let cost = finishedGoods[finishedGoodID]?.cost() else {
-                print("cost of product is not defined")
-                throw BooksError.costOfProductNotDefined
-            }
+            try doubleEntry(debit: .revenue,
+                            credit: .taxesPayable,
+                            amount: order.tax)
 
             /// 3. For amount of Cost of Goods Sold (COGS):
             ///
@@ -95,17 +95,29 @@ public extension Books {
             ///     - credit Inventory (Product).
             ///
             let cogs = Double(order.qty) * cost
-            try finishedGoods[finishedGoodID]?.cogs.debit(amount: cogs)
-            try finishedGoods[finishedGoodID]?.inventory.credit(order: order)
-        } catch let error {
-            /// `restore` to before-state (`undo` changes)
-            clients[clientID]?.receivables = receivablesBackup
 
-            finishedGoods[finishedGoodID]?.cogs = cogsBackup
-            finishedGoods[finishedGoodID]?.inventory = inventoryBackup
+            try doubleEntry(debit: .cogs,
+                            credit: .finishedInventory,
+                            amount: cogs)
 
-            revenueAccount = revenueAccountBackup
-            taxLiabilities = taxLiabilitiesBackup
+            // MARK: Journaling
+
+            // local var change; throws if ...
+            try client.receivables.debit(amount: order.amountWithTax)
+
+            // local var change; throws if ...
+            try finishedGood.cogs.debit(amount: cogs)
+            try finishedGood.inventory.credit(order: order)
+
+            // if no error thrown safe to update clients
+            clients[clientID] = client
+            // if no error thrown safe to update finished goods
+            finishedGoods[finishedGoodID] = finishedGood
+        } catch {
+            // restore if needed
+            if ledger != ledgerBackup {
+                ledger = ledgerBackup
+            }
 
             throw error
         }

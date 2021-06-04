@@ -76,6 +76,37 @@ extension BalanceSheet.Asset: RawRepresentable {
     }
 }
 
+extension BalanceSheet.Asset.CurrentAsset: RawRepresentable {
+    public init?(rawValue: String) {
+        switch rawValue {
+            case "Cash":
+                self = .cash
+            case "Accounts Receivable":
+                self = .accountsReceivable
+            case "VAT Receivable":
+                self = .vatReceivable
+            default:
+                guard let inventory = BalanceSheet.Asset.CurrentAsset.Inventory(rawValue: rawValue) else {
+                    return nil
+                }
+                self = .inventory(inventory)
+        }
+    }
+
+    public var rawValue: String {
+        switch self {
+            case .cash:
+                return "Cash"
+            case .accountsReceivable:
+                return "Accounts Receivable"
+            case .vatReceivable:
+                return "VAT Receivable"
+            case let .inventory(inventory):
+                return inventory.rawValue
+        }
+    }
+}
+
 extension BalanceSheet.Liability: RawRepresentable {
     public init?(rawValue: String) {
         if let currentLiability = CurrentLiability(rawValue: rawValue) {
@@ -100,7 +131,7 @@ extension BalanceSheet.Liability: RawRepresentable {
 extension IncomeStatement: RawRepresentable {
     public init?(rawValue: String) {
         switch rawValue {
-            case "Revenue", "revenue":
+            case "Revenue":
                 self = .revenue
             default:
                 guard let expense = Expense(rawValue: rawValue) else {

@@ -1,4 +1,5 @@
-// MARK: - Business Operations
+// MARK: Business Operations
+
 public extension Books {
 
     /// `Receive Cash` from Client.
@@ -10,18 +11,30 @@ public extension Books {
     ///
     ///
     mutating func receiveCash(_ amount: Double, from clientID: Client.ID) throws {
-        let cashAccountBackup = cashAccount
-        guard let receivablesBackup = clients[clientID]?.receivables else {
+        guard var client = clients[clientID] else {
             throw BooksError.unknownClient
         }
 
+        // backup is needed: transaction #2 could fail after transaction #1
+        let ledgerBackup = ledger
+
         do {
-            try cashAccount.debit(amount: amount)
-            try clients[clientID]?.receivables.credit(amount: amount)
+            #warning("test so that both try fail")
+            // 3. local var change; throws is client owes less than amount
+            try client.receivables.credit(amount: amount)
+
+            // 2. doubleEntry is self-cleaning, no need to backup
+            try doubleEntry(debit: .cash,
+                            credit: .receivables,
+                            amount: amount)
+
+            // 4. if no error thrown safe to update clients
+            clients[clientID] = client
         } catch {
-            // restore (undo)
-            cashAccount = cashAccountBackup
-            clients[clientID]?.receivables = receivablesBackup
+            // restore if needed
+            if ledger != ledgerBackup {
+                ledger = ledgerBackup
+            }
 
             throw error
         }

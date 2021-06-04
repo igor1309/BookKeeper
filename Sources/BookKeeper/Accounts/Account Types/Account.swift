@@ -2,14 +2,15 @@
 ///
 /// For example, `Cash` account is an Account.
 /// For comparison, an Order is needed to debit or credit `Inventory` account.
-public struct Account<AccountType: AccountTypeProtocol> {
-    public let name: String
+public struct Account: AccountProtocol {
+    public var kind: AccountKind { group.kind }
+    public let group: AccountGroup
     private(set) var amount: Double
 
-    public init(name: String = AccountType.defaultName,
+    public init(group: AccountGroup,
                 amount: Double = 0
     ) {
-        self.name = name
+        self.group = group
         self.amount = amount
     }
 
@@ -17,20 +18,15 @@ public struct Account<AccountType: AccountTypeProtocol> {
 
 }
 
-extension Account: AccountProtocol {
-    public var kind: AccountKind { AccountType.kind }
-    public var group: AccountGroup { AccountType.group }
-}
-
 extension Account: CustomStringConvertible {
     public var description: String {
-        "\(name)(\(group.rawValue) (\(kind)); \(amount))"
+        "\(group.rawValue), \(kind): \(amount)"
     }
 }
 
 extension Account {
     public mutating func debit(amount: Double) throws {
-        guard amount >= 0 else { throw AccountError<AccountType>.negativeAmount}
+        guard amount >= 0 else { throw AccountError.negativeAmount}
 
         switch kind {
             case .active, .bothActivePassive:
@@ -38,7 +34,7 @@ extension Account {
 
             case .passive:
                 if self.amount < amount {
-                    throw AccountError<AccountType>.insufficientBalance(self)
+                    throw AccountError.insufficientBalance(self.group)
                 } else {
                     self.amount -= amount
                 }
@@ -46,12 +42,12 @@ extension Account {
     }
 
     public mutating func credit(amount: Double) throws {
-        guard amount >= 0 else { throw AccountError<AccountType>.negativeAmount}
+        guard amount >= 0 else { throw AccountError.negativeAmount}
 
         switch kind {
             case .active, .bothActivePassive:
                 if self.amount < amount {
-                    throw AccountError<AccountType>.insufficientBalance(self)
+                    throw AccountError.insufficientBalance(self.group)
                 } else {
                     self.amount -= amount
                 }

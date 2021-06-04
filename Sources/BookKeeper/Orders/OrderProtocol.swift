@@ -4,6 +4,15 @@ public protocol OrderProtocol: Equatable {
 
     var qty: Int { get }
     var cost: Double? { get }
+    var amount: Double? { get }
+}
+
+public extension OrderProtocol {
+    var amount: Double? {
+        guard let cost = cost else { return nil }
+
+        return Double(qty) * cost
+    }
 }
 
 public enum OrderType: Equatable {
@@ -14,7 +23,7 @@ public enum OrderType: Equatable {
 
     /// `Trashed`
     /// This order type is used when products are utilized due to quality issues.
-    case trashed
+    case trash
     case recordFinishedGoods(cost: Double)
     case someOtherType
     case bookRevenue

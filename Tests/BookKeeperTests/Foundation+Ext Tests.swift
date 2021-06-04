@@ -1,20 +1,44 @@
 import XCTest
-@testable import BookKeeper
+//@testable
+import BookKeeper
 
 final class FoundationExtTests: XCTestCase {
+    func testDictionaryContainsAtKeyPath() {
+        let names = ["aaa", "bbb", "ccc"]
+        let clientsArray: [Client] = names.map { Client(name: $0) }
+        let clients: [Client.ID: Client] = clientsArray.keyedBy(keyPath: \.id)
+
+        XCTAssert(clients.contains("aaa", at: \.name))
+        XCTAssertFalse(clients.contains("abc", at: \.name))
+    }
+
+    func testDictionarySumByKeyPath() {
+        let accountsArray = [
+            Account(group: .cash, amount: 100),
+            Account(group: .cogs, amount: 200),
+            Account(group: .accumulatedDepreciation, amount: 300),
+            Account(group: .depreciationExpenses, amount: 400)
+        ]
+        let accounts: [AccountGroup: Account] = accountsArray.keyedBy(keyPath: \.group)
+
+        let sum = accounts.sum(for: \.balance)
+        XCTAssertEqual(sum, 100 + 200 + 300 + 400)
+    }
+
     func testTotalBalance() {
         let pairs = (1...10).map { (UUID(), Double($0)) }
         let dict = Dictionary(uniqueKeysWithValues: pairs)
 
         let finishedGoods = dict.mapValues { (value: Double) -> FinishedGood in
-            let inventory: InventoryAccount = .init(qty: Int(value), amount: value * 10.0)
-            return FinishedGood(name: "FinishedGood \(value)",
-                                inventory: inventory)
+            FinishedGood(name: "FinishedGood \(value)",
+                         initialInventoryQty: Int(value),
+                         initialInventoryValue: value * 10.0,
+                         initialCOGS: value * 5)
         }
-        XCTAssertEqual(finishedGoods.totalBalance(for: \.cogs), 0)
-        XCTAssertEqual(finishedGoods.totalBalance(for: \.inventory), 550)
-        XCTAssertEqual((1...10).reduce(0) { $0 + $1 * 10},
-                       550)
+
+        XCTAssertEqual((1...10).reduce(0) { $0 + $1 }, 55)
+        XCTAssertEqual(finishedGoods.totalBalance(for: \.inventory), 55 * 10)
+        XCTAssertEqual(finishedGoods.totalBalance(for: \.cogs), 55 * 5)
     }
 
     func testTotalBalanceIsZero() {
@@ -22,52 +46,53 @@ final class FoundationExtTests: XCTestCase {
         let dict = Dictionary(uniqueKeysWithValues: pairs)
 
         let finishedGoods = dict.mapValues { (value: Double) -> FinishedGood in
-            let inventory: InventoryAccount = .init(qty: Int(value), amount: value * 10.0)
-            return FinishedGood(name: "FinishedGood \(value)",
-                                inventory: inventory)
+            FinishedGood(name: "FinishedGood \(value)",
+                         initialInventoryQty: Int(value),
+                         initialInventoryValue: value * 10.0,
+                         initialCOGS: value * 5)
         }
 
-        XCTAssert(finishedGoods.totalBalanceIsZero(for: \.cogs))
-        XCTAssert(finishedGoods.totalBalanceIsZero(for: \.inventory))
+        XCTAssertEqual(finishedGoods.totalBalance(for: \.cogs), 0)
+        XCTAssertEqual(finishedGoods.totalBalance(for: \.inventory), 0)
     }
 
-    func testCombineAccounts() {
-        let pairs = (1...100).map { (UUID(), Double($0) * 1_000.0) }
-        let dict = Dictionary(uniqueKeysWithValues: pairs)
+    //    func testCombineAccounts() {
+    //        let pairs = (1...100).map { (UUID(), Double($0) * 1_000.0) }
+    //        let dict = Dictionary(uniqueKeysWithValues: pairs)
+    //
+    //        let balance = pairs.reduce(0) { $0 + $1.1 }
+    //
+    //        let clients = dict.mapValues {
+    //            Client(name: "Client \($0)", initialReceivables: $0)
+//        }
+//        XCTAssertEqual(
+//            clients.combined(\.receivables),
+//            Account<AccountsReceivable>(
+//                name: "Combined Accounts Receivable",
+//                amount: balance)
+//        )
+//
+//        let suppliers = dict.mapValues {
+//            Supplier(name: "Supplier \($0)", initialPayables: $0)
+//        }
+//        XCTAssertEqual(
+//            suppliers.combined(\.payables),
+//            Account<AccountsPayable>(
+//                name: "Combined Accounts Payable",
+//                amount: balance)
+//        )
+//    }
 
-        let balance = pairs.reduce(0) { $0 + $1.1 }
+    let receivables = Account(group: .receivables, amount: 1_000)
+    let vatReceivable = Account(group: .vatReceivable, amount: 100)
+    let cash = Account(group: .cash, amount: 500)
+    let payables = Account(group: .payables, amount: 900)
+    let accumulatedDepreciationEquipment = Account(group: .accumulatedDepreciation, amount: 66)
+    let taxLiabilities = Account(group: .taxesPayable, amount: 999)
 
-        let clients = dict.mapValues {
-            Client(name: "Client \($0)", initialReceivables: $0)
-        }
-        XCTAssertEqual(
-            clients.combined(\.receivables),
-            Account<AccountsReceivable>(
-                name: "Combined Accounts Receivable",
-                amount: balance)
-        )
-
-        let suppliers = dict.mapValues {
-            Supplier(name: "Supplier \($0)", initialPayables: $0)
-        }
-        XCTAssertEqual(
-            suppliers.combined(\.payables),
-            Account<AccountsPayable>(
-                name: "Combined Accounts Payable",
-                amount: balance)
-        )
-    }
-
-    let receivables = Account<AccountsReceivable>(amount: 1_000)
-    let vatReceivable = Account<VATReceivable>(amount: 100)
-    let cash = Account<Cash>(amount: 500)
-    let payables = Account<AccountsPayable>(amount: 900)
-    let accumulatedDepreciationEquipment = Account<AccumulatedDepreciationEquipment>(amount: 66)
-    let taxLiabilities = Account<TaxLiabilities>(amount: 999)
-
-    let cogs = Account<COGS>(amount: 100)
-    let depreciationExpenses = Account<DepreciationExpenses>(amount: 100)
-    let revenue = Account<Revenue>(amount: 100)
+    let cogs = Account(group: .cogs, amount: 100)
+    let depreciationExpenses = Account(group: .depreciationExpenses, amount: 100)
+    let revenue = Account(group: .revenue, amount: 100)
 
     var simpleAccounts: [SimpleAccount] {
         [receivables.simpleAccount,
@@ -83,29 +108,30 @@ final class FoundationExtTests: XCTestCase {
         ]
     }
 
-    var accounts: [AccountGroup : SimpleAccount] { simpleAccounts.byGroup }
+    // var accounts: [AccountGroup: SimpleAccount] { simpleAccounts.byGroup }
+    var accounts: [AccountGroup: SimpleAccount] { simpleAccounts.keyedBy(keyPath: \.group) }
 
     func testArrayOfAccountProtocolByGroup() {
         XCTAssertEqual(accounts.count, 9)
 
-        XCTAssertEqual(accounts[.balanceSheet(.asset(.currentAsset(.accountsReceivable)))],
+        XCTAssertEqual(accounts[.receivables],
                        receivables.simpleAccount)
-        XCTAssertEqual(accounts[.balanceSheet(.asset(.currentAsset(.vatReceivable)))],
+        XCTAssertEqual(accounts[.vatReceivable],
                        vatReceivable.simpleAccount)
-        XCTAssertEqual(accounts[.balanceSheet(.asset(.currentAsset(.cash)))],
+        XCTAssertEqual(accounts[.cash],
                        cash.simpleAccount)
-        XCTAssertEqual(accounts[.balanceSheet(.liability(.currentLiability(.accountsPayable)))],
+        XCTAssertEqual(accounts[.payables],
                        payables.simpleAccount)
-        XCTAssertEqual(accounts[.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))],
+        XCTAssertEqual(accounts[.accumulatedDepreciation],
                        accumulatedDepreciationEquipment.simpleAccount)
-        XCTAssertEqual(accounts[.balanceSheet(.liability(.currentLiability(.taxesPayable)))],
+        XCTAssertEqual(accounts[.taxesPayable],
                        taxLiabilities.simpleAccount)
 
-        XCTAssertEqual(accounts[.incomeStatement(.expense(.cogs))],
+        XCTAssertEqual(accounts[.cogs],
                        cogs.simpleAccount)
-        XCTAssertEqual(accounts[.incomeStatement(.expense(.depreciation))],
+        XCTAssertEqual(accounts[.depreciationExpenses],
                        depreciationExpenses.simpleAccount)
-        XCTAssertEqual(accounts[.incomeStatement(.revenue)],
+        XCTAssertEqual(accounts[.revenue],
                        revenue.simpleAccount)
     }
 

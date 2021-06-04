@@ -1,125 +1,166 @@
 import XCTest
-// @testable
 import BookKeeper
 
 final class BooksTests: XCTestCase {
-    func testInitNoParameters() {
+    func testBooksInitNoParameters() {
         let books: Books = .init()
+
+        // confirm
         XCTAssert(books.isEmpty)
-        XCTAssert(books.rawMaterialsAll().isEmpty)
-        XCTAssert(books.wipsAll().isEmpty)
-        XCTAssert(books.finishedGoodsAll().isEmpty)
-        XCTAssert(books.clientsAll().isEmpty)
+
+        XCTAssert(books.rawMaterials.isEmpty)
+        XCTAssert(books.wips.isEmpty)
+        XCTAssert(books.finishedGoods.isEmpty)
+
+        XCTAssert(books.clients.isEmpty)
         XCTAssert(books.suppliers.isEmpty)
-        XCTAssert(books.fixedAssetsAll().isEmpty)
-        XCTAssert(books.cashAccount.balanceIsZero)
-        XCTAssert(books.accumulatedDepreciation.balanceIsZero)
-        XCTAssert(books.receivables.balanceIsZero)
-        XCTAssert(books.payables.balanceIsZero)
-        XCTAssert(books.vatReceivable.balanceIsZero)
-        XCTAssert(books.taxLiabilities.balanceIsZero)
-        XCTAssert(books.revenueAccount.balanceIsZero)
-        XCTAssert(books.depreciationExpensesAccount.balanceIsZero)
+
+        XCTAssert(books.equipments.isEmpty)
+
+        XCTAssert(books.ledger.isEmpty)
     }
 
+    func testBooksVariadicInit() {
+        let ledger: [Account] = []
+
+        let books1: Books = .init(rawMaterials: .sample,
+                                  wips: .sample,
+                                  finishedGoods: .sample,
+                                  clients: .sample,
+                                  suppliers: .sample,
+                                  equipments: .sample,
+                                  ledger: ledger
+        )
+
+        let books2: Books = .init(rawMaterials: [.sample],
+                                  wips: [.sample],
+                                  finishedGoods: [.sample],
+                                  clients: [.sample],
+                                  suppliers: [.sample],
+                                  equipments: [.sample],
+                                  ledger: ledger
+        )
+
+        XCTAssertEqual(books1, books2)
+    }
+
+    func testBooksInitWithOverwrite() throws {
+        // ledger with two active accounts
+        let active1: AccountGroup = .cash
+        let active2: AccountGroup = .receivables
+        let books: Books = .init(ledger: [.init(group: active1),
+                                          .init(group: active2)])
+
+        // confirm
+        XCTAssertEqual(books.ledger[active1]?.balance, 0)
+        XCTAssertNil(books.ledger[active2], "Empty clients should overwrite receivables (active2).")
+    }
+
+    #warning("split test into shorter tests")
     // swiftlint:disable function_body_length
-    func testInitWithParameters() {
+    func testBooksInitWithParameters() {
         // initiate books
-        let rawMaterial: RawMaterial = .sample
-        let rawMaterials: [RawMaterial.ID: RawMaterial] = [rawMaterial.id: rawMaterial]
+        let ledger: [Account] = [
+            .init(group: .rawInventory, amount: 333),
+            .init(group: .wipsInventory, amount: 333),
+            .init(group: .finishedInventory, amount: 333),
+            .init(group: .equipment, amount: 333),
+            .init(group: .receivables, amount: 333),
+            .init(group: .payables, amount: 333),
+            .init(group: .accumulatedDepreciation, amount: 333),
+            .init(group: .cogs, amount: 333),
+            .init(group: .depreciationExpenses, amount: 333)
+        ]
 
-        let workInProgress: WorkInProgress = .sample
-        let wips: [WorkInProgress.ID: WorkInProgress] = [workInProgress.id: workInProgress]
-
-        let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
-        let finishedGood: FinishedGood = .init(name: "finished", inventory: inventory)
-        let finishedGoods: [FinishedGood.ID: FinishedGood] = [finishedGood.id: finishedGood]
-
-        let client: Client = .sample
-        let clients: [Client.ID: Client] = [client.id: client]
-
-        let supplier: Supplier = .sample
-        let suppliers: [Supplier.ID: Supplier] = [supplier.id: supplier]
-
-        let fixedAsset: FixedAsset = .sample
-        let fixedAssets: [FixedAsset.ID: FixedAsset] = [fixedAsset.id: fixedAsset]
-
-        let books: Books = .init(rawMaterials: rawMaterials,
-                                 wips: wips,
-                                 finishedGoods: finishedGoods,
-                                 clients: clients,
-                                 suppliers: suppliers,
-                                 fixedAssets: fixedAssets,
-                                 cashAccount: .init(amount: 666),
-                                 accumulatedDepreciation: .init(amount: 333),
-                                 revenueAccount: .init(amount: 999),
-                                 depreciationExpensesAccount: .init(amount: 222),
-                                 vatReceivable: .init(amount: 66),
-                                 taxLiabilities: .init(amount: 111)
+        let books: Books = .init(rawMaterials: .sample,
+                                 wips: .sample,
+                                 finishedGoods: .sample,
+                                 clients: .sample,
+                                 suppliers: .sample,
+                                 equipments: .sample,
+                                 ledger: ledger
         )
 
         // confirm
         XCTAssertEqual(books.rawMaterials.count, 1)
-        XCTAssertEqual(books.rawMaterials.first?.value, rawMaterial)
+        XCTAssertEqual(books.rawMaterials.first?.value, RawMaterial.sample)
+        XCTAssertEqual(books.ledger[.rawInventory]?.balance, 35_000,
+                       "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.wips.count, 1)
-        XCTAssertEqual(books.wips.first?.value, workInProgress)
+        XCTAssertEqual(books.wips.first?.value, WorkInProgress.sample)
+        XCTAssertEqual(books.ledger[.wipsInventory]?.balance, 77_777,
+                       "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.finishedGoods.count, 1)
-        XCTAssertEqual(books.finishedGoods.first?.value, finishedGood)
+        XCTAssertEqual(books.finishedGoods.first?.value, FinishedGood.sample)
+        XCTAssertEqual(books.ledger[.finishedInventory]?.balance, 49_000,
+                       "Account balance from parameter ledger should be overwritten.")
+        XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000,
+                       "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.clients.count, 1)
-        XCTAssertEqual(books.clients.first?.value, client)
+        XCTAssertEqual(books.clients.first?.value, Client.sample)
+        XCTAssertEqual(books.ledger[.receivables]?.balance, 66_666,
+                       "Account balance from parameter ledger should be overwritten.")
 
         XCTAssertEqual(books.suppliers.count, 1)
-        XCTAssertEqual(books.suppliers.first?.value, supplier)
+        XCTAssertEqual(books.suppliers.first?.value, Supplier.sample)
+        XCTAssertEqual(books.ledger[.payables]?.balance, 55_555,
+                       "Account balance from parameter ledger should be overwritten.")
 
-        XCTAssertEqual(books.fixedAssets.count, 1)
-        XCTAssertEqual(books.fixedAssets.first?.value, fixedAsset)
+        XCTAssertEqual(books.equipments.count, 1)
+        XCTAssertEqual(books.equipments.first?.value, Equipment.sample)
+        XCTAssertEqual(books.ledger[.equipment]?.balance, 999_999,
+                       "Account balance from parameter ledger should be overwritten.")
+        XCTAssertEqual(books.ledger[.accumulatedDepreciation]?.balance, 47_619,
+                       "Account balance from parameter ledger should be overwritten.")
+        XCTAssertEqual(books.ledger[.depreciationExpenses]?.balance, 47_619,
+                       "Account balance from parameter ledger should be overwritten.")
 
-        XCTAssertEqual(books.cashAccount.balance, 666)
-        XCTAssertEqual(books.accumulatedDepreciation.balance, 333)
-        XCTAssertEqual(books.revenueAccount.balance, 999)
-        XCTAssertEqual(books.depreciationExpensesAccount.balance, 222)
-        XCTAssertEqual(books.vatReceivable.balance, 66)
-        XCTAssertEqual(books.taxLiabilities.balance, 111)
+        XCTAssertEqual(books.ledger.count, 9)
+        XCTAssertEqual(ledger.count, 9)
+
+        XCTAssertNil(books.ledger[.cash], "Account should not be created")
+        XCTAssertNil(books.ledger[.revenue], "Account should not be created")
+        XCTAssertNil(books.ledger[.vatReceivable], "Account should not be created")
+        XCTAssertNil(books.ledger[.taxesPayable], "Account should not be created")
     }
     // swiftlint:enable function_body_length
 
-    func testIsEmpty() {
+    func testBooksIsEmpty() throws {
         var books: Books = .init()
         XCTAssert(books.isEmpty)
 
-        let client: Client = .sample
-        books.add(client: client)
+        try books.addClient(name: "client")
         XCTAssertFalse(books.isEmpty)
     }
 
     func testCashBalance() {
         let books0: Books = .init()
-        XCTAssert(books0.cashAccount.balanceIsZero)
+        XCTAssertNil(books0.ledger[.cash]?.balanceIsZero)
 
-        let cash: Account<Cash> = .init(amount: 999)
-        let books: Books = .init(cashAccount: cash)
-        XCTAssertEqual(books.cashAccount.balance, 999)
+        let cashAccount: Account = .init(group: .cash, amount: 999)
+        let books: Books = .init(ledger: [cashAccount])
+        XCTAssertEqual(books.ledger[.cash]?.balance, 999)
     }
 
     func testRevenueAccountBalance() {
         let books0: Books = .init()
-        XCTAssert(books0.revenueAccount.balanceIsZero)
+        XCTAssert(books0.ledger.isEmpty)
 
-        let revenueAccount: Account<Revenue> = .init(amount: 999)
-        let books: Books = .init(revenueAccount: revenueAccount)
-        XCTAssertEqual(books.revenueAccount.balance, 999)
+        let revenueAccount: Account = .init(group: .revenue, amount: 999)
+        let books: Books = .init(ledger: [revenueAccount])
+        XCTAssertEqual(books.ledger[.revenue]?.balance, 999)
     }
 
     func testTaxLiabilitiesBalance() {
         let books0: Books = .init()
-        XCTAssert(books0.taxLiabilities.balanceIsZero)
+        XCTAssertNil(books0.ledger[.taxesPayable]?.balanceIsZero)
 
-        let taxLiabilities: Account<TaxLiabilities> = .init(amount: 999)
-        let books: Books = .init(taxLiabilities: taxLiabilities)
-        XCTAssertEqual(books.taxLiabilities.balance, 999)
+        let taxLiabilitiesAccount: Account = .init(group: .taxesPayable, amount: 999)
+        let books: Books = .init(ledger: [taxLiabilitiesAccount])
+        XCTAssertEqual(books.ledger[.taxesPayable]?.balance, 999)
     }
 
     func testDescription() throws {
@@ -132,11 +173,8 @@ final class BooksTests: XCTestCase {
                        Tax Liabilities: 0.0
                        """)
 
-        let finishedGood: FinishedGood = .sample
-        books.add(finishedGood: finishedGood)
-
-        let client: Client = .sample
-        books.add(client: client)
+        try books.addFinishedGood(name: "finishedGood")
+        try books.addClient(name: "client")
 
         XCTAssertEqual([books.description],
                        // swiftlint:disable line_length

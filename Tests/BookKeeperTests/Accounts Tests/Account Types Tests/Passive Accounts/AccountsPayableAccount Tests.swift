@@ -1,34 +1,33 @@
 import XCTest
-// @testable
 import BookKeeper
 
 extension AccountTests {
     func testAccountsPayableAccount() {
-        XCTAssertEqual(Account<AccountsPayable>.init().kind,
+        XCTAssertEqual(Account.init(group: .payables).kind,
                        .passive)
 
-        XCTAssertEqual(Account<AccountsPayable>.init().group,
-                       .balanceSheet(.liability(.currentLiability(.accountsPayable))))
+        XCTAssertEqual(Account.init(group: .payables).group,
+                       AccountGroup.payables)
 
-        let accountsPayableZero: Account<AccountsPayable> = .init()
+        let accountsPayableZero: Account = .init(group: .payables)
         XCTAssert(accountsPayableZero.balanceIsZero)
         XCTAssertEqual(accountsPayableZero.group,
-                       .balanceSheet(.liability(.currentLiability(.accountsPayable))))
+                       AccountGroup.payables)
 
-        let accountsPayableWithValue: Account<AccountsPayable> = .init(amount: 10_000)
+        let accountsPayableWithValue: Account = .init(group: .payables, amount: 10_000)
         XCTAssertEqual(accountsPayableWithValue.balance, 10_000)
         XCTAssertEqual(accountsPayableWithValue.group,
-                       .balanceSheet(.liability(.currentLiability(.accountsPayable))))
+                       AccountGroup.payables)
     }
 
     func testAccountsPayableAccountDescription() {
-        let accountsPayableZero: Account<AccountsPayable> = .init()
+        let accountsPayableZero: Account = .init(group: .payables)
         XCTAssertEqual(accountsPayableZero.description,
-                       "Accounts Payable(Accounts Payable (passive); 0.0)")
+                       "Accounts Payable, passive: 0.0")
 
-        let accountsPayableWithValue: Account<AccountsPayable> = .init(amount: 10_000)
+        let accountsPayableWithValue: Account = .init(group: .payables, amount: 10_000)
         XCTAssertEqual(accountsPayableWithValue.description,
-                       "Accounts Payable(Accounts Payable (passive); 10000.0)")
+                       "Accounts Payable, passive: 10000.0")
     }
 
 }

@@ -4,58 +4,51 @@ import BookKeeper
 final class AccountTypeTests: XCTestCase {
     func testAccountsReceivable() {
         XCTAssertEqual(AccountsReceivable.defaultName, "Accounts Receivable")
-        XCTAssertEqual(AccountsReceivable.kind, AccountKind.active)
-        XCTAssertEqual(AccountsReceivable.group,
-                       AccountGroup.balanceSheet(.asset(.currentAsset(.accountsReceivable))))
+        XCTAssertEqual(AccountsReceivable.kind, .active)
+        XCTAssertEqual(AccountsReceivable.group, .receivables)
     }
 
     func testVATReceivable() {
         XCTAssertEqual(VATReceivable.defaultName, "VAT Receivable")
-        XCTAssertEqual(VATReceivable.kind, AccountKind.active)
-        XCTAssertEqual(VATReceivable.group,
-                       AccountGroup.balanceSheet(.asset(.currentAsset(.vatReceivable))))
+        XCTAssertEqual(VATReceivable.kind, .active)
+        XCTAssertEqual(VATReceivable.group, .vatReceivable)
     }
 
     func testCash() {
         XCTAssertEqual(Cash.defaultName, "Cash")
-        XCTAssertEqual(Cash.kind, AccountKind.active)
-        XCTAssertEqual(Cash.group,
-                       AccountGroup.balanceSheet(.asset(.currentAsset(.cash))))
+        XCTAssertEqual(Cash.kind, .active)
+        XCTAssertEqual(Cash.group, .cash)
     }
 
     func testCOGS() {
         XCTAssertEqual(COGS.defaultName, "COGS")
-        XCTAssertEqual(COGS.kind, AccountKind.active)
-        XCTAssertEqual(COGS.group,
-                       AccountGroup.incomeStatement(.expense(.cogs)))
+        XCTAssertEqual(COGS.kind, .active)
+        XCTAssertEqual(COGS.group, .cogs)
     }
 
     func testDepreciationExpenses() {
         XCTAssertEqual(DepreciationExpenses.defaultName, "Depreciation Expenses")
-        XCTAssertEqual(DepreciationExpenses.kind, AccountKind.active)
-        XCTAssertEqual(DepreciationExpenses.group,
-                       AccountGroup.incomeStatement(.expense(.depreciation)))
+        XCTAssertEqual(DepreciationExpenses.kind, .active)
+        XCTAssertEqual(DepreciationExpenses.group, .depreciationExpenses)
     }
 
     func testAccountsPayable() {
         XCTAssertEqual(AccountsPayable.defaultName, "Accounts Payable")
-        XCTAssertEqual(AccountsPayable.kind, AccountKind.passive)
-        XCTAssertEqual(AccountsPayable.group,
-                       AccountGroup.balanceSheet(.liability(.currentLiability(.accountsPayable))))
+        XCTAssertEqual(AccountsPayable.kind, .passive)
+        XCTAssertEqual(AccountsPayable.group, .payables)
     }
 
     func testAccumulatedDepreciationEquipment() {
         XCTAssertEqual(AccumulatedDepreciationEquipment.defaultName, "Accumulated Depreciation Equipment")
-        XCTAssertEqual(AccumulatedDepreciationEquipment.kind, AccountKind.passive)
+        XCTAssertEqual(AccumulatedDepreciationEquipment.kind, .passive)
         XCTAssertEqual(AccumulatedDepreciationEquipment.group,
-                       AccountGroup.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment))))
+                       .accumulatedDepreciation)
     }
 
     func testTaxLiabilities() {
         XCTAssertEqual(TaxLiabilities.defaultName, "Tax Liabilities")
-        XCTAssertEqual(TaxLiabilities.kind, AccountKind.passive)
-        XCTAssertEqual(TaxLiabilities.group,
-                       AccountGroup.balanceSheet(.liability(.currentLiability(.taxesPayable))))
+        XCTAssertEqual(TaxLiabilities.kind, .passive)
+        XCTAssertEqual(TaxLiabilities.group, .taxesPayable)
     }
 
 }

@@ -22,20 +22,30 @@ public struct FinishedGood: Product {
     /// related expenses are always matched against each other (the matching principle);
     /// the result should be recognition of the proper amount of profit or loss in an accounting period.
     /// https://www.accountingtools.com/articles/what-is-cogs-cost-of-goods-sold.html
-    public var cogs: Account<COGS>
+    public var cogs: Account
 
     public func cost() -> Double? {
         inventory.cost()
     }
-
     public init(id: UUID = UUID(),
                 name: String,
-                inventory: InventoryAccount = .init()
+                initialInventoryQty qty: Int,
+                initialInventoryValue amount: Double,
+                initialCOGS cogs: Double
     ) {
         self.id = Tagged<Self, UUID>(rawValue: id)
         self.name = name
-        self.inventory = inventory
-        self.cogs = .init(name: name)
+        self.inventory = .init(type: .finishedGoods, qty: qty, amount: amount)
+        self.cogs = .init(group: .cogs, amount: cogs)
+    }
+
+    public init(id: UUID = UUID(), name: String) {
+        self.init(id: id,
+                  name: name,
+                  initialInventoryQty: 0,
+                  initialInventoryValue: 0,
+                  initialCOGS: 0
+        )
     }
 
 }
@@ -44,8 +54,8 @@ extension FinishedGood: CustomStringConvertible {
     public var description: String {
         """
         FinishedGood '\(name)'
-        \tinventory: \(inventory)
-        \tcogs: \(cogs))
+        \tInventory: \(inventory)
+        \tCOGS: \(cogs))
         """
     }
 }

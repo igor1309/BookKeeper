@@ -3,30 +3,34 @@ import BookKeeper
 
 extension AccountTests {
     func testAccountsReceivableAccount() {
-        XCTAssertEqual(Account<AccountsReceivable>.init().kind, .active)
+        XCTAssertEqual(Account.init(group: .receivables).kind, .active)
 
-        XCTAssertEqual(Account<AccountsReceivable>.init().group,
+        XCTAssertEqual(Account.init(group: .receivables).group,
                        .balanceSheet(.asset(.currentAsset(.accountsReceivable))))
 
-        let accountsReceivableZero: Account<AccountsReceivable> = .init()
+        let accountsReceivableZero: Account = .init(group: .receivables)
         XCTAssert(accountsReceivableZero.balanceIsZero)
-        XCTAssertEqual(accountsReceivableZero.group,
-                       .balanceSheet(.asset(.currentAsset(.accountsReceivable))))
+        XCTAssertEqual(accountsReceivableZero.group, .receivables)
 
-        let accountsReceivableWithValue: Account<AccountsReceivable> = .init(amount: 10_000)
+        let accountsReceivableWithValue: Account = .init(
+            group: .receivables,
+            amount: 10_000)
         XCTAssertEqual(accountsReceivableWithValue.balance, 10_000)
         XCTAssertEqual(accountsReceivableWithValue.group,
-                       .balanceSheet(.asset(.currentAsset(.accountsReceivable))))
+                       .receivables)
     }
 
     func testAccountsReceivableAccountDescription() {
-        let accountsReceivableZero: Account<AccountsReceivable> = .init()
+        let accountsReceivableZero: Account = .init(
+            group: .receivables)
         XCTAssertEqual(accountsReceivableZero.description,
-                       "Accounts Receivable(Accounts Receivable (active); 0.0)")
+                       "Accounts Receivable, active: 0.0")
 
-        let accountsReceivableWithValue: Account<AccountsReceivable> = .init(amount: 10_000)
+        let accountsReceivableWithValue: Account = .init(
+            group: .receivables,
+            amount: 10_000)
         XCTAssertEqual(accountsReceivableWithValue.description,
-                       "Accounts Receivable(Accounts Receivable (active); 10000.0)")
+                       "Accounts Receivable, active: 10000.0")
     }
 
 }

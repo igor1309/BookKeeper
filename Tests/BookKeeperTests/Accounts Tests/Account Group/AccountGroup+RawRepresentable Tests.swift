@@ -17,15 +17,15 @@ extension AccountGroupTests {
         XCTAssertNil(AccountGroup(rawValue: "Cash Equivalent"))
 
         XCTAssertEqual(AccountGroup(rawValue: "Cash"),
-                       AccountGroup.balanceSheet(.asset(.currentAsset(.cash))))
+                       .cash)
         XCTAssertEqual(AccountGroup(rawValue: "Marketing Expense"),
                        AccountGroup.incomeStatement(.expense(.marketingExpenses)))
     }
 
     func testAccountGroupRawValue() {
-        XCTAssertEqual(AccountGroup.balanceSheet(.asset(.currentAsset(.cash))).rawValue,
+        XCTAssertEqual(AccountGroup.cash.rawValue,
                        "Cash")
-        XCTAssertEqual(AccountGroup.incomeStatement(.expense(.cogs)).rawValue,
+        XCTAssertEqual(AccountGroup.cogs.rawValue,
                        "COGS")
     }
 

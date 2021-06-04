@@ -13,66 +13,66 @@ extension BooksTests {
 
     func testClientsAll() { XCTFail("finish test") }
 
-    func testFixedAssetsAll() { XCTFail("finish test") }
+    func testEquipmentAll() { XCTFail("finish test") }
 
 }
 
 // MARK: - forID
 extension BooksTests {
 
-    func testRawMaterialForID() {
+    func testRawMaterialForID() throws {
         var books: Books = .init()
-        let rawMaterial: RawMaterial = .init()
-        XCTAssertNil(books.rawMaterial(forID: rawMaterial.id))
+        let sample: RawMaterial = .sample
+        XCTAssertNil(books.rawMaterial(forID: sample.id))
 
-        books.add(rawMaterial: rawMaterial)
+        let rawMaterial = try books.addRawMaterial(name: "rawMaterial")
         XCTAssertEqual(books.rawMaterial(forID: rawMaterial.id), rawMaterial)
     }
 
-    func testWorkInProgressForID() {
+    func testWorkInProgressForID() throws {
         var books: Books = .init()
-        let workInProgress: WorkInProgress = .init()
-        XCTAssertNil(books.workInProgress(forID: workInProgress.id))
+        let sample: WorkInProgress = .init(name: "WorkInProgress")
+        XCTAssertNil(books.workInProgress(forID: sample.id))
 
-        books.add(workInProgress: workInProgress)
+        let workInProgress = try books.addWorkInProgress(name: "WorkInProgress")
         XCTAssertEqual(books.workInProgress(forID: workInProgress.id), workInProgress)
     }
 
-    func testFinishedGoodForID() {
+    func testFinishedGoodForID() throws {
         var books: Books = .init()
-        let finishedGood: FinishedGood = .sample
-        XCTAssertNil(books.finishedGood(forID: finishedGood.id))
+        let sample: FinishedGood = .sample
+        XCTAssertNil(books.finishedGood(forID: sample.id))
 
-        books.add(finishedGood: finishedGood)
+        let finishedGood = try books.addFinishedGood(name: "finishedGood")
         XCTAssertEqual(books.finishedGood(forID: finishedGood.id), finishedGood)
     }
 
-    func testClientForID() {
+    func testClientForID() throws {
         var books: Books = .init()
-        let client: Client = .sample
-        XCTAssertNil(books.client(forID: client.id))
+        let sample: Client = .sample
+        XCTAssertNil(books.client(forID: sample.id))
 
-        books.add(client: client)
+        let client = try books.addClient(name: "client")
         XCTAssertEqual(books.client(forID: client.id), client)
     }
 
-    func testSupplierForID() {
+    func testSupplierForID() throws {
         var books: Books = .init()
-        let supplier: Supplier = .sample
-        XCTAssertNil(books.supplier(forID: supplier.id))
+        let sample: Supplier = .sample
+        XCTAssertNil(books.supplier(forID: sample.id))
 
-        books.add(supplier: supplier)
+        let supplier = try books.addSupplier(name: "supplier")
         XCTAssertEqual(books.supplier(forID: supplier.id), supplier)
     }
 
-    func testFixedAssetForID() {
-        let fixedAsset: FixedAsset = .init(name: "freezer", lifetime: 7, value: 1_000_000)
+    func testEquipmentForID() {
+        let equipment: Equipment = .init(name: "freezer", lifetime: 7, value: 1_000_000)
 
         let books0: Books = .init()
-        XCTAssertNil(books0.fixedAsset(forID: fixedAsset.id))
+        XCTAssertNil(books0.equipment(forID: equipment.id))
 
-        let books: Books = .init(fixedAssets: [fixedAsset.id: fixedAsset])
-        XCTAssertEqual(books.fixedAsset(forID: fixedAsset.id), fixedAsset)
+        let books: Books = .init(equipments: [equipment])
+        XCTAssertEqual(books.equipment(forID: equipment.id), equipment)
     }
 
 }

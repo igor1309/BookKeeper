@@ -71,11 +71,34 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
         case currentAsset(CurrentAsset)
         case propertyPlantEquipment(PropertyPlantEquipment)
 
-        public enum CurrentAsset: String, Equatable, Hashable, CaseIterable {
-            case cash = "Cash"
-            case accountsReceivable = "Accounts Receivable"
-            case vatReceivable = "VAT Receivable"
-            case inventory = "Inventory"
+        public enum CurrentAsset: Equatable, Hashable, CaseIterable {
+            case cash
+            case accountsReceivable
+            case vatReceivable
+            case inventory(Inventory)
+
+            public enum Inventory: String, Equatable, Hashable, CaseIterable {
+                case rawMaterials = "Raw Materials Inventory"
+                case workInProgress = "Work in Progress Inventory"
+                case finishedGoods = "Finished Goods Inventory"
+            }
+            public static var allCases: [CurrentAsset] {
+                /// Dummy function whose only purpose is to produce
+                /// an error when a new case is added to enum. Never call!
+                @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
+                func _assertExhaustiveness(of asset: CurrentAsset, never: Never) {
+                    switch asset {
+                        case .cash,
+                             .accountsReceivable,
+                             .vatReceivable,
+                             .inventory:
+                            break
+                    }
+                }
+
+                return [CurrentAsset.cash, CurrentAsset.accountsReceivable, CurrentAsset.vatReceivable]
+                    + Inventory.allCases.map(CurrentAsset.inventory)
+            }
         }
 
         public enum PropertyPlantEquipment: String, Equatable, Hashable, CaseIterable {
@@ -88,11 +111,11 @@ public enum BalanceSheet: Equatable, Hashable, CaseIterable {
             case accumulatedDepreciationVehicles = "Accumulated Depreciation Vehicles"
         }
 
-        public static var allCases: [BalanceSheet.Asset] {
+        public static var allCases: [Asset] {
             /// Dummy function whose only purpose is to produce
             /// an error when a new case is added to enum. Never call!
             @available(*, unavailable, message: "Only for exhaustiveness checking, don't call")
-            func _assertExhaustiveness(of asset: BalanceSheet.Asset, never: Never) {
+            func _assertExhaustiveness(of asset: Asset, never: Never) {
                 switch asset {
                     case .currentAsset,
                          .propertyPlantEquipment:

@@ -14,19 +14,19 @@ public protocol AccountTypeProtocol: Equatable {
 public enum AccountsReceivable: AccountTypeProtocol {
     public static var defaultName = "Accounts Receivable"
     public static let kind = AccountKind.active
-    public static let group = AccountGroup.balanceSheet(.asset(.currentAsset(.accountsReceivable)))
+    public static let group = AccountGroup.receivables
 }
 
 public enum VATReceivable: AccountTypeProtocol {
     public static var defaultName = "VAT Receivable"
     public static let kind = AccountKind.active
-    public static let group = AccountGroup.balanceSheet(.asset(.currentAsset(.vatReceivable)))
+    public static let group = AccountGroup.vatReceivable
 }
 
 public enum Cash: AccountTypeProtocol {
     public static var defaultName = "Cash"
     public static let kind = AccountKind.active
-    public static let group = AccountGroup.balanceSheet(.asset(.currentAsset(.cash)))
+    public static let group = AccountGroup.cash
 }
 
 /// `Cost of Goods Sold`
@@ -47,13 +47,13 @@ public enum Cash: AccountTypeProtocol {
 public enum COGS: AccountTypeProtocol {
     public static var defaultName = "COGS"
     public static let kind = AccountKind.active
-    public static let group = AccountGroup.incomeStatement(.expense(.cogs))
+    public static let group = AccountGroup.cogs
 }
 
 public enum DepreciationExpenses: AccountTypeProtocol {
     public static var defaultName = "Depreciation Expenses"
     public static let kind = AccountKind.active
-    public static let group = AccountGroup.incomeStatement(.expense(.depreciation))
+    public static let group = AccountGroup.depreciationExpenses
 }
 
 /// `Accounts payable` is the aggregate amount of one's short-term obligations to pay
@@ -68,13 +68,13 @@ public enum DepreciationExpenses: AccountTypeProtocol {
 public enum AccountsPayable: AccountTypeProtocol {
     public static var defaultName = "Accounts Payable"
     public static let kind = AccountKind.passive
-    public static let group = AccountGroup.balanceSheet(.liability(.currentLiability(.accountsPayable)))
+    public static let group = AccountGroup.payables
 }
 
-/// `Accumulated depreciation` is the total depreciation for a fixed asset that has been charged
+/// `Accumulated depreciation` is the total depreciation for a equipment that has been charged
 /// to expense since that asset was acquired and made available for use. The accumulated depreciation
 /// account is an asset account with a credit balance (also known as a contra asset account);
-/// this means that it appears on the balance sheet as a reduction from the gross amount of fixed assets reported.
+/// this means that it appears on the balance sheet as a reduction from the gross amount of equipment reported.
 ///
 /// The amount of accumulated depreciation for an asset will increase over time, as depreciation continues
 /// to be charged against the asset. The original cost of the asset is known as its `gross cost`,
@@ -85,18 +85,18 @@ public enum AccumulatedDepreciationEquipment: AccountTypeProtocol {
     public static var defaultName = "Accumulated Depreciation Equipment"
     public static let kind = AccountKind.passive
     // swiftlint:disable line_length
-    public static let group = AccountGroup.balanceSheet(.asset(.propertyPlantEquipment(.accumulatedDepreciationEquipment)))
+    public static let group = AccountGroup.accumulatedDepreciation
     // swiftlint:enable line_length
 }
 
 public enum TaxLiabilities: AccountTypeProtocol {
     public static var defaultName = "Tax Liabilities"
     public static let kind = AccountKind.passive
-    public static let group = AccountGroup.balanceSheet(.liability(.currentLiability(.taxesPayable)))
+    public static let group = AccountGroup.taxesPayable
 }
 
 public enum Revenue: AccountTypeProtocol {
     public static var defaultName = "Revenue"
     public static let kind = AccountKind.passive
-    public static let group = AccountGroup.incomeStatement(.revenue)
+    public static let group = AccountGroup.revenue
 }

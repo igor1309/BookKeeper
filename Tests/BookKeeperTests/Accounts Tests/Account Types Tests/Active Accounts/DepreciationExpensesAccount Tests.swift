@@ -3,31 +3,31 @@ import BookKeeper
 
 extension AccountTests {
     func testDepreciationExpensesAccount() {
-        XCTAssertEqual(Account<DepreciationExpenses>.init().kind,
+        XCTAssertEqual(Account.init(group: .depreciationExpenses).kind,
                        .active)
 
-        XCTAssertEqual(Account<DepreciationExpenses>.init().group,
-                       .incomeStatement(.expense(.depreciation)))
+        XCTAssertEqual(Account.init(group: .depreciationExpenses).group,
+                       .depreciationExpenses)
 
-        let depreciationExpenses0: Account<DepreciationExpenses> = .init()
+        let depreciationExpenses0: Account = .init(group: .depreciationExpenses)
         XCTAssert(depreciationExpenses0.balanceIsZero)
         XCTAssertEqual(depreciationExpenses0.group,
-                       .incomeStatement(.expense(.depreciation)))
+                       .depreciationExpenses)
 
-        let depreciationExpenses1: Account<DepreciationExpenses> = .init(amount: 1_000)
+        let depreciationExpenses1: Account = .init(group: .depreciationExpenses, amount: 1_000)
         XCTAssertEqual(depreciationExpenses1.balance, 1_000)
         XCTAssertEqual(depreciationExpenses1.group,
-                       .incomeStatement(.expense(.depreciation)))
+                       .depreciationExpenses)
     }
 
     func testDepreciationExpensesAccountDescription() {
-        let depreciationExpensesZero: Account<DepreciationExpenses> = .init()
+        let depreciationExpensesZero: Account = .init(group: .depreciationExpenses)
         XCTAssertEqual(depreciationExpensesZero.description,
-                       "Depreciation Expenses(Depreciation Expense (active); 0.0)")
+                       "Depreciation Expense, active: 0.0")
 
-        let depreciationExpenses: Account<DepreciationExpenses> = .init(amount: 10_000)
+        let depreciationExpenses: Account = .init(group: .depreciationExpenses, amount: 10_000)
         XCTAssertEqual(depreciationExpenses.description,
-                       "Depreciation Expenses(Depreciation Expense (active); 10000.0)")
+                       "Depreciation Expense, active: 10000.0")
     }
 
 }

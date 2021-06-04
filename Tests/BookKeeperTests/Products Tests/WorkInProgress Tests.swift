@@ -4,27 +4,25 @@ import BookKeeper
 final class WorkInProgressTests: XCTestCase {
 
     func testWorkInProgressInit() {
-        let wipNoInventory: WorkInProgress = .init()
+        let wipNoInventory: WorkInProgress = .init(name: "WIP without Inventory")
         XCTAssertEqual(wipNoInventory.inventory.qty, 0)
         XCTAssertEqual(wipNoInventory.inventory.amount, 0)
         XCTAssert(wipNoInventory.inventory.balanceIsZero)
 
-        let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
-        let wipWithInventory: WorkInProgress = .init(inventory: inventory)
+        let wipWithInventory: WorkInProgress = .sample
         XCTAssertEqual(wipWithInventory.inventory.qty, 1_000)
-        XCTAssertEqual(wipWithInventory.inventory.amount, 49_000)
-        XCTAssertEqual(wipWithInventory.inventory.balance, 49_000)
+        XCTAssertEqual(wipWithInventory.inventory.amount, 77_777)
+        XCTAssertEqual(wipWithInventory.inventory.balance, 77_777)
     }
 
     func testDescription() {
-        let wipNoInventory: WorkInProgress = .init()
+        let wipNoInventory: WorkInProgress = .init(name: "WIP without Inventory")
         XCTAssertEqual(wipNoInventory.description,
-                       "WorkInProgress(inventory: Inventory(qty: 0, amount: 0.0))")
+                       "WorkInProgress WIP without Inventory(inventory: Inventory(qty: 0, amount: 0.0))")
 
-        let inventory: InventoryAccount = .init(qty: 1_000, amount: 49_000)
-        let wipWithInventory: WorkInProgress = .init(inventory: inventory)
+        let wipWithInventory: WorkInProgress = .sample
         XCTAssertEqual(wipWithInventory.description,
-                       "WorkInProgress(inventory: Inventory(qty: 1000, amount: 49000.0))")
+                       "WorkInProgress WorkInProgress(inventory: Inventory(qty: 1000, amount: 77777.0))")
     }
 
 }

@@ -3,8 +3,8 @@ import BookKeeper
 
 final class ProductionOrderTests: XCTestCase {
     func testInit() {
-        let finished: FinishedGood = .init(name: "FinishedGood")
-        let workInProgress: WorkInProgress = .init()
+        let finished: FinishedGood = .sample
+        let workInProgress: WorkInProgress = .sample
 
         let orderRecordFinishedGoods: ProductionOrder = .init(
             orderType: .recordFinishedGoods(cost: 49),
@@ -34,8 +34,8 @@ final class ProductionOrderTests: XCTestCase {
     }
 
     func testDescription() {
-        let finished: FinishedGood = .init(name: "FinishedGood")
-        let workInProgress: WorkInProgress = .init()
+        let finished: FinishedGood = .sample
+        let workInProgress: WorkInProgress = .sample
 
         let orderRecordFinishedGoods: ProductionOrder = .init(
             orderType: .recordFinishedGoods(cost: 49),

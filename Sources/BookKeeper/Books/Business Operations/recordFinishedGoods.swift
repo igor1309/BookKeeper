@@ -1,4 +1,5 @@
-// MARK: - Business Operations
+// MARK: Business Operations
+
 public extension Books {
 
     /// `Record Finished Goods`
@@ -16,27 +17,45 @@ public extension Books {
             throw BooksError.incorrectOrderType
         }
 
+        guard let amount = order.amount else {
+            throw OrderProcessingError.noCost
+        }
+
         let finishedGoodID = order.finishedGoodID
         let wipID = order.wipID
 
-        /// `Save State`
-        /// See comment for function bookRevenue(for:)
-        guard let finishedGoodsInventoryBackup = finishedGoods[finishedGoodID]?.inventory else {
+        guard var finishedGood = finishedGoods[finishedGoodID] else {
             throw BooksError.unknownFinishedGood
         }
-        guard let wipsInventoryBackup = wips[wipID]?.inventory else {
+        guard var workInProgress = wips[wipID] else {
             throw BooksError.unknownWorkInProgress
         }
 
+        // backup
+        let ledgerBackup = ledger
+
         do {
-            try finishedGoods[finishedGoodID]?.inventory.debit(order: order)
-            try wips[wipID]?.inventory.credit(order: order)
-        } catch let error {
-            /// `restore` to before-state (`undo` changes)
-            finishedGoods[finishedGoodID]?.inventory = finishedGoodsInventoryBackup
-            wips[wipID]?.inventory = wipsInventoryBackup
+            // local var change; throws if ...
+            try finishedGood.inventory.debit(order: order)
+            // local var change; throws if ...
+            try workInProgress.inventory.credit(order: order)
+
+            try doubleEntry(debit: .finishedInventory,
+                            credit: .wipsInventory,
+                            amount: amount)
+
+            // if no error thrown safe to update finished goods
+            finishedGoods[finishedGoodID] = finishedGood
+            // and work in progress
+            wips[wipID] = workInProgress
+        } catch {
+            // restore if needed
+            if ledger != ledgerBackup {
+                ledger = ledgerBackup
+            }
 
             throw error
         }
     }
+
 }

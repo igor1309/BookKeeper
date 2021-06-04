@@ -6,24 +6,39 @@
 /// Journal entries for inventory transactions — AccountingTools
 /// https://www.accountingtools.com/articles/2017/5/13/journal-entries-for-inventory-transactions
 ///
-public struct InventoryAccount {
+public struct InventoryAccount: AccountProtocol {
+    public typealias InventoryType = BalanceSheet.Asset.CurrentAsset.Inventory
+
+    public let kind: AccountKind = .active
+    public var type: InventoryType
+
+    #warning("make qty private(set)")
     public var qty: Int
+    #warning("make amount private")
     public var amount: Double
 
-    public init(qty: Int = 0, amount: Double = 0) {
+    public init(type: InventoryType,
+                qty: Int,
+                amount: Double
+    ) {
+        self.type = type
         self.qty = qty
         self.amount = amount
+    }
+
+    public init(type: InventoryType) {
+        self.type = type
+        self.qty = 0
+        self.amount = 0
     }
 
     public var balance: Double { amount }
 }
 
-extension InventoryAccount: AccountProtocol {
-    public static let kind: AccountKind = .active
-    public static let accountGroup: AccountGroup = .balanceSheet(.asset(.currentAsset(.inventory)))
-
-    public var kind: AccountKind { Self.kind }
-    public var group: AccountGroup { Self.accountGroup }
+extension InventoryAccount {
+    public var group: AccountGroup {
+        .balanceSheet(.asset(.currentAsset(.inventory(type))))
+    }
 }
 
 extension InventoryAccount: CustomStringConvertible {
@@ -63,15 +78,14 @@ extension InventoryAccount: OrderProcessingAccount {
     public mutating func debit<Order: OrderProtocol>(order: Order) throws {
 
         switch order.orderType {
-            case .salesReturn(let cost),
-                 .produced(let cost),
-                 .recordFinishedGoods(let cost):
-                let amount = Double(order.qty) * cost
-                self.amount += amount
-                self.qty += order.qty
+            case .salesReturn,
+                 .produced,
+                 .recordFinishedGoods,
+                 .purchaseRawMaterial:
+                guard let amount = order.amount else {
+                    throw OrderProcessingError.noCost
+                }
 
-            case .purchaseRawMaterial:
-                let amount = Double(order.qty) * (order.cost ?? 0)
                 self.amount += amount
                 self.qty += order.qty
 
@@ -94,17 +108,22 @@ extension InventoryAccount: OrderProcessingAccount {
     public mutating func credit<Order: OrderProtocol>(order: Order) throws {
 
         switch order.orderType {
-            case .bookRevenue, .trashed:
+            case .bookRevenue,
+                 .trash:
+
                 guard let cost = cost() else {
-                    throw OrderProcessingError.emptyInventoryHasNoCost
+                    throw OrderProcessingError.noCost
                 }
 
-                let amount = Double(order.qty) * cost
+                let amount = cost * Double(order.qty)
                 self.amount -= amount
                 self.qty -= order.qty
 
-            case .recordFinishedGoods(let cost):
-                let amount = Double(order.qty) * cost
+            case .recordFinishedGoods:
+                guard let amount = order.amount else {
+                    throw OrderProcessingError.noCost
+                }
+
                 self.amount -= amount
                 self.qty -= order.qty
 

@@ -5,34 +5,34 @@ final class AccountTests: XCTestCase {
     enum Active: AccountTypeProtocol {
         static let defaultName = ""
         static let kind: AccountKind = .active
-        static let group: AccountGroup = .balanceSheet(.asset(.currentAsset(.cash)))
+        static let group: AccountGroup = .cash
     }
 
     enum Passive: AccountTypeProtocol {
         static let defaultName = ""
         static let kind: AccountKind = .passive
-        static let group: AccountGroup = .balanceSheet(.liability(.currentLiability(.interestPayable)))
+        static let group: AccountGroup = .payables
     }
 
     // both active passive account
     enum BothActivePassive: AccountTypeProtocol {
         static let defaultName = ""
         static let kind: AccountKind = .bothActivePassive
-        static let group: AccountGroup = .balanceSheet(.liability(.currentLiability(.taxesPayable)))
+        static let group: AccountGroup = .taxesPayable
     }
 
     // swiftlint:disable function_body_length
     func testAccountDebitCredit() throws {
         // active account
-        var activeAccount: Account<Active> = .init()
+        var activeAccount: Account = .init(group: .cash)
 
         XCTAssertThrowsError(try activeAccount.debit(amount: -100)) { error in
-            XCTAssertEqual(error as? AccountError<Active>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
         XCTAssertThrowsError(try activeAccount.credit(amount: -100)) { error in
-            XCTAssertEqual(error as? AccountError<Active>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
@@ -41,22 +41,22 @@ final class AccountTests: XCTestCase {
 
         XCTAssertThrowsError(try activeAccount.credit(amount: 200)) { error in
             XCTAssertEqual(error as? AccountError,
-                           AccountError.insufficientBalance(activeAccount))
+                           AccountError.insufficientBalance(.cash))
         }
 
         try activeAccount.credit(amount: 50)
         XCTAssertEqual(activeAccount.balance, 50)
 
         // passive account
-        var passiveAccount: Account<Passive> = .init()
+        var passiveAccount: Account = .init(group: .taxesPayable)
 
         XCTAssertThrowsError(try passiveAccount.debit(amount: -100)) { error in
-            XCTAssertEqual(error as? AccountError<Passive>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
         XCTAssertThrowsError(try passiveAccount.credit(amount: -100)) { error in
-            XCTAssertEqual(error as? AccountError<Passive>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
@@ -65,21 +65,22 @@ final class AccountTests: XCTestCase {
 
         XCTAssertThrowsError(try passiveAccount.debit(amount: 200)) { error in
             XCTAssertEqual(error as? AccountError,
-                           AccountError.insufficientBalance(passiveAccount))
+                           AccountError.insufficientBalance(.taxesPayable))
         }
 
         try passiveAccount.debit(amount: 50)
         XCTAssertEqual(passiveAccount.balance, 50)
 
-        var bothActivePassiveAccount: Account<BothActivePassive> = .init(name: "taxes")
+        let vatReceivable: AccountGroup = .vatReceivable
+        var bothActivePassiveAccount: Account = .init(group: vatReceivable)
 
         XCTAssertThrowsError(try bothActivePassiveAccount.debit(amount: -100)) { error in
-            XCTAssertEqual(error as? AccountError<BothActivePassive>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
         XCTAssertThrowsError(try bothActivePassiveAccount.credit(amount: -100)) { error in
-            XCTAssertEqual(error as? AccountError<BothActivePassive>,
+            XCTAssertEqual(error as? AccountError,
                            AccountError.negativeAmount)
         }
 
@@ -87,8 +88,8 @@ final class AccountTests: XCTestCase {
         XCTAssertEqual(bothActivePassiveAccount.balance, 100)
 
         XCTAssertThrowsError(try bothActivePassiveAccount.credit(amount: 200)) { error in
-            XCTAssertEqual(error as? AccountError<BothActivePassive>,
-                           AccountError.insufficientBalance(bothActivePassiveAccount))
+            XCTAssertEqual(error as? AccountError,
+                           AccountError.insufficientBalance(vatReceivable))
         }
 
         try bothActivePassiveAccount.credit(amount: 50)
@@ -97,13 +98,17 @@ final class AccountTests: XCTestCase {
     // swiftlint:enable function_body_length
 
     func testDescription() {
-        let active: Account<Active> = .init(name: "Active Account", amount: 99_999)
+        let active: Account = .init(
+            group: .cash,
+            amount: 99_999)
         XCTAssertEqual(active.description,
-                       "Active Account(Cash (active); 99999.0)")
+                       "Cash, active: 99999.0")
 
-        let passive: Account<Passive> = .init(name: "Passive Account", amount: 88_999)
+        let passive: Account = .init(
+            group: .revenue,
+            amount: 88_999)
         XCTAssertEqual(passive.description,
-                       "Passive Account(Interest Payable (passive); 88999.0)")
+                       "Revenue, passive: 88999.0")
     }
 
 }

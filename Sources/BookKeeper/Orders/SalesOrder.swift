@@ -6,10 +6,22 @@
 ///
 public struct SalesOrder: OrderProtocol {
     public var cost: Double? {
-        if case .salesReturn(let cost) = orderType {
-            return cost
-        } else {
-            return nil
+        #warning("not clear here: getting cost from order type or from order.priceExTax ???")
+        switch orderType {
+            case .bookRevenue:
+                return priceExTax
+            case .purchaseRawMaterial:
+                return priceExTax
+            case .purchasePackaging:
+                return priceExTax
+            case let .produced(cost):
+                return cost
+            case let .recordFinishedGoods(cost):
+                return cost
+            case let .salesReturn(cost):
+                return cost
+            default:
+                return nil
         }
     }
 

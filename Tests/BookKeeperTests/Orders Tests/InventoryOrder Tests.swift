@@ -17,12 +17,12 @@ final class InventoryOrderTests: XCTestCase {
         XCTAssertEqual(orderProduced.cost, 59)
 
         let orderTrashed: InventoryOrder = .init(
-            orderType: .trashed,
+            orderType: .trash,
             finishedGoodID: finished.id,
             qty: 200
         )
         XCTAssertEqual(orderTrashed.orderType,
-                       OrderType.trashed)
+                       OrderType.trash)
         XCTAssertEqual(orderTrashed.finishedGoodID, finished.id)
         XCTAssertEqual(orderTrashed.qty, 200)
         XCTAssertNil(orderTrashed.cost)
@@ -40,12 +40,12 @@ final class InventoryOrderTests: XCTestCase {
                        "Sales Order(produced(cost: 59.0): 500)")
 
         let orderTrashed: InventoryOrder = .init(
-            orderType: .trashed,
+            orderType: .trash,
             finishedGoodID: finished.id,
             qty: 200
         )
         XCTAssertEqual(orderTrashed.description,
-                       "Sales Order(trashed: 200)")
+                       "Sales Order(trash: 200)")
     }
 
 }

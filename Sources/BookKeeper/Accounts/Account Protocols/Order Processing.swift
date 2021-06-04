@@ -1,6 +1,8 @@
 public enum OrderProcessingError: Error {
     case wrongOrderType
+    #warning("do you use emptyInventoryHasNoCost ??")
     case emptyInventoryHasNoCost
+    case noCost
 }
 
 public protocol OrderProcessingAccount: AccountProtocol {

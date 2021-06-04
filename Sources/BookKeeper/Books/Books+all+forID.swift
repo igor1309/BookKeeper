@@ -13,8 +13,8 @@ public extension Books {
         clients
     }
 
-    func fixedAssetsAll() -> [FixedAsset.ID: FixedAsset] {
-        fixedAssets
+    func equipmentsAll() -> [Equipment.ID: Equipment] {
+        equipments
     }
 
 }
@@ -36,8 +36,8 @@ public extension Books {
     func supplier(forID id: Supplier.ID) -> Supplier? {
         suppliers[id]
     }
-    func fixedAsset(forID id: FixedAsset.ID) -> FixedAsset? {
-        fixedAssets[id]
+    func equipment(forID id: Equipment.ID) -> Equipment? {
+        equipments[id]
     }
 
 }
