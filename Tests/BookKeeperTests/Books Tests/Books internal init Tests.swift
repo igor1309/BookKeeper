@@ -1,4 +1,5 @@
-import XCTest
+/*
+ import XCTest
 @testable import BookKeeper
 
 extension BooksTests {
@@ -93,3 +94,4 @@ extension BooksTests {
     // swiftlint:enable function_body_length
 
 }
+*/

@@ -2,22 +2,22 @@ import SwiftUI
 
 /// Core structure to run book keeping.
 public struct Books: Equatable {
-    
+
     // MARK: Inventory
-    public var rawMaterials: [RawMaterial.ID: RawMaterial]
-    public var wips: [WorkInProgress.ID: WorkInProgress]
-    public var finishedGoods: [FinishedGood.ID: FinishedGood]
+    internal var rawMaterials: [RawMaterial.ID: RawMaterial]
+    internal var wips: [WorkInProgress.ID: WorkInProgress]
+    internal var finishedGoods: [FinishedGood.ID: FinishedGood]
 
     // MARK: World
-    public var clients: [Client.ID: Client]
-    public var suppliers: [Supplier.ID: Supplier]
+    internal var clients: [Client.ID: Client]
+    internal var suppliers: [Supplier.ID: Supplier]
 
     // MARK: Fixed Assets
     // also land, buildings, and vehicles
-    public var equipments: [Equipment.ID: Equipment]
+    internal var equipments: [Equipment.ID: Equipment]
 
     // MARK: General Ledger
-    public var ledger: [AccountGroup: Account]
+    internal var ledger: [AccountGroup: Account]
 
     /// InItialise Books with `variadic parameters` for raw materials, work in progress, finished goods, clients, suppliers, equipment and ledger
     public init(rawMaterials: RawMaterial...,
@@ -56,7 +56,7 @@ public struct Books: Equatable {
     }
 
     /// InItialise Books with `dictionaries` for raw materials, work in progress, finished goods, clients, suppliers, equipment and ledger
-    internal init(rawMaterials: [RawMaterial.ID: RawMaterial] = [:],
+    private init(rawMaterials: [RawMaterial.ID: RawMaterial] = [:],
                   wips: [WorkInProgress.ID: WorkInProgress] = [:],
                   finishedGoods: [FinishedGood.ID: FinishedGood] = [:],
                   clients: [Client.ID: Client] = [:],
@@ -160,7 +160,6 @@ public extension Books {
 }
 
 extension Books: CustomStringConvertible {
-    #warning("finish with this")
     public var description: String {
         let finished = finishedGoods.values.map { "\n\t\($0)" }.joined()
         let clientsStr = clients.values.map { "\n\t\($0)" }.joined()

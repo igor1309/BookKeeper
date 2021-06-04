@@ -1,5 +1,5 @@
 import XCTest
-import BookKeeper
+@testable import BookKeeper
 
 // MARK: Add Objects to Books
 

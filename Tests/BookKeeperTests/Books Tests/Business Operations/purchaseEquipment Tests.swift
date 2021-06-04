@@ -1,10 +1,9 @@
 import XCTest
-import BookKeeper
+@testable import BookKeeper
 
 // MARK: Business Operations
 
 extension BooksTests {
-    // swiftlint:disable function_body_length
     func testPurchaseEquipmentUnknownSupplierError() throws {
         var books: Books = .init()
 
@@ -147,6 +146,5 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.payables]?.balance, 1_200_000,
                        "Should include VAT")
     }
-    // swiftlint:enable function_body_length
 
 }

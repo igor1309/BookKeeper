@@ -1,4 +1,4 @@
-import BookKeeper
+@testable import BookKeeper
 
 extension Books {
     static let sample: Self = .init(

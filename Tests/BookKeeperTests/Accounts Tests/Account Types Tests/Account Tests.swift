@@ -21,8 +21,7 @@ final class AccountTests: XCTestCase {
         static let group: AccountGroup = .taxesPayable
     }
 
-    // swiftlint:disable function_body_length
-    func testAccountDebitCredit() throws {
+    func testAccountDebitCreditActive() throws {
         // active account
         var activeAccount: Account = .init(group: .cash)
 
@@ -46,7 +45,9 @@ final class AccountTests: XCTestCase {
 
         try activeAccount.credit(amount: 50)
         XCTAssertEqual(activeAccount.balance, 50)
+    }
 
+    func testAccountDebitCreditPassive() throws {
         // passive account
         var passiveAccount: Account = .init(group: .taxesPayable)
 
@@ -70,7 +71,9 @@ final class AccountTests: XCTestCase {
 
         try passiveAccount.debit(amount: 50)
         XCTAssertEqual(passiveAccount.balance, 50)
+    }
 
+    func testAccountDebitCreditBothActivePassive() throws {
         let vatReceivable: AccountGroup = .vatReceivable
         var bothActivePassiveAccount: Account = .init(group: vatReceivable)
 
@@ -95,7 +98,6 @@ final class AccountTests: XCTestCase {
         try bothActivePassiveAccount.credit(amount: 50)
         XCTAssertEqual(bothActivePassiveAccount.balance, 50)
     }
-    // swiftlint:enable function_body_length
 
     func testDescription() {
         let active: Account = .init(

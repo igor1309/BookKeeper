@@ -1,5 +1,5 @@
 import XCTest
-import BookKeeper
+@testable import BookKeeper
 
 extension BooksTests {
     func testDoubleEntryActiveActiveInsufficientBalanceError() throws {

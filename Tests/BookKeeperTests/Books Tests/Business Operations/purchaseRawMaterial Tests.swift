@@ -1,5 +1,5 @@
 import XCTest
-import BookKeeper
+@testable import BookKeeper
 
 extension BooksTests {
     #warning("test passes but not confirming everything here - check all elements that could change")

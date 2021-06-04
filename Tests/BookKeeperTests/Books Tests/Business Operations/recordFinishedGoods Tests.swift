@@ -1,10 +1,9 @@
 import XCTest
-import BookKeeper
+@testable import BookKeeper
 
 // MARK: Business Operations
 
 extension BooksTests {
-    // swiftlint:disable function_body_length
     #warning("not sure this test is finished")
     func testRecordFinishedGoodsIncorrectOrderTypeError() {
         // initiate empty books
