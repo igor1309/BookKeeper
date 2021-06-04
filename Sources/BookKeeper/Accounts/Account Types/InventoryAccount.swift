@@ -119,12 +119,15 @@ extension InventoryAccount: OrderProcessingAccount {
                 self.amount -= amount
                 self.qty -= order.qty
 
+            /// debiting and crediting recordFinishedGoods (inventory operation)
+            /// is different: we use order amount for debit
+            /// but for credit we should use cost from inventory account
             case .recordFinishedGoods:
-                guard let amount = order.amount else {
+                guard let cost = cost() else {
                     throw OrderProcessingError.noCost
                 }
 
-                self.amount -= amount
+                self.amount -= Double(order.qty) * cost
                 self.qty -= order.qty
 
             default:

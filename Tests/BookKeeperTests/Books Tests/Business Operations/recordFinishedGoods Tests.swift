@@ -39,7 +39,7 @@ extension BooksTests {
         XCTAssert(books.isEmpty)
 
         // create production order
-        let order: ProductionOrder = .sample
+        let order: ProductionOrder = .recordFinishedGoods
 
         // try record finished goods
         XCTAssertThrowsError(
@@ -67,7 +67,7 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
 
         // create production order
-        let order: ProductionOrder = .sample
+        let order: ProductionOrder = .recordFinishedGoods
 
         // try record finished goods
         XCTAssertThrowsError(
@@ -188,7 +188,7 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
 
         // create production order
-        let order: ProductionOrder = .sample
+        let order: ProductionOrder = .recordFinishedGoods
 
         // try record finished goods
         XCTAssertNoThrow(
@@ -197,15 +197,15 @@ extension BooksTests {
 
         // confirm changes
         XCTAssertEqual(books.finishedGoods.totalBalance(for: \.inventory),
-                       49_000 + 999 * 49)
+                       49_000 + 444 * 49)
         XCTAssertEqual(books.wips.totalBalance(for: \.inventory),
-                       77_777 - 999 * 49)
+                       77_777 - 444 * 77.777)
 
         XCTAssertEqual(books.ledger.count, 3)
         XCTAssertEqual(books.ledger[.wipsInventory]?.balance,
-                       77_777 - 999 * 49)
+                       77_777 - 444 * 49)
         XCTAssertEqual(books.ledger[.finishedInventory]?.balance,
-                       49_000 + 999 * 49)
+                       49_000 + 444 * 49)
         XCTAssertEqual(books.ledger[.cogs]?.balance, 35_000)
 
         XCTAssert(books.rawMaterials.isEmpty)
@@ -216,14 +216,12 @@ extension BooksTests {
         XCTAssertNil(books.ledger[.taxesPayable])
 
         let wipInventory = try XCTUnwrap(books.workInProgress(forID: WorkInProgress.sample.id)?.inventory)
-        XCTAssertEqual(wipInventory.qty, 1_000 - 999)
-        XCTAssertEqual(wipInventory.amount, 77_777 - 999 * 49)
-        XCTAssertEqual(wipInventory.balance, 77_777 - 999 * 49)
+        XCTAssertEqual(wipInventory.qty, 1_000 - 444)
+        XCTAssertEqual(wipInventory.balance, 77_777 - 444 * 77.777)
 
         let finishedGoodInventory = try XCTUnwrap(books.finishedGood(forID: FinishedGood.sample.id)?.inventory)
-        XCTAssertEqual(finishedGoodInventory.qty, 1_000 + 999)
-        XCTAssertEqual(finishedGoodInventory.amount, 49_000 + 999 * 49)
-        XCTAssertEqual(finishedGoodInventory.balance, 49_000 + 999 * 49)
+        XCTAssertEqual(finishedGoodInventory.qty, 1_000 + 444)
+        XCTAssertEqual(finishedGoodInventory.balance, 49_000 + 444 * 49)
     }
 
 }

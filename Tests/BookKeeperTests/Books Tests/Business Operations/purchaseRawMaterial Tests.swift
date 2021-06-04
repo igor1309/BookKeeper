@@ -10,7 +10,7 @@ extension BooksTests {
         XCTAssert(books.isEmpty)
 
         // try purchase
-        let order: PurchaseOrder = .sample
+        let order: PurchaseOrder = .purchaseRawMaterial
         XCTAssertThrowsError(
             try books.purchaseRawMaterial(for: order)
         ) { error in
@@ -35,7 +35,7 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.rawInventory]?.balance, 37_555)
 
         // try purchase
-        let order: PurchaseOrder = .sample
+        let order: PurchaseOrder = .purchaseRawMaterial
         XCTAssertThrowsError(
             try books.purchaseRawMaterial(for: order)
         ) { error in
@@ -73,7 +73,7 @@ extension BooksTests {
         XCTAssertEqual(books.ledger[.payables]?.balance, 37_555)
 
         // try purchase
-        let order: PurchaseOrder = .sample
+        let order: PurchaseOrder = .purchaseRawMaterial
         XCTAssertNoThrow(
             try books.purchaseRawMaterial(for: order)
         )

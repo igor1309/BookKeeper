@@ -50,7 +50,7 @@ extension Equipment {
 }
 
 extension SalesOrder {
-    static let sample: Self = .init(
+    static let bookRevenue: Self = .init(
         orderType: .bookRevenue,
         clientID: Client.sample.id,
         finishedGoodID: FinishedGood.sample.id,
@@ -60,7 +60,7 @@ extension SalesOrder {
 }
 
 extension PurchaseOrder {
-    static let sample: Self = .init(
+    static let purchaseRawMaterial: Self = .init(
         supplierID: Supplier.sample.id,
         orderType: .purchaseRawMaterial(RawMaterial.sample),
         qty: 9_999,
@@ -70,17 +70,60 @@ extension PurchaseOrder {
 }
 
 extension ProductionOrder {
-    static let sample: Self = .init(
+    static let recordFinishedGoods: Self = .init(
         orderType: .recordFinishedGoods(cost: 49),
         finishedGoodID: FinishedGood.sample.id,
         workInProgressID: WorkInProgress.sample.id,
-        finishedGoodQty: 999
+        finishedGoodQty: 444
+    )
+
+    #warning("""
+        this is not a ProductionOrder, this is InventoryOrder
+
+        example of common OrderType usage - it would be safer to use
+        order type inside each of ProductionOrder/SalesOrder, etc
+        but that would kill debit and credit funcs that are generic
+        over Order: OrderProtocol and we should create debit/credit for each
+        type (ProductionOrder/SalesOrder, etc)
+
+        so we have to deal with this complexity by additional checking
+        inside debit/credit funcs
+        """)
+    static let trash: Self = .init(
+        orderType: .trash,
+        finishedGoodID: FinishedGood.sample.id,
+        workInProgressID: WorkInProgress.sample.id,
+        finishedGoodQty: 333
+    )
+
+    #warning("""
+        this is not a ProductionOrder, this is InventoryOrder
+
+        example of common OrderType usage - it would be safer to use
+        order type inside each of ProductionOrder/SalesOrder, etc
+        but that would kill debit and credit funcs that are generic
+        over Order: OrderProtocol and we should create debit/credit for each
+        type (ProductionOrder/SalesOrder, etc)
+
+        so we have to deal with this complexity by additional checking
+        inside debit/credit funcs
+        """)
+    static let bookRevenue: Self = .init(
+        orderType: .bookRevenue,
+        finishedGoodID: FinishedGood.sample.id,
+        workInProgressID: WorkInProgress.sample.id,
+        finishedGoodQty: 555
     )
 }
 
 extension InventoryAccount {
-    static let sample: Self = .init(
+    static let finishedInventory: Self = .init(
         type: .finishedGoods,
+        qty: 999,
+        amount: 20_979
+    )
+    static let wipsInventory: Self = .init(
+        type: .workInProgress,
         qty: 999,
         amount: 20_979
     )
@@ -201,7 +244,7 @@ final class HelpersTests: XCTestCase {
     }
 
     func testSalesOrderSample() {
-        let order: SalesOrder = .sample
+        let order: SalesOrder = .bookRevenue
 
         XCTAssertEqual(order.orderType, .bookRevenue)
         XCTAssertEqual(order.clientID, Client.sample.id)
@@ -217,7 +260,7 @@ final class HelpersTests: XCTestCase {
     }
 
     func testPurchaseOrderSample() {
-        let order: PurchaseOrder = .sample
+        let order: PurchaseOrder = .purchaseRawMaterial
 
         XCTAssertEqual(order.supplierID, Supplier.sample.id)
         XCTAssertEqual(order.orderType, .purchaseRawMaterial(RawMaterial.sample))
@@ -233,18 +276,38 @@ final class HelpersTests: XCTestCase {
         XCTAssertEqual(order.amountWithVAT, 9_999 * 21 * (1 + 20/100))
     }
 
-    func testProductionOrderSample() {
-        let order: ProductionOrder = .sample
+    func testProductionOrderSampleRecordFinishedGoods() {
+        let order: ProductionOrder = .recordFinishedGoods
 
         XCTAssertEqual(order.orderType, .recordFinishedGoods(cost: 49))
-        XCTAssertEqual(order.qty, 999)
+        XCTAssertEqual(order.qty, 444)
         XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
         XCTAssertEqual(order.wipID, WorkInProgress.sample.id)
         XCTAssertEqual(order.cost, 49)
     }
 
+    func testProductionOrderSampleTrash() {
+        let order: ProductionOrder = .trash
+
+        XCTAssertEqual(order.orderType, .trash)
+        XCTAssertEqual(order.qty, 333)
+        XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
+        XCTAssertEqual(order.wipID, WorkInProgress.sample.id)
+        XCTAssertEqual(order.cost, nil)
+    }
+
+    func testProductionOrderSampleBookRevenue() {
+        let order: ProductionOrder = .bookRevenue
+
+        XCTAssertEqual(order.orderType, .bookRevenue)
+        XCTAssertEqual(order.qty, 555)
+        XCTAssertEqual(order.finishedGoodID, FinishedGood.sample.id)
+        XCTAssertEqual(order.wipID, WorkInProgress.sample.id)
+        XCTAssertEqual(order.cost, nil)
+    }
+
     func testInventoryAccountSample() throws {
-        let inventory: InventoryAccount = .sample
+        let inventory: InventoryAccount = .finishedInventory
 
         XCTAssertEqual(inventory.kind, .active)
         XCTAssertEqual(inventory.type, .finishedGoods)
@@ -253,4 +316,5 @@ final class HelpersTests: XCTestCase {
         XCTAssertEqual(inventory.balance, 20_979)
         XCTAssertEqual(inventory.cost(), 21.0)
     }
+
 }

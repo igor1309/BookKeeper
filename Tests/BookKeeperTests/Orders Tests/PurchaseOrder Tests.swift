@@ -3,7 +3,7 @@ import BookKeeper
 
 final class PurchaseOrderTests: XCTestCase {
     func testSample() {
-        let order: PurchaseOrder = .sample
+        let order: PurchaseOrder = .purchaseRawMaterial
 
         XCTAssertEqual(order.amountExVAT, 209_979.0)
         XCTAssertEqual(order.amountWithVAT, 251_974.8)

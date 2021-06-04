@@ -6,7 +6,7 @@ import BookKeeper
 extension InventoryAccountTests {
     func testDebitSalesOrderWrongOrderType() throws {
         // new inventory
-        var inventory: InventoryAccount = .sample
+        var inventory: InventoryAccount = .finishedInventory
 
         // confirm
         XCTAssertEqual(inventory.group, .finishedInventory)
@@ -36,7 +36,7 @@ extension InventoryAccountTests {
 
     func testDebitSalesOrder() throws {
         // new inventory
-        var inventory: InventoryAccount = .sample
+        var inventory: InventoryAccount = .finishedInventory
 
         // confirm
         XCTAssertEqual(inventory.group, .finishedInventory)
@@ -121,7 +121,7 @@ extension InventoryAccountTests {
 
     func testCreditSalesOrderNonEmptyAccount() throws {
         // new inventory
-        var inventory: InventoryAccount = .sample
+        var inventory: InventoryAccount = .finishedInventory
 
         // confirm
         XCTAssertEqual(inventory.group, .finishedInventory)
